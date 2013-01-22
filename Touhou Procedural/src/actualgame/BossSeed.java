@@ -1,6 +1,13 @@
+package actualgame;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+
+import actualgame.patterncommands.AttackPattern;
+import actualgame.patterncommands.BulletSeed;
+import actualgame.patterncommands.Command;
+import actualgame.patterncommands.FireCommand;
+import actualgame.patterncommands.MoveCommand;
 
 
 public class BossSeed {
@@ -69,7 +76,25 @@ public class BossSeed {
 			}
 			patterns.add(new AttackPattern(c));
 		}
+	}
+	
+	public BossSeed(double str, double con, double wis, double inte, double dex, double luk, ArrayList<AttackPattern> patterns){
+		double sum = str+con+wis+inte+dex+luk;
 		
+		this.STR= str/sum*nutrients ;
+		this.CON= con/sum*nutrients ;
+		this.WIS= wis/sum*nutrients ;
+		this.INT= inte/sum*nutrients ;
+		this.DEX= dex/sum*nutrients ;
+		this.LUK= luk/sum*nutrients ;
+		
+		this.color=new Color(
+				(int)((str+con)/(2*sum)*255),
+				(int)((dex+luk)/(2*sum)*255),
+				(int)((inte+wis)/(2*sum)*255)
+				);
+		
+		this.patterns = patterns;
 	}
 	
 	public static Color getTColor(){
@@ -85,17 +110,15 @@ public class BossSeed {
 		
 		int totalPrior = (int) (STR+CON+WIS+INT+DEX);
 		
-		double damage = 	STR / totalPrior * nutrients;
-		double weight = 	(STR/5.0+CON)/2;
-		int HP = (int)		(CON / totalPrior * nutrients);
-		int MP = (int)		(INT / totalPrior * nutrients);
-		double manaRegen = 	WIS / totalPrior * nutrients;
-		double moveSpeed = DEX / totalPrior * nutrients;
-		double reactionRate= DEX / totalPrior * nutrients;
-		int volleySize= (int)((INT+STR)/2 / totalPrior * nutrients);
-		double bulletSpeed =	DEX / totalPrior * nutrients;
-		double torquePower =(STR+DEX)/2 / totalPrior * nutrients;
-		double dodgeChance =	DEX / totalPrior * nutrients;
+		double damage = 		STR;
+		double weight = 		(STR/5.0+CON)/2;
+		int HP = (int)			(CON);
+		int MP = (int)			(INT);
+		double manaRegen = 		WIS;
+		double moveSpeed = 		DEX;
+		int volleySize= 		(int)(INT*0.8);
+		double bulletSpeed =	DEX;
+		double dodgeChance =	LUK;
 		
 		return new Boss(x,y,color,patterns,
 				damage*0.5,
@@ -104,17 +127,15 @@ public class BossSeed {
 				MP/4,
 				manaRegen/8000,
 				moveSpeed,
-				1000-2*reactionRate,
 				volleySize,
 				bulletSpeed/2,
-				torquePower,
 				dodgeChance);
 	}
 	
 	public Command randomCommand(int volleySize){
 		Random r = new Random();
 		double d = r.nextDouble();
-		if(d<0.01){
+		if(d<0.5){
 			return new MoveCommand((int)(TouhouGame.playFieldLeft.x+r.nextDouble()*(TouhouGame.playFieldRight.x-TouhouGame.playFieldLeft.x)),
 					(int)(TouhouGame.playFieldLeft.y+r.nextDouble()*(TouhouGame.playFieldRight.y-TouhouGame.playFieldLeft.y)),
 					r.nextDouble());
@@ -130,5 +151,18 @@ public class BossSeed {
 			seed.add(new BulletSeed());
 		}
 		return seed;
+	}
+	
+	public BossSeed breedWith(BossSeed seed){
+		ArrayList<AttackPattern> pattern = new ArrayList<AttackPattern>(0);
+		Random r = new Random();
+		for (int i=0; i< this.patterns.size(); i++){
+			if(r.nextBoolean()){
+				pattern.append(this.pattrens.get(i).){
+					
+				}
+			}
+		}
+		
 	}
 }

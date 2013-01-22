@@ -1,3 +1,4 @@
+package actualgame;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Random;
@@ -116,10 +117,12 @@ public class TouhouGame extends Game{
 		
 		super.update();
 		if (player.alive && !boss.alive){
-			//TODO sending player's winstate
+			bossClearText.visible=true;
+			//TODO followup
 		}
 		else if (!player.alive && boss.alive){
 			gameOverText.visible=true;
+			//TODO followup
 		}
 	}
 	

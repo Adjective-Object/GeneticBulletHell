@@ -1,4 +1,7 @@
+package actualgame.patterncommands;
 import java.util.ArrayList;
+
+import actualgame.Boss;
 
 public class FireCommand extends Command{
 	protected ArrayList<BulletSeed> bullets = new ArrayList<BulletSeed>(0);
@@ -11,7 +14,7 @@ public class FireCommand extends Command{
 	public void apply(Boss boss){
 		
 		for(int i=0;i<bullets.size();i++){
-			if(i>boss.volleySize || boss.MP<bullets.get(i).power/1000){break;}
+			if(boss.bullets.size()<boss.volleySize || boss.MP<bullets.get(i).power/1000){break;}
 			boss.bullets.add(bullets.get(i).makeBullet(boss));
 			boss.MP-=bullets.get(i).power/200;
 		}

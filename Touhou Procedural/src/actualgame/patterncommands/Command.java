@@ -1,3 +1,6 @@
+package actualgame.patterncommands;
+
+import actualgame.Boss;
 
 public abstract class Command {
 

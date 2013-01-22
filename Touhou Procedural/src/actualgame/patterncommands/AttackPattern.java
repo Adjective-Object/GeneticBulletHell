@@ -1,4 +1,7 @@
+package actualgame.patterncommands;
 import java.util.ArrayList;
+
+import actualgame.Boss;
 
 
 public class AttackPattern {

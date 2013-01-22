@@ -1,5 +1,9 @@
+package actualgame.patterncommands;
 import java.awt.Color;
 import java.util.Random;
+
+import actualgame.Boss;
+import actualgame.Bullet;
 
 
 public class BulletSeed {
@@ -35,7 +39,6 @@ public class BulletSeed {
 				(int)(power*boss.power),
 				speed*boss.bulletSpeed,
 				angle,
-				torque*boss.torquePower,
 				size,
 				boss.baseColor,
 				35*(1-power),

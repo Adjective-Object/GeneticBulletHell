@@ -1,8 +1,11 @@
+package actualgame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
+
+import actualgame.patterncommands.AttackPattern;
 
 import framework.*;
 
@@ -11,7 +14,6 @@ public class Boss extends BakedGameComponent{
 	protected ArrayList<AttackPattern> patterns = new ArrayList<AttackPattern>(0);
 	public ArrayList<Bullet> bullets = new ArrayList<Bullet>(0);
 	
-	public double movementUrgency;
 	public int destX, destY;
 	
 	/**
@@ -19,17 +21,16 @@ public class Boss extends BakedGameComponent{
 	 * fireMillis: milliseconds since last bullet fired
 	 * manaRegenRate: rate of mana regeneration in mana / second
 	 */
-	protected int lastfired=0, HP, maxHP, maxMP, volleySize, currentPhase=0, totalPhases;
-	protected long comMillis=0;
-	protected double MP, manaRegenRate, comRate, weight, moveSpeed,dashDist, power,bulletSpeed,torquePower;
+	public int lastfired=0, HP, maxHP, maxMP, volleySize, currentPhase=0, totalPhases;
+	public long comMillis=0;
+	public double MP, manaRegenRate, comRate, weight, moveSpeed,dashDist, power,bulletSpeed,torquePower;
 	
 	public boolean phaseChanged= false, active = false;
 	
 	public Color baseColor;
 	
 	public Boss(int x, int y, Color baseColor,ArrayList<AttackPattern> patterns, double damage, double weight,
-			int HP, int MP, double manaRegenRate, double moveSpeed, double reactionRate,int volleySize, double bulletSpeed, double torquePower,
-			double dodgeChance){
+			int HP, int MP, double manaRegenRate, double moveSpeed, int volleySize, double bulletSpeed, double dodgeChance){
 		super(x,y,makeImage((int)weight,(int)weight,baseColor),TouhouGame.playFieldLeft,TouhouGame.playFieldRight,GameComponent.BOUNDARY_BLOCK);
 		this.baseColor = baseColor;
 		this.power =damage;
@@ -42,14 +43,10 @@ public class Boss extends BakedGameComponent{
 		this.MP=maxMP/4.0;
 		this.manaRegenRate=manaRegenRate;
 		this.moveSpeed=moveSpeed;
-		this.comRate=reactionRate;
-		this.torquePower=torquePower;
-		this.volleySize=volleySize;
-		this.dashDist=dashDist;
+		this.volleySize=volleySize;//most # of bulltets onscreen at the time
 		
 		destX=x;
 		destY=y;
-		movementUrgency=0;
 		
 		System.out.println(this.comRate);
 	}
@@ -68,14 +65,14 @@ public class Boss extends BakedGameComponent{
 			
 			//using Commands
 			comMillis+=elapsedTime;
-			if(comMillis>comRate*(1-movementUrgency)){
+			if(comMillis>comRate){
 				this.patterns.get(currentPhase).apply(this);
 				comMillis=(long)(comMillis-comRate);
 			}
 			
 			//movement
-			if(movementUrgency!=0 && (destX!=x || destY!=y)){
-				Point pawnt = Global.rotate(moveSpeed*(elapsedTime/1000.0)*movementUrgency,0.0,Global.findAngle(x,y,destX,destY));
+			if(destX!=x || destY!=y){
+				Point pawnt = Global.scaleAlong(moveSpeed*(elapsedTime/1000.0),Global.getsincos(x,y,destX,destY));
 				
 				//if catches to avoid jittering
 				if(Math.abs(x-destX)<pawnt.x){
@@ -146,7 +143,12 @@ public class Boss extends BakedGameComponent{
 						(int)(drawColor.getGreen()+r.nextDouble()*80-5) ,
 						(int)(drawColor.getBlue()+r.nextDouble()*80-5) ));
 			
-			Point pixel = Global.rotate(0,r.nextDouble()*height/2,r.nextDouble()*(Math.PI*2));
+			Point pixel = Global.scaleAlong(
+					r.nextDouble()*height/2,
+					new Point(
+							r.nextDouble()-r.nextDouble(),
+							r.nextDouble()-r.nextDouble())
+					);
 			int p =(int) Math.round(r.nextDouble()*sv);
 			g.fillRect((int)pixel.x+width/2,(int)pixel.y+height/2, p,p);
 		}

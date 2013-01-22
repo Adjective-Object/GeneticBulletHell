@@ -1,5 +1,8 @@
+package actualgame;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -56,7 +59,7 @@ public class Player extends RelativeColorComponent{
 				if (Keys.isKeyDown(KeyEvent.VK_Z)){
 					double bulletRange = 0.05;
 					bullets.add(new Bullet((int)(this.getCenter().x), (int)(this.y+this.getHeight()/4),
-							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2, 0, this.getWidth()/2, this.baseColor, 1,1,1));
+							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2, this.getWidth()/2, this.baseColor, 1,1,1));
 				}
 				
 				if(mana>0 && Keys.isKeyPressed(KeyEvent.VK_X)){
@@ -100,4 +103,7 @@ public class Player extends RelativeColorComponent{
 		super.setParent(g);
 		tg=(TouhouGame) g;
 	}
+	
+	
+
 }

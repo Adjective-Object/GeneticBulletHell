@@ -7,6 +7,20 @@ public class Global {
 	public static int width=794;
 	public static int height=572;
 	
+	public static Point scaleAlong (double displacement, Point sincos){
+		return new Point(displacement*sincos.x,displacement*sincos.y);
+	}
+	
+	public static Point getsincos(double x0, double y0, double x1, double y1){
+		return getsincos(x1-x0, y1-y0);
+	}
+	
+	public static Point getsincos(double xoff, double yoff){
+		//x=cos, y=sin
+		double hypo = Math.sqrt(xoff*xoff+yoff*yoff);
+		return new Point(xoff/hypo, yoff/hypo);
+	}
+	
 	public static Point rotate (double x, double y,double angle){
 		return new Point(x*Math.cos(angle)-y*Math.sin(angle) , x*Math.sin(angle)+y*Math.cos(angle));
 	}
@@ -46,5 +60,10 @@ public class Global {
 			toRet.add(comp);
 		}	
 		return toRet;
+	}
+
+	private static Point scaleAlong(double d, int i, double e) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

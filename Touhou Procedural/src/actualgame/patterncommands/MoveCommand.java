@@ -1,3 +1,6 @@
+package actualgame.patterncommands;
+
+import actualgame.Boss;
 
 public class MoveCommand extends Command{
 	
@@ -13,6 +16,5 @@ public class MoveCommand extends Command{
 	public void apply(Boss boss){
 		boss.destX=x;
 		boss.destY=y;
-		boss.movementUrgency=urgency;
 	}
 }
