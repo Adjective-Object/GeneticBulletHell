@@ -1,29 +1,26 @@
 package framework;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-
-public class Group extends GameComponent{
+public class Group<T extends GameComponent> extends GameComponent{
 	
 	public boolean removeDead = false;
-	public ArrayList<GameComponent> content;
+	public ArrayList<T> content;
 	
-	public Group(ArrayList<GameComponent> content){
+	public Group(ArrayList<T> content){
 		this();
 		this.content.addAll(content);
 	}
 	
-	public Group(GameComponent content){
+	public Group(T content){
 		this();
 		this.content.add(content);
 	}
 	
 	public Group(){
 		super(0,0);
-		this.content = new ArrayList<GameComponent>(0);
+		this.content = new ArrayList<T>(0);
 	}
 	
 	public Group(boolean removeDead){
@@ -31,13 +28,13 @@ public class Group extends GameComponent{
 		this.removeDead = true;
 	}
 	
-	public void add(GameComponent comp){
+	public void add(T comp){
 		this.content.add(comp);
 		comp.setParent(this.parentGame);
 		
 	}
 	
-	public void addAll(Group Component){
+	public void addAll(Group<T> Component){
 		for(int i=0; i<Component.content.size(); i++){
 			Component.content.get(i).setParent(this.parentGame);
 		}
@@ -112,5 +109,15 @@ public class Group extends GameComponent{
 		for(int x=0; x<content.size();x++){
 			content.get(x).setParent(g);
 		}
+	}
+
+	public void clear() {
+		this.content.clear();
+	}
+	
+	public Group<T> clone(){
+		Group<T> g = new Group<T>();
+		g.addAll(this);
+		return g;
 	}
 }

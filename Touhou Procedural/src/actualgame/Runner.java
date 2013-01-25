@@ -18,16 +18,16 @@ public class Runner  {
 	public static Game makeTheGame(){
 		Game m = new Menu(
 				new String[] {
-						"StartGame",
-						"AlsoStartGame",
-						"heylookyoucanstartGame",
-						"Wonder what this does",
-						"Start Game"},
+						"Start",
+						"Start B",
+						"Start C",
+						"Start D",
+						"Start With Default"},
 				new Game[] {
-						new TouhouGame(new BossSeed()),
-						new TouhouGame(new BossSeed()),
-						new TouhouGame(new BossSeed()),
-						new TouhouGame(new BossSeed()),
+						new TouhouGame(new BossSeed(System.currentTimeMillis())),
+						new TouhouGame(new BossSeed(System.currentTimeMillis())),
+						new TouhouGame(new BossSeed(System.currentTimeMillis())),
+						new TouhouGame(new BossSeed(System.currentTimeMillis())),
 						new TouhouGame(new BossSeed())},
 				new Color(100,150,30),
 				Font.decode("123123-bold-60")

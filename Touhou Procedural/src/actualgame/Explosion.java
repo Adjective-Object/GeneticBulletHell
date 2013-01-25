@@ -44,7 +44,7 @@ public class Explosion extends GameComponent{
 		this.killonCollide(tg.bossBullets);
 	}
 	
-	public void killonCollide(Group g){
+	public <T extends GameComponent> void killonCollide(Group<T> g){
 		for (int i=0; i<g.size();i++){
 			GameComponent c = g.content.get(i);
 			if(Math.sqrt( Math.pow(x-c.getCenter().x,2) + Math.pow(y-c.getCenter().y,2) ) <= scale.x){

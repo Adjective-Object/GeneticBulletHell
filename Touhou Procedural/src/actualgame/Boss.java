@@ -1,6 +1,9 @@
 package actualgame;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Polygon;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,7 +15,7 @@ import framework.*;
 public class Boss extends BakedGameComponent{
 	
 	protected ArrayList<AttackPattern> patterns = new ArrayList<AttackPattern>(0);
-	public ArrayList<Bullet> bullets = new ArrayList<Bullet>(0);
+	public Group<Bullet> bullets = new Group<Bullet>();
 	
 	public int destX, destY;
 	
@@ -24,31 +27,41 @@ public class Boss extends BakedGameComponent{
 	public int lastfired=0, HP, maxHP, maxMP, volleySize, currentPhase=0, totalPhases;
 	public long comMillis=0;
 	public double MP, manaRegenRate, comRate, weight, moveSpeed,dashDist, power,bulletSpeed,torquePower;
+	double radius;
 	
 	public boolean phaseChanged= false, active = false;
 	
 	public Color baseColor;
 	
-	public Boss(int x, int y, Color baseColor,ArrayList<AttackPattern> patterns, double damage, double weight,
-			int HP, int MP, double manaRegenRate, double moveSpeed, int volleySize, double bulletSpeed, double dodgeChance){
-		super(x,y,makeImage((int)weight,(int)weight,baseColor),TouhouGame.playFieldLeft,TouhouGame.playFieldRight,GameComponent.BOUNDARY_BLOCK);
-		this.baseColor = baseColor;
-		this.power =damage;
-		this.bulletSpeed=bulletSpeed;
-		this.patterns=patterns;
-		this.weight=weight;
-		this.HP=HP;
-		this.maxHP=HP;
-		this.maxMP=MP;
-		this.MP=maxMP/4.0;
-		this.manaRegenRate=manaRegenRate;
-		this.moveSpeed=moveSpeed;
-		this.volleySize=volleySize;//most # of bulltets onscreen at the time
+	public Boss(int x, int y, BossSeed seed){
+		super(x,y,makeImage(seed),TouhouGame.playFieldLeft,TouhouGame.playFieldRight,GameComponent.BOUNDARY_BLOCK);
+		
+		this.baseColor 		=seed.color;
+		this.power 			=seed.STR*0.5;
+		this.bulletSpeed	=seed.DEX;
+		this.patterns		=seed.patterns;
+		this.weight			=(seed.STR/5.0+seed.CON)/2;
+		this.maxHP			=(int) seed.CON;
+		this.HP				=maxHP;
+		this.maxMP			=(int) seed.WIS/2;
+		this.MP				=maxMP/4.0;
+		this.manaRegenRate	=seed.INT/6000;
+		this.moveSpeed		=5+10*seed.LUK/seed.CON;
+		this.volleySize		=(int)(seed.INT*0.8);//most # of bulltets onscreen at the time
+		this.comRate		=500+seed.CON/2+seed.STR/4-seed.INT-seed.DEX*2-seed.WIS;
 		
 		destX=x;
 		destY=y;
+
+		System.out.println("volley size "+this.volleySize);
 		
-		System.out.println(this.comRate);
+		this.radius			=(seed.CON*0.25);
+		this.size			= new Point(radius,radius);
+		this.imageOffset 	= new Point(
+				this.image.getWidth()/2-this.radius/2,
+				this.image.getWidth()/2-this.radius/2
+				);
+		
 	}
 	
 	/**
@@ -89,7 +102,7 @@ public class Boss extends BakedGameComponent{
 				}
 			}
 		
-			if(HP<=0)
+			if(HP<=0 || Keys.isKeyPressed(KeyEvent.VK_T))
 			{
 				if(currentPhase >= patterns.size()-1){
 					this.kill();
@@ -111,11 +124,13 @@ public class Boss extends BakedGameComponent{
 			this.visible=false;
 			this.active=false;
 			TouhouGame g = (TouhouGame) this.parentGame;
+			System.out.println(g);//null
 			g.particles.addAll(Global.createSimpleExplosion(5,(int)this.size.x*4,this.color,
 						this.getCenter(),this.velocity,2000,1000,(int)this.size.x, true));	
 			//Touhou.particles.add(new FadeoutComponent((int)getCenter().x,(int)getCenter().y,image(),0,10000,Component.BOUNDARY_NONE));
 			g.playerScore+=10000;
-			g.particles.add(new Explosion(this.getCenter().x, this.getCenter().y,this.size.x*4,this.color));
+			/*g.particles.add(new Explosion(this.getCenter().x, this.getCenter().y,this.size.x*4,this.color));*/
+			g.particles.add(new FadeoutGameComponent((int)(this.getCenter().x), (int)(this.getCenter().y), this.image, 0, 1000, GameComponent.BOUNDARY_KILL_ON_CROSS, true));
 		}
 		super.kill();
 	}
@@ -124,34 +139,52 @@ public class Boss extends BakedGameComponent{
 	 * meant to be called by the Game object the boss is in. 
 	 * @return all the bullets in that the boss has been storing
 	 */
-	public ArrayList<Bullet> getBullets(boolean remove){
-		ArrayList<Bullet> bull = (ArrayList<Bullet>) bullets.clone();
+	public Group<Bullet> getBullets(boolean remove){
+		Group<Bullet> bull = bullets.clone();
 		if (remove){bullets.clear();}
 		return bull;
 	}
 	
-	public static BufferedImage makeImage(int width, int height, Color drawColor){
-		BufferedImage img = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+	public void setParent(Game g){
+		this.bullets.setParent(g);
+		super.setParent(g);
+	}
+	
+	public static BufferedImage makeImage(BossSeed seed){
+		
+		
+		double radius = seed.CON*0.25;
+		double numstep = 3+seed.LUK;
+		double anglestep = 2*Math.PI/numstep;
+		double spikeyness = radius * (0.5*seed.DEX/seed.STR);
+		if(spikeyness<1){
+			spikeyness=1;
+		}
+		
+		BufferedImage img = new BufferedImage(2*(int)(radius+spikeyness),2*(int)(radius+spikeyness),BufferedImage.TYPE_INT_ARGB);
+		int center = img.getWidth()/2;
 		Graphics g = img.getGraphics();
 		
-		//g.clearRect(0, 0, width, height);
+		Polygon poly = new Polygon();
 		
-		int sv = 3;
-		Random r = new Random();
-		for(int i=0;i<width*height;i++){
-			g.setColor(new Color((int)(drawColor.getRed()+r.nextDouble()*80-5) ,
-						(int)(drawColor.getGreen()+r.nextDouble()*80-5) ,
-						(int)(drawColor.getBlue()+r.nextDouble()*80-5) ));
+		
+		Random r = new Random((long) (seed.CON+seed.DEX+seed.INT+seed.LUK+seed.STR+seed.WIS));
+		
+		double tempradius = radius;
+		
+		for(int i=0; i<numstep; i++){
+			tempradius = radius+spikeyness*(r.nextDouble()-r.nextDouble());
+			Point p = Global.rotate(new Point(0, -tempradius),anglestep*i);
 			
-			Point pixel = Global.scaleAlong(
-					r.nextDouble()*height/2,
-					new Point(
-							r.nextDouble()-r.nextDouble(),
-							r.nextDouble()-r.nextDouble())
-					);
-			int p =(int) Math.round(r.nextDouble()*sv);
-			g.fillRect((int)pixel.x+width/2,(int)pixel.y+height/2, p,p);
+			poly.addPoint(center+(int)p.x, center+(int)p.y);
+			
 		}
+		
+		
+		g.setColor(new Color(seed.color.getRed()+20, seed.color.getGreen()+20, seed.color.getBlue()+20));
+		g.fillOval((int)spikeyness, (int)spikeyness, (int)(radius*2), (int)(radius*2));
+		g.setColor(seed.color);
+		g.fillPolygon(poly);
 		
 		return img;
 	}

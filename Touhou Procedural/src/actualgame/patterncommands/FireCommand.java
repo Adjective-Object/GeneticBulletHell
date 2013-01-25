@@ -14,9 +14,13 @@ public class FireCommand extends Command{
 	public void apply(Boss boss){
 		
 		for(int i=0;i<bullets.size();i++){
-			if(boss.bullets.size()<boss.volleySize || boss.MP<bullets.get(i).power/1000){break;}
-			boss.bullets.add(bullets.get(i).makeBullet(boss));
-			boss.MP-=bullets.get(i).power/200;
+			if(boss.bullets.size()<boss.volleySize &&  boss.MP>bullets.get(i).getManaCost()){
+				boss.bullets.add(bullets.get(i).makeBullet(boss));
+				boss.MP-=bullets.get(i).getManaCost();
+			}
+			else{
+				break;
+			}
 		}
 	}
 	

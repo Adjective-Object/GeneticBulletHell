@@ -44,11 +44,15 @@ public class Player extends RelativeColorComponent{
 		
 		int speed = baseSpeed;
 		
+		if(Keys.isKeyDown(KeyEvent.VK_T)){
+			hp+=100;
+		}
+		
 		//if the player is marked as "responsive", it responds to keypresses (changeable in settings later?)
 		if(responsive){
 			
 			if(Keys.isKeyDown(KeyEvent.VK_SHIFT)) {speed = slowSpeed;}
-			if(Keys.isKeyDown(KeyEvent.VK_CONTROL)) {speed = fastSpeed;}
+			if(Keys.isKeyDown(KeyEvent.VK_SPACE)) {speed = fastSpeed;}
 			
 			if(Keys.isKeyDown(KeyEvent.VK_LEFT)) {this.acceleration.x=-speed;}
 			else if(Keys.isKeyDown(KeyEvent.VK_RIGHT)) {this.acceleration.x=speed;}
@@ -59,7 +63,9 @@ public class Player extends RelativeColorComponent{
 				if (Keys.isKeyDown(KeyEvent.VK_Z)){
 					double bulletRange = 0.05;
 					bullets.add(new Bullet((int)(this.getCenter().x), (int)(this.y+this.getHeight()/4),
-							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2, this.getWidth()/2, this.baseColor, 1,1,1));
+							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2,
+							1,0,
+							this.getWidth()/2, this.baseColor, 1,1,1));
 				}
 				
 				if(mana>0 && Keys.isKeyPressed(KeyEvent.VK_X)){
@@ -75,7 +81,7 @@ public class Player extends RelativeColorComponent{
 				}
 			}
 		}
-		if(hp<=0){
+		if(hp<=0 ){
 			this.kill();
 		}
 		super.update(elapsedTime);

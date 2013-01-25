@@ -106,32 +106,6 @@ public class BossSeed {
 	    		);
 	}
 	
-	public Boss makeBoss(int x, int y){
-		
-		int totalPrior = (int) (STR+CON+WIS+INT+DEX);
-		
-		double damage = 		STR;
-		double weight = 		(STR/5.0+CON)/2;
-		int HP = (int)			(CON);
-		int MP = (int)			(INT);
-		double manaRegen = 		WIS;
-		double moveSpeed = 		DEX;
-		int volleySize= 		(int)(INT*0.8);
-		double bulletSpeed =	DEX;
-		double dodgeChance =	LUK;
-		
-		return new Boss(x,y,color,patterns,
-				damage*0.5,
-				weight/120 * 30 + 30,
-				HP*2,
-				MP/4,
-				manaRegen/8000,
-				moveSpeed,
-				volleySize,
-				bulletSpeed/2,
-				dodgeChance);
-	}
-	
 	public Command randomCommand(int volleySize){
 		Random r = new Random();
 		double d = r.nextDouble();
@@ -154,6 +128,7 @@ public class BossSeed {
 	}
 	
 	public BossSeed breedWith(BossSeed seed){
+		/*
 		ArrayList<AttackPattern> pattern = new ArrayList<AttackPattern>(0);
 		Random r = new Random();
 		for (int i=0; i< this.patterns.size(); i++){
@@ -163,6 +138,7 @@ public class BossSeed {
 				}
 			}
 		}
-		
+		*/
+		return seed;		
 	}
 }

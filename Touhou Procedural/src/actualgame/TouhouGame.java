@@ -7,7 +7,8 @@ import framework.*;
 
 public class TouhouGame extends Game{
 	
-	public Group bossBullets, playerBullets, uiBorder, GUIBombs, particles;
+	public Group<Bullet> bossBullets;
+	public Group<GameComponent> playerBullets, uiBorder, GUIBombs, particles;
 	public Player player;
 	public Boss boss;
 	public RelativeColorComponent hpBar,bossHpBar, bossMpBar, bossHpBarB, bossMpBarB;
@@ -27,14 +28,14 @@ public class TouhouGame extends Game{
 		this.seed=seed;
 		this.baseColor = seed.color;
 		
-		bossBullets = new Group(true);
-		playerBullets = new Group(true);
+		bossBullets = new Group<Bullet>(true);
+		playerBullets = new Group<GameComponent>(true);
 		
 		player = new Player(230,500,baseColor);
 		player.boundingSmall= new Point(10,10);
 		player.boundingLarge= new Point(475,562);
 		
-		boss=  seed.makeBoss(200,50);
+		boss=  new Boss(200,50,seed);
 		
 		makeUI(baseColor);
 		
@@ -79,7 +80,7 @@ public class TouhouGame extends Game{
 			GUIBombs.content.get(i).visible=player.mana>=(i+1);
 		}
 		
-		bossBullets.content.addAll(boss.getBullets(true));
+		bossBullets.addAll(boss.getBullets(true));
 		playerBullets.content.addAll(player.getBullets(true));
 		
 		if(player.responsive && player.alive){

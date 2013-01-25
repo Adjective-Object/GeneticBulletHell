@@ -25,6 +25,10 @@ public class Global {
 		return new Point(x*Math.cos(angle)-y*Math.sin(angle) , x*Math.sin(angle)+y*Math.cos(angle));
 	}
 	
+	public static Point rotate (Point p, double angle){
+		return rotate(p.x, p.y, angle);
+	}
+	
 	//this is derptacular and doesn't really work, but it's ok for now
 	//it's meant to find the angle in radians from the origin (x,y) to the destination(destx,desty)
 	public static double findAngle(double x, double y, double destx, double desty){
@@ -40,7 +44,7 @@ public class Global {
 		return anglepart;
 	}
 	
-	public static Group createSimpleExplosion(GameComponent b){
+	public static Group<GameComponent> createSimpleExplosion(GameComponent b){
 		int particleSize = 5;
 		int numParts = Math.round((float)(b.getWidth()*b.getHeight())/(particleSize*particleSize));
 		if (numParts<5){
@@ -49,9 +53,9 @@ public class Global {
 		return createSimpleExplosion(particleSize,numParts,b.color,new Point(b.getCenter().x,b.getCenter().y),b.velocity,0,1000,(b.getWidth()+b.getHeight())/4,false);
 	}
 	
-	public static Group createSimpleExplosion(int particleSize, int numParticles, Color color, Point location, Point initialVelocity, int particleTime, int fadeTime, int blastRadius, boolean fadeout){
+	public static Group<GameComponent> createSimpleExplosion(int particleSize, int numParticles, Color color, Point location, Point initialVelocity, int particleTime, int fadeTime, int blastRadius, boolean fadeout){
 		Random r = new Random();
-		Group toRet = new Group(false);
+		Group<GameComponent> toRet = new Group<GameComponent>(false);
 		for(int i=0; i<numParticles;i++){
 			SimpleFadeoutComponent comp = new SimpleFadeoutComponent((int)location.x, (int)location.y,particleSize,particleSize, color, particleTime,fadeTime,GameComponent.BOUNDARY_KILL_ON_CROSS,fadeout);
 			comp.velocity=Global.rotate((initialVelocity.x + initialVelocity.y)*r.nextDouble(),0, i*(2*Math.PI/numParticles)+r.nextDouble()-r.nextDouble());
@@ -62,8 +66,4 @@ public class Global {
 		return toRet;
 	}
 
-	private static Point scaleAlong(double d, int i, double e) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

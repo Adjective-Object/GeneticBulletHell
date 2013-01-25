@@ -13,10 +13,11 @@ public class FadeoutGameComponent extends BakedGameComponent{
 	protected int fadeoutFrames;
 	public boolean shrinkOut;
 	
-	public FadeoutGameComponent(int x, int y, BufferedImage img, long millistolive, int fadeoutmillis, int boundMethod){
+	public FadeoutGameComponent(int x, int y, BufferedImage img, long millistolive, int fadeoutmillis, int boundMethod, boolean shrinkout){
 		super(x,y,img,new Point(10,10),new Point(Global.width, Global.height),boundMethod);
 		this.millisToLive=millistolive;
 		this.fadeoutFrames=fadeoutmillis;
+		this.shrinkOut=shrinkout;
 	}
 	
 	public void update(long elapsedTime){

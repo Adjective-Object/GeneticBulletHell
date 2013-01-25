@@ -33,4 +33,16 @@ public class SimpleFadeoutComponent extends GameComponent{
 		}
 		super.update(elapsedTime);
 	}
+	
+	public Graphics render(Graphics g){
+		if (visible){
+			g.setColor(this.color);
+			g.fillRect(
+					(int)(getCenter().x-size.x/2*(scale.x)),
+					(int)(getCenter().y-size.y/2*(scale.y)),
+					(int)(size.x*scale.x),
+					(int)(size.y*scale.y));
+		}
+		return g;
+	}
 }

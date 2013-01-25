@@ -12,4 +12,12 @@ public class Point{
 	public String toString(){
 		return("Point("+x+","+y+")");
 	}
+
+
+	public Point scale(double factor) {
+		Point p = new Point(
+				this.x*factor,
+				this.y*factor);
+		return p;
+	}
 }	
