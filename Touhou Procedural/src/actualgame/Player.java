@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
+import actualgame.gamescreens.TouhouGame;
+
 import framework.*;
 
 public class Player extends RelativeColorComponent{
@@ -14,7 +16,7 @@ public class Player extends RelativeColorComponent{
 	protected int baseSpeed = 2000;
 	protected int slowSpeed = 1000;
 	
-	protected double hp=100, maxHp=100, mana=3, maxMana=10;
+	public double hp=100, maxHp=100, mana=3, maxMana=10;
 	
 	public boolean responsive=true, canshoot=false;
 	

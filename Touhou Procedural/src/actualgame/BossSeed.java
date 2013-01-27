@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import actualgame.gamescreens.TouhouGame;
 import actualgame.patterncommands.AttackPattern;
 import actualgame.patterncommands.BulletSeed;
 import actualgame.patterncommands.Command;
@@ -12,7 +13,7 @@ import actualgame.patterncommands.MoveCommand;
 
 public class BossSeed {
 	public static int nutrients = 500;
-	protected Color color;
+	public Color color;
 	protected ArrayList<AttackPattern> patterns = new ArrayList<AttackPattern> (0);
 	
 	//stat priorities

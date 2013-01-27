@@ -1,6 +1,8 @@
 package actualgame;
 import java.awt.Color;
 
+import actualgame.gamescreens.TouhouGame;
+
 import framework.*;
 
 public class Bullet extends RelativeColorComponent{

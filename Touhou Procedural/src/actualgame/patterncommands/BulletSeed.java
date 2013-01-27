@@ -53,6 +53,6 @@ public class BulletSeed {
 	}
 
 	public double getManaCost() {
-		return 0.01*(this.power+this.speed+Math.abs(1-this.acceleration)*10+this.torque);
+		return 0.002*(this.power+this.speed+Math.abs(1-this.acceleration)*10+this.torque);
 	}
 }

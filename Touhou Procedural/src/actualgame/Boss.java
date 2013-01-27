@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
+import actualgame.gamescreens.TouhouGame;
 import actualgame.patterncommands.AttackPattern;
 
 import framework.*;
@@ -128,7 +129,6 @@ public class Boss extends BakedGameComponent{
 			g.particles.addAll(Global.createSimpleExplosion(5,(int)this.size.x*4,this.color,
 						this.getCenter(),this.velocity,2000,1000,(int)this.size.x, true));	
 			//Touhou.particles.add(new FadeoutComponent((int)getCenter().x,(int)getCenter().y,image(),0,10000,Component.BOUNDARY_NONE));
-			g.playerScore+=10000;
 			/*g.particles.add(new Explosion(this.getCenter().x, this.getCenter().y,this.size.x*4,this.color));*/
 			g.particles.add(new FadeoutGameComponent((int)(this.getCenter().x), (int)(this.getCenter().y), this.image, 0, 1000, GameComponent.BOUNDARY_KILL_ON_CROSS, true));
 		}

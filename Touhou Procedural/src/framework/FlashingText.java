@@ -2,7 +2,6 @@ package framework;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 
 public class FlashingText extends Text{
 	
@@ -11,8 +10,8 @@ public class FlashingText extends Text{
 	protected int activeIndex=0;
 	public boolean killonfinish=true;
 	
-	public FlashingText(String[] texts, Color color, Font font, int x, int y, int width, int height, long flashtime){
-		super(texts[0],color,font,x,y,width,height);
+	public FlashingText(String[] texts, Color color, Font font, int x, int y, long flashtime){
+		super(texts[0],color,font,x,y);
 		this.texts=texts; //TODO baking animation frames ahead of time
 		this.flashtime=flashtime;
 		activeIndex=0;
@@ -20,6 +19,7 @@ public class FlashingText extends Text{
 		killonfinish=true;
 	}
 	
+	@Override
 	public void update(long elapsedTime){
 		cumtime = cumtime+elapsedTime;
 		if(flashtime<cumtime && this.alive){
@@ -37,6 +37,10 @@ public class FlashingText extends Text{
 				this.text=this.texts[activeIndex];
 			}
 		}
+	}
+	
+	public void reset(){
+		this.cumtime=0;
 	}
 	
 }

@@ -3,7 +3,11 @@ package actualgame;
 import java.awt.Color;
 import java.awt.Font;
 
+import actualgame.gamescreens.AboutScreen;
+import actualgame.gamescreens.ExitGame;
+import actualgame.gamescreens.TouhouGame;
 import framework.Game;
+import framework.Menu;
 import framework.TopFrame;
 
 public class Runner  {
@@ -16,22 +20,25 @@ public class Runner  {
     }
     
 	public static Game makeTheGame(){
+		TouhouGame g = new TouhouGame(new EvolutionManager());
+		
 		Game m = new Menu(
 				new String[] {
-						"Start",
-						"Start B",
-						"Start C",
-						"Start D",
-						"Start With Default"},
+						"Boss Rush",
+						"Gallery",
+						"About",
+						"Exit"},
 				new Game[] {
-						new TouhouGame(new BossSeed(System.currentTimeMillis())),
-						new TouhouGame(new BossSeed(System.currentTimeMillis())),
-						new TouhouGame(new BossSeed(System.currentTimeMillis())),
-						new TouhouGame(new BossSeed(System.currentTimeMillis())),
-						new TouhouGame(new BossSeed())},
-				new Color(100,150,30),
+						g,
+						new AboutScreen(),
+						new AboutScreen(),
+						new ExitGame()},
+				new Color(25,25,25),
 				Font.decode("123123-bold-60")
 			);
+
+    	TouhouGlobal.mainMenu = m;
+    	
 		return m;
 	}
     

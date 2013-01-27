@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 public class Global {
+	
 	public static int width=794;
 	public static int height=572;
 	

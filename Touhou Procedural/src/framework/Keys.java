@@ -55,5 +55,13 @@ public class Keys{
 		}
 		return false;
 	}
+
+	public static boolean anyKeyPressed() {
+		return(downKeys.size()>0);
+	}
+
+	public static void clearpressedButtons() {
+		downKeys.clear();
+	}
 	
 }
