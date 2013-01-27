@@ -9,6 +9,10 @@ public class BakedGameComponent extends GameComponent{
 	protected BufferedImage image;
 	protected Point imageOffset;
 	
+	public BakedGameComponent(int x, int y,BufferedImage bi){
+		this(x,y,bi,new Point(0,0), new Point(0,0), GameComponent.BOUNDARY_NONE);
+	}
+	
 	public BakedGameComponent(int x, int y,BufferedImage bi,
 			Point boundingSmall, Point boundingLarge, int boundaryState){
 		super(x,y,bi.getWidth(), bi.getHeight(), new Color(255,255,255),boundingSmall, boundingLarge,boundaryState);
@@ -17,11 +21,13 @@ public class BakedGameComponent extends GameComponent{
 		this.imageOffset=new Point(0,0);
 	}
 	
+	@Override
 	public Graphics render(Graphics g){
 		g.drawImage(image(),(int)(x-imageOffset.x),(int)(y-imageOffset.y),null);
 		return g;
 	}
 	
+	@Override
 	public BufferedImage image(){
 		return image;
 	}
