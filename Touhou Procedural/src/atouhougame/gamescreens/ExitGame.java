@@ -1,4 +1,4 @@
-package actualgame.gamescreens;
+package atouhougame.gamescreens;
 
 import framework.Game;
 

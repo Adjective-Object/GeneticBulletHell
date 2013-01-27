@@ -1,15 +1,24 @@
-package actualgame.patterncommands;
+package atouhougame.patterncommands;
 import java.io.Serializable;
 import java.util.Random;
 
-import actualgame.Boss;
-import actualgame.Bullet;
+import atouhougame.Boss;
+import atouhougame.Bullet;
 
 
 public class BulletSeed implements Serializable{
 	
 	protected double power, angle, torque, acceleration, speed;
 	protected int size;
+	
+	public BulletSeed(double angle, double power, double speed, int size, double torque, double acceleraton){
+		this.size=size;
+		this.speed=speed;
+		this.power=power;
+		this.torque=torque;
+		this.acceleration=acceleraton;
+		this.angle=angle;
+	}
 	
 	/**
 	 * makes a bulletseed with random properties
@@ -54,5 +63,9 @@ public class BulletSeed implements Serializable{
 
 	public double getManaCost() {
 		return 0.002*(this.power+this.speed+Math.abs(1-this.acceleration)*10+this.torque);
+	}
+
+	public BulletSeed rotatedCopy(double angle) {
+		return new BulletSeed(this.angle+angle, power, speed, size, torque, acceleration);
 	}
 }

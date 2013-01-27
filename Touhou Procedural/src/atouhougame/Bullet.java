@@ -1,7 +1,7 @@
-package actualgame;
+package atouhougame;
 import java.awt.Color;
 
-import actualgame.gamescreens.TouhouGame;
+import atouhougame.gamescreens.TouhouGame;
 
 import framework.*;
 

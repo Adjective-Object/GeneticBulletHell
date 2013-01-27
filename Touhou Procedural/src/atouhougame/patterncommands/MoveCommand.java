@@ -1,6 +1,6 @@
-package actualgame.patterncommands;
+package atouhougame.patterncommands;
 
-import actualgame.Boss;
+import atouhougame.Boss;
 
 public class MoveCommand extends Command{
 	

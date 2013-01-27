@@ -1,4 +1,4 @@
-package actualgame;
+package atouhougame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
-import actualgame.gamescreens.TouhouGame;
-import actualgame.patterncommands.AttackPattern;
+import atouhougame.gamescreens.TouhouGame;
+import atouhougame.patterncommands.AttackPattern;
 import framework.BakedGameComponent;
 import framework.FadeoutGameComponent;
 import framework.Game;
@@ -47,7 +47,7 @@ public class Boss extends BakedGameComponent{
 		this.bulletSpeed	=seed.DEX;
 		this.patterns		=seed.patterns;
 		this.weight			=(seed.STR/5.0+seed.CON)/2;
-		this.maxHP			=(int) seed.CON;
+		this.maxHP			=50+(int) seed.CON;
 		this.HP				=maxHP;
 		this.maxMP			=(int) seed.WIS/2;
 		this.MP				=maxMP/4.0;

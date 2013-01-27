@@ -1,8 +1,8 @@
-package actualgame.patterncommands;
+package atouhougame.patterncommands;
 
 import java.io.Serializable;
 
-import actualgame.Boss;
+import atouhougame.Boss;
 
 public abstract class Command implements Serializable{
 

@@ -1,4 +1,4 @@
-package actualgame;
+package atouhougame;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ public class EvolutionManager{
 
 	ArrayList<BossSeed> currentGeneration;
 	
-	static final int generationsize = 3, trials = 2;
+	static final int generationsize = 5, trials = 10;
 	
 	int currentBoss,generationNumber=0;
 	

@@ -1,10 +1,10 @@
-package actualgame;
+package atouhougame;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-import actualgame.gamescreens.TouhouGame;
+import atouhougame.gamescreens.TouhouGame;
 import framework.Game;
 import framework.Global;
 import framework.Keys;

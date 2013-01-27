@@ -1,8 +1,8 @@
-package actualgame.gamescreens;
+package atouhougame.gamescreens;
 
 import java.awt.event.ActionEvent;
 
-import actualgame.TGlobal;
+import atouhougame.TGlobal;
 import framework.Game;
 import framework.Keys;
 import framework.ParagraphText;

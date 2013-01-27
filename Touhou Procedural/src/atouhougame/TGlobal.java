@@ -1,9 +1,9 @@
-package actualgame;
+package atouhougame;
 
 import java.awt.Color;
 import java.awt.Font;
 
-import actualgame.gamescreens.BossRushRouter;
+import atouhougame.gamescreens.BossRushRouter;
 import framework.Game;
 
 public class TGlobal {

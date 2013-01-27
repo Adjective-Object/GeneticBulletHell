@@ -1,10 +1,10 @@
-package actualgame;
+package atouhougame;
 
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-import actualgame.gamescreens.TouhouGame;
+import atouhougame.gamescreens.TouhouGame;
 import framework.GameComponent;
 import framework.Global;
 import framework.Group;

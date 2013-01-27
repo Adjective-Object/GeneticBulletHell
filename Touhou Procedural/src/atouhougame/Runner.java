@@ -1,9 +1,9 @@
-package actualgame;
+package atouhougame;
 
-import actualgame.gamescreens.AboutScreen;
-import actualgame.gamescreens.BossRushRouter;
-import actualgame.gamescreens.ExitGame;
-import actualgame.gamescreens.GalleryScreen;
+import atouhougame.gamescreens.AboutScreen;
+import atouhougame.gamescreens.BossRushRouter;
+import atouhougame.gamescreens.ExitGame;
+import atouhougame.gamescreens.GalleryScreen;
 import framework.Game;
 import framework.Menu;
 import framework.TopFrame;

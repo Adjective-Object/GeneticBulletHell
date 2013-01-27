@@ -1,15 +1,16 @@
-package actualgame;
+package atouhougame;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import actualgame.gamescreens.TouhouGame;
-import actualgame.patterncommands.AttackPattern;
-import actualgame.patterncommands.BulletSeed;
-import actualgame.patterncommands.Command;
-import actualgame.patterncommands.FireCommand;
-import actualgame.patterncommands.MoveCommand;
+import atouhougame.gamescreens.TouhouGame;
+import atouhougame.patterncommands.AttackPattern;
+import atouhougame.patterncommands.BulletSeed;
+import atouhougame.patterncommands.Command;
+import atouhougame.patterncommands.FireCommand;
+import atouhougame.patterncommands.MoveCommand;
+import atouhougame.patterncommands.SleepCommand;
 
 
 public class BossSeed implements Serializable{
@@ -114,10 +115,17 @@ public class BossSeed implements Serializable{
 	public Command randomCommand(int volleySize){
 		Random r = new Random();
 		double d = r.nextDouble();
-		if(d<0.5){
-			return new MoveCommand((int)(TouhouGame.playFieldLeft.x+r.nextDouble()*(TouhouGame.playFieldRight.x-TouhouGame.playFieldLeft.x)),
+		if(d<0.3){
+			return new SleepCommand();
+		}
+		else if(d<0.5){
+			return new MoveCommand(
+					(int)(TouhouGame.playFieldLeft.x+r.nextDouble()*(TouhouGame.playFieldRight.x-TouhouGame.playFieldLeft.x)),
 					(int)(TouhouGame.playFieldLeft.y+r.nextDouble()*(TouhouGame.playFieldRight.y-TouhouGame.playFieldLeft.y)),
 					r.nextDouble());
+		}
+		else if (d<0.9){
+			return new FireCommand(getRadialBulletArr(volleySize/10));
 		}
 		else{
 			return new FireCommand(getRandBulletArr(volleySize));
@@ -128,6 +136,14 @@ public class BossSeed implements Serializable{
 		ArrayList<BulletSeed> seed = new ArrayList<BulletSeed>(0);
 		for(int d=0; d<numBullets;d++){
 			seed.add(new BulletSeed());
+		}
+		return seed;
+	}
+	public static ArrayList<BulletSeed> getRadialBulletArr(int numBullets){
+		ArrayList<BulletSeed> seed = new ArrayList<BulletSeed>(0);
+		BulletSeed b = new BulletSeed();
+		for(int d=0; d<numBullets;d++){
+			seed.add( b.rotatedCopy(2*Math.PI*d/numBullets) );
 		}
 		return seed;
 	}

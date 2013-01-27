@@ -1,14 +1,14 @@
-package actualgame.gamescreens;
+package atouhougame.gamescreens;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import actualgame.Boss;
-import actualgame.BossSeed;
-import actualgame.EvolutionManager;
-import actualgame.TGlobal;
+import atouhougame.Boss;
+import atouhougame.BossSeed;
+import atouhougame.EvolutionManager;
+import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
 import framework.Keys;
@@ -66,7 +66,7 @@ public class GalleryScreen extends Game{
 					new ParagraphText(
 						new String[]{
 							"Times Tested: "+s.timesTested,
-							"Overall Score: "+s.score
+							"Overall Score: "+(int)s.score
 						},
 						TGlobal.textTrans,TGlobal.fsmall,
 						y*boxsize+margin+20,

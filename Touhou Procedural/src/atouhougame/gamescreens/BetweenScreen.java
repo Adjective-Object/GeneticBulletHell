@@ -1,13 +1,13 @@
-package actualgame.gamescreens;
+package atouhougame.gamescreens;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-import actualgame.Boss;
-import actualgame.BossSeed;
-import actualgame.TGlobal;
+import atouhougame.Boss;
+import atouhougame.BossSeed;
+import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
 import framework.Global;
@@ -37,7 +37,7 @@ public class BetweenScreen extends Game{
 				new String[]{
 					lastSeed.getName(),
 					"Times Tested: "+lastSeed.timesTested,
-					"Overall Score: "+lastSeed.score,
+					"Overall Score: "+(int)lastSeed.score,
 					"Vs You: "+score
 				},
 				TGlobal.textTrans,TGlobal.fsmall,
@@ -53,7 +53,7 @@ public class BetweenScreen extends Game{
 				new String[]{
 					nextSeed.getName(),
 					"Times Tested: "+nextSeed.timesTested,
-					"Overall Score: "+nextSeed.score
+					"Overall Score: "+(int)nextSeed.score
 				},
 				TGlobal.textTrans,TGlobal.fsmall,
 				500,200,8

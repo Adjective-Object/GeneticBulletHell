@@ -1,9 +1,9 @@
-package actualgame.gamescreens;
+package atouhougame.gamescreens;
 
 import java.awt.event.ActionEvent;
 
-import actualgame.BossSeed;
-import actualgame.EvolutionManager;
+import atouhougame.BossSeed;
+import atouhougame.EvolutionManager;
 import framework.Game;
 import framework.SwitchGameEvent;
 

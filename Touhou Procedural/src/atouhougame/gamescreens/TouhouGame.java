@@ -1,14 +1,14 @@
-package actualgame.gamescreens;
+package atouhougame.gamescreens;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import actualgame.Boss;
-import actualgame.BossSeed;
-import actualgame.Bullet;
-import actualgame.EvolutionManager;
-import actualgame.Player;
-import actualgame.TGlobal;
+import atouhougame.Boss;
+import atouhougame.BossSeed;
+import atouhougame.Bullet;
+import atouhougame.EvolutionManager;
+import atouhougame.Player;
+import atouhougame.TGlobal;
 import framework.FlashingText;
 import framework.Game;
 import framework.GameComponent;
@@ -60,10 +60,11 @@ public class TouhouGame extends Game{
 		this.player.boundingLarge= new Point(475,562);
 		
 		this.makeUI(this.baseColor);
+
 		
+		this.add(this.bossBullets);
 		this.add(this.boss);
 		this.add(this.player);
-		this.add(this.bossBullets);
 		this.add(this.playerBullets);
 		this.add(this.particles);
 		this.add(this.bossHpBarB);
@@ -166,7 +167,7 @@ public class TouhouGame extends Game{
 
 	public void bossBulletKilled(int numberKilled) {
 		if(gameRunning){
-			this.bossScore+=numberKilled*10;//forcing the player to use bombs & clear bullets gives the boss score
+			this.bossScore+=numberKilled*2;//forcing the player to use bombs & clear bullets gives the boss score
 		}
 	}
 	
