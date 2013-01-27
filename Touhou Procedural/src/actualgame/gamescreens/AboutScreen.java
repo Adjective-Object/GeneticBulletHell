@@ -10,7 +10,6 @@ import framework.Keys;
 import framework.ParagraphText;
 import framework.SwitchGameEvent;
 import framework.Text;
-import framework.TopFrame;
 
 public class AboutScreen extends Game{
 	
@@ -67,17 +66,7 @@ public class AboutScreen extends Game{
 		super.update();
 		if (Keys.anyKeyPressed()){
 			Keys.clearpressedButtons();
-			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TouhouGlobal.mainMenu,endGameDelay);
-			this.getParent().dispatchEvent(e);
-			/*this should work but something else
-			is intercepting/interpreting the event from the sysevent queue or
-			it's not being dispatched to the correct queue
-			that being said, it is getting into the system event queue
-			*/
-			TopFrame t = (TopFrame)(this.getUltimateFrame());
-			t.actionPerformed(e);
-			//posts event to the system event queue
-
+			switchGame(new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TouhouGlobal.mainMenu,endGameDelay));
 		}
 	}
 	

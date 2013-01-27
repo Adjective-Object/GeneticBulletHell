@@ -3,15 +3,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
 import actualgame.gamescreens.TouhouGame;
 import actualgame.patterncommands.AttackPattern;
-
-import framework.*;
+import framework.BakedGameComponent;
+import framework.FadeoutGameComponent;
+import framework.Game;
+import framework.GameComponent;
+import framework.Global;
+import framework.Group;
+import framework.Keys;
+import framework.Point;
 
 public class Boss extends BakedGameComponent{
 	
@@ -48,7 +53,7 @@ public class Boss extends BakedGameComponent{
 		this.MP				=maxMP/4.0;
 		this.manaRegenRate	=seed.INT/6000;
 		this.moveSpeed		=5+10*seed.LUK/seed.CON;
-		this.volleySize		=(int)(seed.INT*0.8);//most # of bulltets onscreen at the time
+		this.volleySize		=(int)(seed.INT*0.8+seed.STR*0.6+seed.DEX*0.4);//most # of bulltets onscreen at the time
 		this.comRate		=500+seed.CON/2+seed.STR/4-seed.INT-seed.DEX*2-seed.WIS;
 		
 		destX=x;
@@ -69,6 +74,7 @@ public class Boss extends BakedGameComponent{
 	 * updates the boss
 	 * "shot" bullets are in fact stored to an internal list meant to be called by the game object the boss is a part of, then added to the component list of that game
 	 */
+	@Override
 	public void update(long elapsedTime){
 		
 		if(this.active){
@@ -120,6 +126,7 @@ public class Boss extends BakedGameComponent{
 		super.update(elapsedTime);
 	}
 	
+	@Override
 	public void kill(){
 		if(this.visible && this.active){
 			this.visible=false;
@@ -128,8 +135,7 @@ public class Boss extends BakedGameComponent{
 			System.out.println(g);//null
 			g.particles.addAll(Global.createSimpleExplosion(5,(int)this.size.x*4,this.color,
 						this.getCenter(),this.velocity,2000,1000,(int)this.size.x, true));	
-			//Touhou.particles.add(new FadeoutComponent((int)getCenter().x,(int)getCenter().y,image(),0,10000,Component.BOUNDARY_NONE));
-			/*g.particles.add(new Explosion(this.getCenter().x, this.getCenter().y,this.size.x*4,this.color));*/
+			g.particles.add(new Explosion(this.getCenter().x, this.getCenter().y,this.size.x*4,this.color));
 			g.particles.add(new FadeoutGameComponent((int)(this.getCenter().x), (int)(this.getCenter().y), this.image, 0, 1000, GameComponent.BOUNDARY_KILL_ON_CROSS, true));
 		}
 		super.kill();
@@ -145,6 +151,7 @@ public class Boss extends BakedGameComponent{
 		return bull;
 	}
 	
+	@Override
 	public void setParent(Game g){
 		this.bullets.setParent(g);
 		super.setParent(g);
@@ -153,7 +160,7 @@ public class Boss extends BakedGameComponent{
 	public static BufferedImage makeImage(BossSeed seed){
 		
 		
-		double radius = seed.CON*0.25;
+		double radius = seed.CON*0.25+8;
 		double numstep = 3+seed.LUK;
 		double anglestep = 2*Math.PI/numstep;
 		double spikeyness = radius * (0.5*seed.DEX/seed.STR);

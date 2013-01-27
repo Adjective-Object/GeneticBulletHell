@@ -1,8 +1,10 @@
 package actualgame.patterncommands;
 
+import java.io.Serializable;
+
 import actualgame.Boss;
 
-public abstract class Command {
+public abstract class Command implements Serializable{
 
 	public boolean finished=false;
 	

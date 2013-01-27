@@ -1,10 +1,11 @@
 package actualgame.patterncommands;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import actualgame.Boss;
 
 
-public class AttackPattern {
+public class AttackPattern implements Serializable{
 	protected ArrayList<Command> commands;
 	protected int currentCommand;
 	

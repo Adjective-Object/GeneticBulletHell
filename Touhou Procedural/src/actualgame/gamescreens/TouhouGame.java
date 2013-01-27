@@ -2,6 +2,7 @@ package actualgame.gamescreens;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import actualgame.Boss;
 import actualgame.BossSeed;
@@ -13,11 +14,11 @@ import framework.Game;
 import framework.GameComponent;
 import framework.Global;
 import framework.Group;
+import framework.Keys;
 import framework.Point;
 import framework.RelativeColorComponent;
 import framework.SwitchGameEvent;
 import framework.Text;
-import framework.TopFrame;
 
 public class TouhouGame extends Game{
 	
@@ -45,7 +46,7 @@ public class TouhouGame extends Game{
 	public TouhouGame(EvolutionManager evolutionManager){
 		super();
 		this.evolutionManager=evolutionManager;
-		this.seed=evolutionManager.nextSeed();
+		this.seed=evolutionManager.currentSeed();
 		this.baseColor = this.seed.color;
 		
 		this.bossBullets = new Group<Bullet>(true);
@@ -134,7 +135,7 @@ public class TouhouGame extends Game{
 			this.boss.active=true;
 			this.player.responsive=true;
 			this.player.canshoot=true;
-			this.bossScore+=this.elapsedTime/10;
+			this.bossScore+=this.elapsedTime/10;//this should be looping forever though
 		}
 		
 		super.update();
@@ -154,24 +155,10 @@ public class TouhouGame extends Game{
 		if(!gameRunning && endGameDelay>0){
 			endGameDelay-=this.elapsedTime;
 		}
-		if(!gameRunning && endGameDelay<=0){
-			this.toNextBoss();
+		if(!gameRunning && (endGameDelay<=0 || Keys.isKeyPressed(KeyEvent.VK_ENTER))){
+			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, new BetweenScreen(this.evolutionManager,this.bossScore) ,endGameDelay);
+			switchGame(e);
 		}
-	}
-	
-	private void toNextBoss() {
-		this.evolutionManager.scoreLastSeed((int)(this.bossScore));
-		SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, new BetweenScreen(this.evolutionManager) ,endGameDelay);
-		this.getParent().dispatchEvent(e);
-		/*this should work but something else
-		is intercepting/interpreting the event from the sysevent queue or
-		it's not being dispatched to the correct queue
-		that being said, it is getting into the system event queue
-		*/
-		TopFrame t = (TopFrame)(this.getUltimateFrame());
-		t.actionPerformed(e);
-		//posts event to the system event queue
-		
 	}
 
 	public void setGroupRelativeTo(Group<RelativeColorComponent> g, Color c){

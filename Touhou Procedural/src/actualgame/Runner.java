@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import actualgame.gamescreens.AboutScreen;
 import actualgame.gamescreens.ExitGame;
+import actualgame.gamescreens.GalleryScreen;
 import actualgame.gamescreens.TouhouGame;
 import framework.Game;
 import framework.Menu;
@@ -30,7 +31,7 @@ public class Runner  {
 						"Exit"},
 				new Game[] {
 						g,
-						new AboutScreen(),
+						new GalleryScreen(),
 						new AboutScreen(),
 						new ExitGame()},
 				new Color(25,25,25),

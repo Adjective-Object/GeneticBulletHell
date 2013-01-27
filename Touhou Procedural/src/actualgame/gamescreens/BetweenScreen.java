@@ -4,35 +4,123 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
+import actualgame.Boss;
+import actualgame.BossSeed;
 import actualgame.EvolutionManager;
 import actualgame.TouhouGlobal;
+import framework.BakedGameComponent;
 import framework.Game;
+import framework.Global;
 import framework.Keys;
 import framework.SwitchGameEvent;
 import framework.Text;
-import framework.TopFrame;
 
 public class BetweenScreen extends Game{
 	
 	Game next;
 	
-	public BetweenScreen(EvolutionManager manager){
+	public BetweenScreen(EvolutionManager manager, double score){
 		super();
 		
-		this.next=new TouhouGame(manager);
+		//declare fonts
+		Font fsmall = Font.decode("123123-bold-12");
+		Font fbig = Font.decode("123123-bold-60");
+		
+
+		//#######################################################
+		BufferedImage previousBoss = new Boss(0,0,manager.currentSeed()).image();
+		this.add(new BakedGameComponent(200-previousBoss.getWidth()/2,200-previousBoss.getHeight()/2,previousBoss));
+		Color c = manager.currentSeed().color;
+		this.bkgColor=new Color(c.getRed()+70, c.getGreen()+70, c.getBlue()+70);
+		
+		this.add(
+				new Text(
+						manager.currentSeed().getName(),
+						new Color(255,255,255,180),fsmall,
+						30,200
+				));
+		
+		manager.scoreLastSeed(score);//score
+		
+		this.add(
+				new Text(
+						"Times Tested: "+manager.currentSeed().timesTested,
+						new Color(255,255,255,180),fsmall,
+						30,200+fsmall.getSize()+8
+				));
+		this.add(
+				new Text(
+						"Overall Score: "+manager.currentSeed().score,
+						new Color(255,255,255,180),fsmall,
+						30,200+(fsmall.getSize()+8)*2
+				));
+
+		this.add(
+				new Text(
+						"Vs You: "+score,
+						new Color(255,255,255,180),fsmall,
+						30,200+(fsmall.getSize()+8)*3
+				));
 		
 		
+
+		//#######################################################
+		manager.advanceSeed();//advance to next boss
+		BossSeed nextSeed = manager.currentSeed();
+		//adding content from of next boss
+		BufferedImage nextBoss = new Boss(0,0,manager.currentSeed()).image();
+		this.add(new BakedGameComponent(700-nextBoss.getWidth()/2,200-nextBoss.getHeight()/2,nextBoss));
 		
+		this.add(
+				new Text(
+						manager.currentSeed().getName(),
+						new Color(255,255,255,180),fsmall,
+						500,200
+				));
 		
-		Font f = Font.decode("123123-bold-12");
+		this.add(
+				new Text(
+						"Times Tested: "+manager.currentSeed().timesTested,
+						new Color(255,255,255,180),fsmall,
+						500,200+fsmall.getSize()+8
+				));
+		this.add(
+				new Text(
+						"Overall Score: "+manager.currentSeed().score,
+						new Color(255,255,255,180),fsmall,
+						500,200+(fsmall.getSize()+8)*2
+				));
+		
+		//#######################################################
+		//put text on top of everything else.
 		this.add(
 				new Text(
 						"Enter to continue, esc to return to main menu.",
-						new Color(255,255,255,180),f,
+						new Color(255,255,255,180),fsmall,
 						30,
-						f.getSize()+5
+						Global.height-35
 				));
+		
+		this.add(
+				new Text(
+						"Previous",
+						new Color(255,255,255,180),fbig,
+						30,
+						fbig.getSize()+30
+				));
+		
+		this.add(
+				new Text(
+						"Next",
+						new Color(255,255,255,180),fbig,
+						500,
+						fbig.getSize()+30
+				));
+		
+		
+		this.next=new TouhouGame(manager);
 	}
 	
 	@Override
@@ -47,16 +135,7 @@ public class BetweenScreen extends Game{
 		}
 		if(targetGame!=null){
 			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,targetGame,endGameDelay);
-			this.getParent().dispatchEvent(e);
-			/*this should work but something else
-			is intercepting/interpreting the event from the sysevent queue or
-			it's not being dispatched to the correct queue
-			that being said, it is getting into the system event queue
-			*/
-			TopFrame t = (TopFrame)(this.getUltimateFrame());
-			t.actionPerformed(e);
-			//posts event to the system event queue
-
+			switchGame(e);
 		}
 	}
 

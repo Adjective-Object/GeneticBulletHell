@@ -62,16 +62,9 @@ public class Menu extends Game{
 		super.update();
 		
 		if(Keys.isKeyPressed(KeyEvent.VK_ENTER)){
-			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,this.results[this.currentSelection],endGameDelay);
-			this.getParent().dispatchEvent(e);
-			/*this should work but something else
-			is intercepting/interpreting the event from the sysevent queue or
-			it's not being dispatched to the correct queue
-			that being said, it is getting into the system event queue
-			*/
-			TopFrame t = (TopFrame)(this.getUltimateFrame());
-			t.actionPerformed(e);
-			//posts event to the system event queue
+			switchGame(
+					new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,this.results[this.currentSelection],endGameDelay)
+							);
 		}
 	}
 }

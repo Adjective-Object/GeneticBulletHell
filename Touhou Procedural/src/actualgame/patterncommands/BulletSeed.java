@@ -1,12 +1,12 @@
 package actualgame.patterncommands;
-import java.awt.Color;
+import java.io.Serializable;
 import java.util.Random;
 
 import actualgame.Boss;
 import actualgame.Bullet;
 
 
-public class BulletSeed {
+public class BulletSeed implements Serializable{
 	
 	protected double power, angle, torque, acceleration, speed;
 	protected int size;

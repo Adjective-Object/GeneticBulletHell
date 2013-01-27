@@ -1,5 +1,6 @@
 package actualgame;
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,8 +12,8 @@ import actualgame.patterncommands.FireCommand;
 import actualgame.patterncommands.MoveCommand;
 
 
-public class BossSeed {
-	public static int nutrients = 500;
+public class BossSeed implements Serializable{
+	public static int nutrients = 1000;
 	public Color color;
 	protected ArrayList<AttackPattern> patterns = new ArrayList<AttackPattern> (0);
 	
@@ -20,6 +21,9 @@ public class BossSeed {
 	double STR,CON,WIS,INT,DEX,LUK;
 	
 	//stat priorities
+	
+	public int timesTested=0;
+	public double score;
 	
 	public BossSeed(){
 		
@@ -140,6 +144,32 @@ public class BossSeed {
 			}
 		}
 		*/
-		return seed;		
+		return this;	
+	}
+	
+	static final String[] humanNames= new String[]{
+		"Melissa",
+		"Harold",
+		"Archer",
+		"Michael",
+	};
+	
+	public String getName(){
+		String name="";
+		char[] chars = new char[]{
+				(char)((int)(this.STR)),
+				(char)((int)(this.CON)),
+				(char)((int)(this.INT)),
+				(char)((int)(this.LUK)),
+				(char)((int)(this.WIS)),
+				(char)((int)(this.DEX)),
+		};
+		for (char c:chars){
+			name+=c;
+		}
+		name+="-";
+		name+=humanNames[(int)(this.CON+this.LUK+this.DEX)%humanNames.length];
+		return name;
+		
 	}
 }

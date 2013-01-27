@@ -1,19 +1,19 @@
 package framework;
-import java.util.*;
-
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 
 public abstract class Game extends JPanel implements ActionListener{
@@ -29,9 +29,11 @@ public abstract class Game extends JPanel implements ActionListener{
 	public Color bkgColor = new Color(0,0,0);
 	public Game nextGame;
 	
-	protected ArrayList<GameComponent> content = new ArrayList<GameComponent>(0);
+	protected Group<GameComponent> content = new Group<GameComponent>();
 	
 	public Game(){
+		
+		this.content.removeDead=true;
 		
 		this.setSize(width,height);
 		this.setPreferredSize(new Dimension(width,height));
@@ -86,6 +88,7 @@ public abstract class Game extends JPanel implements ActionListener{
 	 * will dispatch an event to the parent so it can parse the
 	 * various ending conditions of the game;
 	 **/
+	@Override
 	public void actionPerformed (ActionEvent evt){
 		if (evt.getActionCommand().equals("Refresh_Screen")){
 			update();
@@ -110,14 +113,7 @@ public abstract class Game extends JPanel implements ActionListener{
 	public void update(){
 		this.elapsedTime = System.currentTimeMillis() - lastUpdate;
 		lastUpdate = System.currentTimeMillis();
-		
-		for(int i=0; i<content.size();i++){
-			content.get(i).update(elapsedTime);
-			if(!content.get(i).alive){
-				this.content.remove(i);
-				i--;
-			}
-		}
+		content.update(elapsedTime);
 	}
 	
 	/**
@@ -132,6 +128,7 @@ public abstract class Game extends JPanel implements ActionListener{
 	 * prepares and draws the double buffered image onto the screen
 	 * called automatically by Swing magyks
 	 **/
+	@Override
 	public void paint(Graphics g){
 		
 		renderToBuffer();
@@ -152,9 +149,19 @@ public abstract class Game extends JPanel implements ActionListener{
 		bufferGraphics.setColor(bkgColor);
 		bufferGraphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		for(int i=0; i<content.size(); i++){
-			content.get(i).render(bufferImage);
-		}
+		content.render(bufferImage);
+	}
+	
+	protected void switchGame(SwitchGameEvent e){
+		this.getParent().dispatchEvent(e);
+		/*this should work but something else
+		is intercepting/interpreting the event from the sysevent queue or
+		it's not being dispatched to the correct queue
+		that being said, it is getting into the system event queue
+		*/
+		TopFrame t = (TopFrame)(this.getUltimateFrame());
+		t.actionPerformed(e);
+		//posts event to the system event queue
 	}
 }
 
