@@ -16,7 +16,6 @@ public class BakedGameComponent extends GameComponent{
 	public BakedGameComponent(int x, int y,BufferedImage bi,
 			Point boundingSmall, Point boundingLarge, int boundaryState){
 		super(x,y,bi.getWidth(), bi.getHeight(), new Color(255,255,255),boundingSmall, boundingLarge,boundaryState);
-		System.out.println(bi.getWidth()+" "+bi.getHeight());
 		this.image= bi;
 		this.imageOffset=new Point(0,0);
 	}

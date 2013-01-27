@@ -156,7 +156,8 @@ public class TouhouGame extends Game{
 			endGameDelay-=this.elapsedTime;
 		}
 		if(!gameRunning && (endGameDelay<=0 || Keys.isKeyPressed(KeyEvent.VK_ENTER))){
-			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, new BetweenScreen(this.evolutionManager,this.bossScore) ,endGameDelay);
+			TGlobal.bossRushRouter.scoreNext(this.bossScore);
+			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, TGlobal.bossRushRouter ,endGameDelay);
 			switchGame(e);
 		}
 	}

@@ -74,7 +74,6 @@ public class Player extends RelativeColorComponent{
 				
 				if(mana>0 && Keys.isKeyPressed(KeyEvent.VK_X)){
 					mana-=1;
-					System.out.println(mana);
 					int highest = tg.baseColor.getRed();
 					if(tg.baseColor.getGreen()>highest){highest = tg.baseColor.getGreen();}
 					if(tg.baseColor.getBlue()>highest){highest = tg.baseColor.getBlue();}

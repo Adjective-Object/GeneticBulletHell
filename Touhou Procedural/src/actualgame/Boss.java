@@ -59,7 +59,6 @@ public class Boss extends BakedGameComponent{
 		destX=x;
 		destY=y;
 
-		System.out.println("volley size "+this.volleySize);
 		
 		this.radius			=(seed.CON*0.25);
 		this.size			= new Point(radius,radius);
@@ -132,7 +131,6 @@ public class Boss extends BakedGameComponent{
 			this.visible=false;
 			this.active=false;
 			TouhouGame g = (TouhouGame) this.parentGame;
-			System.out.println(g);//null
 			g.particles.addAll(Global.createSimpleExplosion(5,(int)this.size.x*4,this.color,
 						this.getCenter(),this.velocity,2000,1000,(int)this.size.x, true));	
 			g.particles.add(new Explosion(this.getCenter().x, this.getCenter().y,this.size.x*4,this.color));

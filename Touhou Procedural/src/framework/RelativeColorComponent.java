@@ -33,7 +33,6 @@ public class RelativeColorComponent extends GameComponent{
 	
 	public void setRelativeTo(Color c){
 		this.baseColor = c;
-		System.out.println(c);
 	}
 	
 	@Override

@@ -112,7 +112,6 @@ public class GameComponent {
 	 */
 	public void update(long elapsedTime){
 		double timeRatio = (elapsedTime)/1000.0;
-		//System.out.println(velocity);
 		
 		this.acceleration.x += this.jerk.x*timeRatio;
 		this.acceleration.y += this.jerk.y*timeRatio;

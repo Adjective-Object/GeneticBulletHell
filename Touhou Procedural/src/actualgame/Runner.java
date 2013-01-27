@@ -1,9 +1,9 @@
 package actualgame;
 
 import actualgame.gamescreens.AboutScreen;
+import actualgame.gamescreens.BossRushRouter;
 import actualgame.gamescreens.ExitGame;
 import actualgame.gamescreens.GalleryScreen;
-import actualgame.gamescreens.TouhouGame;
 import framework.Game;
 import framework.Menu;
 import framework.TopFrame;
@@ -19,26 +19,24 @@ public class Runner  {
     
 	public static Game makeTheGame(){
 		TGlobal.evolutionManager = new EvolutionManager();
-		TouhouGame g = new TouhouGame(TGlobal.evolutionManager);
+		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
-		Game m = new Menu(
+		TGlobal.mainMenu = new Menu(
 				new String[] {
 						"Boss Rush",
 						"Gallery",
 						"About",
 						"Exit"},
 				new Game[] {
-						g,
+						TGlobal.bossRushRouter,
 						new GalleryScreen(TGlobal.evolutionManager),
 						new AboutScreen(),
 						new ExitGame()},
 				TGlobal.greyBack,
 				TGlobal.fbig
 			);
-
-    	TGlobal.mainMenu = m;
     	
-		return m;
+		return TGlobal.mainMenu;
 	}
     
 }

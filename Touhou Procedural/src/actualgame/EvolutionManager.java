@@ -9,36 +9,34 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class EvolutionManager {
+public class EvolutionManager{
 
 	ArrayList<BossSeed> currentGeneration;
 	
 	static final int generationsize = 3, trials = 2;
 	
-	int currentBoss,generationNumber;
+	int currentBoss,generationNumber=0;
 	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
 	public EvolutionManager(){
-		this.currentGeneration= new ArrayList<BossSeed>(0);
-		currentBoss=0;
-		for(int i=0; i<generationsize; i++){
-			currentGeneration.add(new BossSeed(System.currentTimeMillis()));
+		ArrayList<ArrayList<BossSeed>> seeds = loadGenerations();
+		if(seeds.size()==0){
+			this.currentGeneration= new ArrayList<BossSeed>(0);
+			currentBoss=0;
+			generationNumber=0;
+			for(int i=0; i<generationsize; i++){
+				currentGeneration.add(new BossSeed(System.currentTimeMillis()));
+			}
 		}
-	}
-	
-	public EvolutionManager(File generationFile){
-		this.currentGeneration = getGeneration(generationFile);
-		//finds the last boss tested
-		int failcount=0, maxTrials=0;
-		while(currentGeneration.get(currentBoss).timesTested>=maxTrials && failcount<generationsize){
-			maxTrials=currentGeneration.get(currentBoss).timesTested;
-			failcount++;
-			currentBoss++;
+		else{
+			this.currentGeneration = seeds.get(seeds.size()-1);
+			generationNumber=seeds.size()-1;
+			currentBoss=0;
+			advanceSeed();
 		}
-		//and tests the one after that
-		currentBoss=(currentBoss+1)%currentGeneration.size();
+		
 	}
-	
+		
 	BossSeed currentSeed=new BossSeed(System.currentTimeMillis());
 	
 	public BossSeed currentSeed(){
@@ -51,22 +49,28 @@ public class EvolutionManager {
 			/(1+currentGeneration.get(currentBoss).timesTested);
 		//weighted average of scores
 		currentGeneration.get(currentBoss).timesTested++;
+		archiveCurrentGeneration();
 	}
 	
 	public void advanceSeed(){
-		currentBoss=(currentBoss+1)%currentGeneration.size();
+		int maxTrials = 0,fails=0;
+		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<generationsize){
+			maxTrials=this.currentGeneration.get(currentBoss).timesTested;
+			currentBoss=(currentBoss+1)%currentGeneration.size();
+			fails++;
+		}
 		
 		//advance
 		if(currentGeneration.get(currentBoss).timesTested>=trials){
-			System.out.println("archiving generation");
-			archiveGeneration();
-			System.out.println("generating new generation");
 			makeNextGeneration();
+			archiveCurrentGeneration();
 		}
 	}
 	
 	//makes a new generation
 	private void makeNextGeneration(){
+		System.out.println("generating new generation");
+		
 		BossSeed best = currentGeneration.get(0), secondBest= null;//find the best two
 		for(BossSeed seed:currentGeneration){
 			if (best.score<seed.score){
@@ -81,10 +85,12 @@ public class EvolutionManager {
 		}
 		//add one more random for faster solution finding.
 		currentGeneration.add(new BossSeed(System.currentTimeMillis()));
+		generationNumber++;
 		
 	}
 	
-	private void archiveGeneration(){
+	public void archiveCurrentGeneration(){
+		System.out.println("archiving generation");
 		try {
 			FileOutputStream fileOut = new FileOutputStream("generation_"+generationNumber+".gen");
 			ObjectOutputStream out;
@@ -96,12 +102,6 @@ public class EvolutionManager {
 			e.printStackTrace();
 		}
 		 
-	}
-	
-	public ArrayList<ArrayList<BossSeed>> getGenerationArchive(){
-		ArrayList<ArrayList<BossSeed>> archive = new ArrayList<ArrayList<BossSeed>>(0);
-		//TODO loading generations
-		return archive;
 	}
 	
 	public ArrayList<BossSeed> getGeneration(File f){
@@ -126,8 +126,7 @@ public class EvolutionManager {
 		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
 		
 		ArrayList<ArrayList<BossSeed>> seeds = new ArrayList<ArrayList<BossSeed>>(0);
-
-		System.out.println(genFiles.length);
+		
 		for (File f:genFiles){
 			seeds.add(getGeneration(f));
 		}

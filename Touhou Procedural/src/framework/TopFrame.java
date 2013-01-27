@@ -39,7 +39,9 @@ public class TopFrame extends JFrame implements ActionListener{
     }
 
 	@Override
-	public void actionPerformed(ActionEvent evt) {System.out.println(evt.getActionCommand());}
+	public void actionPerformed(ActionEvent evt) {
+		
+	}
     
 	public void actionPerformed(SwitchGameEvent evt){
 		this.game.stop();
