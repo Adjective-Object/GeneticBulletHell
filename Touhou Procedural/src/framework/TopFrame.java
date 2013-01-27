@@ -1,17 +1,11 @@
 package framework;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JFrame;
-
-import framework.Game;
-import framework.Keys;
 
 public class TopFrame extends JFrame implements ActionListener{
 	
@@ -33,11 +27,13 @@ public class TopFrame extends JFrame implements ActionListener{
     
     private class TAdapter extends KeyAdapter {
 
-        public void keyReleased(KeyEvent e) {
+        @Override
+		public void keyReleased(KeyEvent e) {
             Keys.keyReleased(e);
         }
 
-        public void keyPressed(KeyEvent e) {
+        @Override
+		public void keyPressed(KeyEvent e) {
             Keys.keyPressed(e);
         }
     }

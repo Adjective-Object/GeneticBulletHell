@@ -1,10 +1,6 @@
 package framework;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 
 public class RelativeColorComponent extends GameComponent{
 	protected int relativeRed, relativeGreen, relativeBlue;
@@ -40,6 +36,7 @@ public class RelativeColorComponent extends GameComponent{
 		System.out.println(c);
 	}
 	
+	@Override
 	public void update(long elapsedTime){
 		Color oldCC = currentColor;
 		currentColor = getColor();

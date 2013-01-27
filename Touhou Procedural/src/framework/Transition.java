@@ -1,7 +1,5 @@
 package framework;
 
-import java.awt.image.BufferedImage;
-
 public abstract class Transition extends Game{
 	
 	protected Game startGame, endGame;
@@ -18,6 +16,7 @@ public abstract class Transition extends Game{
 		this.endGame = endGame;
 	}
 	
+	@Override
 	public void update(){
 		super.update();
 		advanceTransition(elapsedTime);

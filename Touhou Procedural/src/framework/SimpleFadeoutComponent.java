@@ -1,11 +1,7 @@
 package framework;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 
 public class SimpleFadeoutComponent extends GameComponent{
 	
@@ -20,6 +16,7 @@ public class SimpleFadeoutComponent extends GameComponent{
 		this.fadeout=fadeout;
 	}
 	
+	@Override
 	public void update(long elapsedTime){
 		millisToLive-=elapsedTime;
 		if(millisToLive<fadeoutFrames && millisToLive>0){
@@ -34,6 +31,7 @@ public class SimpleFadeoutComponent extends GameComponent{
 		super.update(elapsedTime);
 	}
 	
+	@Override
 	public Graphics render(Graphics g){
 		if (visible){
 			g.setColor(this.color);

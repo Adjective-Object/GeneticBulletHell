@@ -38,7 +38,7 @@ public class Animation {
 	 */
 	public Animation(BufferedImage[] images, long millisPerFrame, boolean looping){
 		this(images,millisPerFrame);
-		looping = looping;
+		this.looping = looping;
 	}
 	
 	/**

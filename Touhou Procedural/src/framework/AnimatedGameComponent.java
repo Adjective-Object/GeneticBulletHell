@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 //TODO most everything
@@ -59,6 +58,7 @@ public class AnimatedGameComponent extends GameComponent{
 	 * @param bi: the target bufferedImage
 	 * @return : returns the altered BufferedImage
 	 */
+	@Override
 	public BufferedImage render(BufferedImage bi){
 		Graphics g = bi.getGraphics();
 		render(g);
@@ -70,6 +70,7 @@ public class AnimatedGameComponent extends GameComponent{
 	 * @param g : the target Graphics
 	 * @return : returns the altered Graphics
 	 */
+	@Override
 	public Graphics render(Graphics g){
 		if (visible){
 			BufferedImage bi = this.image();

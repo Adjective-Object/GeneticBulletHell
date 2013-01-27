@@ -41,7 +41,7 @@ public class GameComponent {
 	public Color color;
 	
 	public int boundaryState=0;
-	public static int BOUNDARY_NONE = 0, BOUNDARY_BLOCK = 1, BOUNDARY_KILL_ON_TOUCH = 2, BOUNDARY_KILL_ON_CROSS = 3, BOUNDARY_BOUNCE=4;
+	public static final int BOUNDARY_NONE = 0, BOUNDARY_BLOCK = 1, BOUNDARY_KILL_ON_TOUCH = 2, BOUNDARY_KILL_ON_CROSS = 3, BOUNDARY_BOUNCE=4;
 	
 	
 	public GameComponent(double x, double y, int width, int height, Color color,
@@ -56,8 +56,6 @@ public class GameComponent {
 		
 		this.size=new Point(width,height);
 		this.color=color;
-		
-		this.parentGame=parentGame;
 	}
 	
 	/**
@@ -113,7 +111,7 @@ public class GameComponent {
 	 * @param elapsedTime : time elapsed since last update in milliseconds
 	 */
 	public void update(long elapsedTime){
-		double timeRatio = (double)(elapsedTime)/1000.0;
+		double timeRatio = (elapsedTime)/1000.0;
 		//System.out.println(velocity);
 		
 		this.acceleration.x += this.jerk.x*timeRatio;
@@ -172,18 +170,21 @@ public class GameComponent {
 	 * forces inside bounding box, based on the set mode
 	 */
 	public void applyBounding(){
-		if(this.boundaryState == this.BOUNDARY_NONE){}
-		else if(this.boundaryState == this.BOUNDARY_BLOCK){
-			forceBounding();
-		}
-		else if (this.boundaryState == this.BOUNDARY_BOUNCE){
-			bounceBounding();
-		}
-		else if (this.boundaryState == this.BOUNDARY_KILL_ON_TOUCH){
-			killTouchBounding();
-		}
-		else if (this.boundaryState == this.BOUNDARY_KILL_ON_CROSS){
-			killCrossBounding();
+		switch(this.boundaryState){
+			case GameComponent.BOUNDARY_BLOCK:
+				forceBounding();
+				break;
+			case GameComponent.BOUNDARY_BOUNCE:
+				bounceBounding();
+				break;
+			case GameComponent.BOUNDARY_KILL_ON_TOUCH:
+				killTouchBounding();
+				break;
+			case GameComponent.BOUNDARY_KILL_ON_CROSS:
+				killCrossBounding();
+				break;			
+			case GameComponent.BOUNDARY_NONE:
+				break;
 		}
 	}
 	

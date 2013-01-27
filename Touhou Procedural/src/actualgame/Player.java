@@ -1,14 +1,15 @@
 package actualgame;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
 import actualgame.gamescreens.TouhouGame;
-
-import framework.*;
+import framework.Game;
+import framework.Global;
+import framework.Keys;
+import framework.Point;
+import framework.RelativeColorComponent;
 
 public class Player extends RelativeColorComponent{
 	
@@ -41,6 +42,7 @@ public class Player extends RelativeColorComponent{
 	/**
 	 * updates the player, supering others. only really interprets keypresses
 	 */
+	@Override
 	public void update(long elapsedTime){
 		this.acceleration=new Point(0,0);
 		
@@ -89,6 +91,7 @@ public class Player extends RelativeColorComponent{
 		super.update(elapsedTime);
 	}
 	
+	@Override
 	public void kill(){
 		this.responsive=false;
 		this.canshoot=false;
@@ -107,6 +110,7 @@ public class Player extends RelativeColorComponent{
 		return toRet;
 	}
 	
+	@Override
 	public void setParent(Game g){
 		super.setParent(g);
 		tg=(TouhouGame) g;

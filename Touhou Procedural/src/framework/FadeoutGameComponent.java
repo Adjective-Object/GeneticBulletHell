@@ -1,7 +1,6 @@
 package framework;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -20,6 +19,7 @@ public class FadeoutGameComponent extends BakedGameComponent{
 		this.shrinkOut=shrinkout;
 	}
 	
+	@Override
 	public void update(long elapsedTime){
 		millisToLive-=elapsedTime;
 		if(millisToLive<=0){
@@ -28,6 +28,7 @@ public class FadeoutGameComponent extends BakedGameComponent{
 		super.update(elapsedTime);
 	}
 	
+	@Override
 	public Graphics render(Graphics g){
 		if (visible && alive){
 			Graphics2D g2 = (Graphics2D)(g);
