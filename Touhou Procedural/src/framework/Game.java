@@ -61,6 +61,8 @@ public abstract class Game extends JPanel implements ActionListener{
 		frameRefresh.setActionCommand("Refresh_Screen");
 	}
 	
+	public void onSwitch(){}
+	
 	/**
 	 * starts the game
 	 */

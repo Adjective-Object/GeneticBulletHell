@@ -1,6 +1,5 @@
 package actualgame.gamescreens;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -9,6 +8,7 @@ import actualgame.BossSeed;
 import actualgame.Bullet;
 import actualgame.EvolutionManager;
 import actualgame.Player;
+import actualgame.TGlobal;
 import framework.FlashingText;
 import framework.Game;
 import framework.GameComponent;
@@ -170,16 +170,16 @@ public class TouhouGame extends Game{
 	
 	public void makeUI(Color baseColor){
 		this.gameOverText = new Text("GAME OVER",new Color(baseColor.getRed()+75,baseColor.getGreen()+75,baseColor.getBlue()+75),
-				Font.decode("safasdfasdw-bold-60"),Global.width/2-250,Global.height/2-30);
+				TGlobal.fbig,Global.width/2-250,Global.height/2-30);
 		this.gameOverText.visible=false;
 		
 		this.bossClearText = new Text("BOSS CLEAR",new Color(baseColor.getRed()+75,baseColor.getGreen()+75,baseColor.getBlue()+75),
-				Font.decode("safasdfasdw-bold-60"),Global.width/2-250,Global.height/2-30);
+				TGlobal.fbig,Global.width/2-250,Global.height/2-30);
 		this.bossClearText.visible=false;
 		
 		this.readyStart = new FlashingText(new String[] {" ","   3"," ","   2"," ","   1"," ","START!"},
 				new Color(baseColor.getRed()+75,baseColor.getGreen()+75,baseColor.getBlue()+75),
-				Font.decode("safasdfasdw-bold-60"),Global.width/2-250,Global.height/2-30,750);
+				TGlobal.fbig,Global.width/2-250,Global.height/2-30,750);
 		this.readyStart.visible=true;
 		
 		this.hpBar = new RelativeColorComponent(500,75, 269,10,baseColor,60,60,60);
@@ -206,7 +206,7 @@ public class TouhouGame extends Game{
 		this.uiBorder.add(new RelativeColorComponent(475,10,Global.width-475,Global.height-20,baseColor,0,0,0));
 		
 		this.bossScoreCounter=new Text("0",new Color(baseColor.getRed()+40,baseColor.getGreen()+40,baseColor.getBlue()+40),
-				Font.decode("safasdfasdw-bold-20"),(int)playFieldRight.x+10,370);
+				TGlobal.fmed,(int)playFieldRight.x+10,370);
 		
 	}
 }

@@ -1,8 +1,5 @@
 package actualgame;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import actualgame.gamescreens.AboutScreen;
 import actualgame.gamescreens.ExitGame;
 import actualgame.gamescreens.GalleryScreen;
@@ -21,7 +18,8 @@ public class Runner  {
     }
     
 	public static Game makeTheGame(){
-		TouhouGame g = new TouhouGame(new EvolutionManager());
+		TGlobal.evolutionManager = new EvolutionManager();
+		TouhouGame g = new TouhouGame(TGlobal.evolutionManager);
 		
 		Game m = new Menu(
 				new String[] {
@@ -31,14 +29,14 @@ public class Runner  {
 						"Exit"},
 				new Game[] {
 						g,
-						new GalleryScreen(),
+						new GalleryScreen(TGlobal.evolutionManager),
 						new AboutScreen(),
 						new ExitGame()},
-				new Color(25,25,25),
-				Font.decode("123123-bold-60")
+				TGlobal.greyBack,
+				TGlobal.fbig
 			);
 
-    	TouhouGlobal.mainMenu = m;
+    	TGlobal.mainMenu = m;
     	
 		return m;
 	}

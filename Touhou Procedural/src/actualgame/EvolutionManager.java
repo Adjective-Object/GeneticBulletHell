@@ -1,8 +1,9 @@
 package actualgame;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,8 +26,8 @@ public class EvolutionManager {
 		}
 	}
 	
-	public EvolutionManager(int generationNumber){
-		this.currentGeneration = getGeneration(generationNumber);
+	public EvolutionManager(File generationFile){
+		this.currentGeneration = getGeneration(generationFile);
 		//finds the last boss tested
 		int failcount=0, maxTrials=0;
 		while(currentGeneration.get(currentBoss).timesTested>=maxTrials && failcount<generationsize){
@@ -103,19 +104,14 @@ public class EvolutionManager {
 		return archive;
 	}
 	
-	public ArrayList<BossSeed> getGeneration(int number){
+	public ArrayList<BossSeed> getGeneration(File f){
 		ArrayList<BossSeed> seeds=null;
 		try {
-	        FileInputStream fileIn = new FileInputStream("generation_"+number+".gen");
+	        FileInputStream fileIn = new FileInputStream(f);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			seeds = (ArrayList<BossSeed>) in.readObject();
 			in.close();
 			fileIn.close();
-			
-		} catch(FileNotFoundException f){
-			System.err.println("File not found.");
-			f.printStackTrace();
-			System.exit( 0);
 		} catch (IOException io) {
 			System.err.println("File of unreadable format.");
 			io.printStackTrace();
@@ -124,6 +120,26 @@ public class EvolutionManager {
 	        c.printStackTrace();
 		}
 		return seeds;
+	}
+
+	public ArrayList<ArrayList<BossSeed>> loadGenerations() {
+		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
+		
+		ArrayList<ArrayList<BossSeed>> seeds = new ArrayList<ArrayList<BossSeed>>(0);
+
+		System.out.println(genFiles.length);
+		for (File f:genFiles){
+			seeds.add(getGeneration(f));
+		}
+		
+		return seeds;
+	}
+	
+	private class GenFilter implements FilenameFilter{
+		@Override
+		public boolean accept(File file, String name) {
+			return name.matches(".*generation_[0,1,2,3,4,5,6,7,8,9]*.gen");
+		}
 	}
 	
 }

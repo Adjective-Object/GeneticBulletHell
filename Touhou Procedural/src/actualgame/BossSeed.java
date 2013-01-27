@@ -13,7 +13,7 @@ import actualgame.patterncommands.MoveCommand;
 
 
 public class BossSeed implements Serializable{
-	public static int nutrients = 1000;
+	public static int nutrients = 500;
 	public Color color;
 	protected ArrayList<AttackPattern> patterns = new ArrayList<AttackPattern> (0);
 	

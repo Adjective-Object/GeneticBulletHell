@@ -1,10 +1,8 @@
 package actualgame.gamescreens;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 
-import actualgame.TouhouGlobal;
+import actualgame.TGlobal;
 import framework.Game;
 import framework.Keys;
 import framework.ParagraphText;
@@ -16,20 +14,18 @@ public class AboutScreen extends Game{
 	public AboutScreen(){
 		super();
 		
-		this.bkgColor = new Color(25,25,25);
+		this.bkgColor = TGlobal.greyBack;
 
 		
-		Font fbig = Font.decode("123123-bold-60");
-		Font fsmall = Font.decode("123123-bold-12");
-		int height = fbig.getSize()+5;
+		int height = TGlobal.fbig.getSize()+5;
 		this.add(
 				new Text(
 						"This is an Experiment.",
-						new Color(255,255,255,180),fbig,
+						TGlobal.textTrans,TGlobal.fbig,
 						30,
 						height
 				));
-		height+=fsmall.getSize()+15;
+		height+=TGlobal.fsmall.getSize()+15;
 		this.add(
 				new ParagraphText(
 						new String[] {
@@ -54,7 +50,7 @@ public class AboutScreen extends Game{
 							"",
 							"(Press any button to return to the main menu)"
 						},
-						Color.white,fsmall,
+						TGlobal.textLight,TGlobal.fsmall,
 						45,
 						height,
 						8
@@ -66,7 +62,7 @@ public class AboutScreen extends Game{
 		super.update();
 		if (Keys.anyKeyPressed()){
 			Keys.clearpressedButtons();
-			switchGame(new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TouhouGlobal.mainMenu,endGameDelay));
+			switchGame(new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TGlobal.mainMenu,endGameDelay));
 		}
 	}
 	

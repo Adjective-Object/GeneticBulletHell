@@ -9,11 +9,12 @@ import java.awt.image.BufferedImage;
 import actualgame.Boss;
 import actualgame.BossSeed;
 import actualgame.EvolutionManager;
-import actualgame.TouhouGlobal;
+import actualgame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
 import framework.Global;
 import framework.Keys;
+import framework.ParagraphText;
 import framework.SwitchGameEvent;
 import framework.Text;
 
@@ -35,34 +36,20 @@ public class BetweenScreen extends Game{
 		Color c = manager.currentSeed().color;
 		this.bkgColor=new Color(c.getRed()+70, c.getGreen()+70, c.getBlue()+70);
 		
-		this.add(
-				new Text(
-						manager.currentSeed().getName(),
-						new Color(255,255,255,180),fsmall,
-						30,200
-				));
-		
 		manager.scoreLastSeed(score);//score
 		
 		this.add(
-				new Text(
-						"Times Tested: "+manager.currentSeed().timesTested,
-						new Color(255,255,255,180),fsmall,
-						30,200+fsmall.getSize()+8
-				));
-		this.add(
-				new Text(
-						"Overall Score: "+manager.currentSeed().score,
-						new Color(255,255,255,180),fsmall,
-						30,200+(fsmall.getSize()+8)*2
-				));
+			new ParagraphText(
+				new String[]{
+					manager.currentSeed().getName(),
+					"Times Tested: "+manager.currentSeed().timesTested,
+					"Overall Score: "+manager.currentSeed().score,
+					"Vs You: "+score
+				},
+				TGlobal.textTrans,fsmall,
+				30,200,8
+			));
 
-		this.add(
-				new Text(
-						"Vs You: "+score,
-						new Color(255,255,255,180),fsmall,
-						30,200+(fsmall.getSize()+8)*3
-				));
 		
 		
 
@@ -74,31 +61,22 @@ public class BetweenScreen extends Game{
 		this.add(new BakedGameComponent(700-nextBoss.getWidth()/2,200-nextBoss.getHeight()/2,nextBoss));
 		
 		this.add(
-				new Text(
-						manager.currentSeed().getName(),
-						new Color(255,255,255,180),fsmall,
-						500,200
-				));
-		
-		this.add(
-				new Text(
-						"Times Tested: "+manager.currentSeed().timesTested,
-						new Color(255,255,255,180),fsmall,
-						500,200+fsmall.getSize()+8
-				));
-		this.add(
-				new Text(
-						"Overall Score: "+manager.currentSeed().score,
-						new Color(255,255,255,180),fsmall,
-						500,200+(fsmall.getSize()+8)*2
-				));
+			new ParagraphText(
+				new String[]{
+					manager.currentSeed().getName(),
+					"Times Tested: "+manager.currentSeed().timesTested,
+					"Overall Score: "+manager.currentSeed().score
+				},
+				TGlobal.textTrans,fsmall,
+				500,200,8
+		));
 		
 		//#######################################################
 		//put text on top of everything else.
 		this.add(
 				new Text(
 						"Enter to continue, esc to return to main menu.",
-						new Color(255,255,255,180),fsmall,
+						TGlobal.textTrans,fsmall,
 						30,
 						Global.height-35
 				));
@@ -106,7 +84,7 @@ public class BetweenScreen extends Game{
 		this.add(
 				new Text(
 						"Previous",
-						new Color(255,255,255,180),fbig,
+						TGlobal.textTrans,fbig,
 						30,
 						fbig.getSize()+30
 				));
@@ -114,7 +92,7 @@ public class BetweenScreen extends Game{
 		this.add(
 				new Text(
 						"Next",
-						new Color(255,255,255,180),fbig,
+						TGlobal.textTrans,fbig,
 						500,
 						fbig.getSize()+30
 				));
@@ -131,7 +109,7 @@ public class BetweenScreen extends Game{
 			targetGame=next;
 		}
 		else if(Keys.isKeyPressed(KeyEvent.VK_ESCAPE)){
-			targetGame=TouhouGlobal.mainMenu;
+			targetGame=TGlobal.mainMenu;
 		}
 		if(targetGame!=null){
 			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,targetGame,endGameDelay);
