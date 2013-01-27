@@ -53,7 +53,7 @@ public class EvolutionManager{
 	}
 	
 	public void advanceSeed(){
-		int maxTrials = 0,fails=0;
+		int maxTrials = 0,fails=-1;
 		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<generationsize){
 			maxTrials=this.currentGeneration.get(currentBoss).timesTested;
 			currentBoss=(currentBoss+1)%currentGeneration.size();
@@ -77,11 +77,15 @@ public class EvolutionManager{
 				secondBest=best;
 				best=seed;
 			}
+			else if( (secondBest==null || seed.score>secondBest.score) && seed.score<best.score){
+				secondBest=seed;
+			}
 		}
 		//mating
 		currentGeneration = new ArrayList<BossSeed>(0);
 		for (int i=0; i<generationsize-1; i++){
 			currentGeneration.add(best.breedWith(secondBest));
+			System.out.println("breeding: "+best+" "+secondBest);
 		}
 		//add one more random for faster solution finding.
 		currentGeneration.add(new BossSeed(System.currentTimeMillis()));

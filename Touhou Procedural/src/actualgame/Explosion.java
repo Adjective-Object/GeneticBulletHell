@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import actualgame.gamescreens.TouhouGame;
-
 import framework.GameComponent;
 import framework.Global;
 import framework.Group;
@@ -21,6 +20,7 @@ public class Explosion extends GameComponent{
 		this.endSize=endSize;
 	}
 	
+	@Override
 	public void update( long elapsedTime){
 		
 		elapsedExplosion+= elapsedTime;
@@ -43,20 +43,25 @@ public class Explosion extends GameComponent{
 			this.kill();
 		}
 		TouhouGame tg= (TouhouGame)(this.parentGame);
-		this.killonCollide(tg.bossBullets);
+		int numberKilled = this.killonCollide(tg.bossBullets);
+		tg.bossBulletKilled(numberKilled);
 	}
 	
-	public <T extends GameComponent> void killonCollide(Group<T> g){
+	public <T extends GameComponent> int killonCollide(Group<T> g){
+		int numKilled = 0;
 		for (int i=0; i<g.size();i++){
 			GameComponent c = g.content.get(i);
 			if(Math.sqrt( Math.pow(x-c.getCenter().x,2) + Math.pow(y-c.getCenter().y,2) ) <= scale.x){
 				TouhouGame tg= (TouhouGame)(this.parentGame);
 				tg.particles.addAll(Global.createSimpleExplosion(c));
 				c.kill();
+				numKilled++;
 			}
 		}
+		return numKilled;
 	}
 	
+	@Override
 	public Graphics render(Graphics g){
 		if(this.alive){
 			g.setColor(new Color(this.color.getRed(),this.color.getGreen(),this.color.getBlue(),(int)this.alpha));

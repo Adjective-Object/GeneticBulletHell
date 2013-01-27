@@ -6,7 +6,7 @@ import actualgame.Boss;
 
 
 public class AttackPattern implements Serializable{
-	protected ArrayList<Command> commands;
+	public ArrayList<Command> commands;
 	protected int currentCommand;
 	
 	public AttackPattern(ArrayList<Command> commands){

@@ -108,6 +108,7 @@ public class TouhouGame extends Game{
 					Bullet bullet = (this.bossBullets.content.get(i));
 					if(this.boss.alive){
 						this.player.hp-= bullet.power;
+						this.bossScore+=bullet.power*10;//damaging player gives boss score
 					}
 					this.bossBullets.content.remove(i);
 					this.particles.addAll(Global.createSimpleExplosion(bullet));
@@ -135,7 +136,7 @@ public class TouhouGame extends Game{
 			this.boss.active=true;
 			this.player.responsive=true;
 			this.player.canshoot=true;
-			this.bossScore+=this.elapsedTime/10;//this should be looping forever though
+			this.bossScore+=this.elapsedTime/10;//surviving long periods of time gives boss score
 		}
 		
 		super.update();
@@ -148,7 +149,7 @@ public class TouhouGame extends Game{
 		else if (!this.player.alive && this.boss.alive && this.gameRunning){
 			this.gameRunning=false;
 			this.gameOverText.visible=true;
-			this.bossScore=this.bossScore*2;
+			this.bossScore=this.bossScore*2;//killing the player is a huge score boost
 			//boss win
 		}
 		
@@ -162,6 +163,13 @@ public class TouhouGame extends Game{
 		}
 	}
 
+
+	public void bossBulletKilled(int numberKilled) {
+		if(gameRunning){
+			this.bossScore+=numberKilled*10;//forcing the player to use bombs & clear bullets gives the boss score
+		}
+	}
+	
 	public void setGroupRelativeTo(Group<RelativeColorComponent> g, Color c){
 		for(int i=0; i<g.content.size(); i++){
 			RelativeColorComponent p = (g.content.get(i));
