@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import atouhougame.Boss;
 import atouhougame.BossSeed;
-import atouhougame.EvolutionManager;
+import atouhougame.LocalEvolutionManager;
 import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
@@ -23,9 +23,9 @@ public class GalleryScreen extends Game{
 	static final int textheight = 50;
 	static final int margin = 10;
 	
-	EvolutionManager manager;
+	LocalEvolutionManager manager;
 	
-	public GalleryScreen(EvolutionManager evomanager){
+	public GalleryScreen(LocalEvolutionManager evomanager){
 		super();
 		this.manager = evomanager;
 		this.bkgColor=TGlobal.greyBack;

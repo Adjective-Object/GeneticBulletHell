@@ -3,17 +3,17 @@ package atouhougame.gamescreens;
 import java.awt.event.ActionEvent;
 
 import atouhougame.BossSeed;
-import atouhougame.EvolutionManager;
+import atouhougame.LocalEvolutionManager;
 import framework.Game;
 import framework.SwitchGameEvent;
 
 public class BossRushRouter extends Game{
 	
 	boolean toBoss=true;
-	EvolutionManager manager;
+	LocalEvolutionManager manager;
 	double lastScore;
 	
-	public BossRushRouter(EvolutionManager m){
+	public BossRushRouter(LocalEvolutionManager m){
 		this.manager=m;
 	}
 	

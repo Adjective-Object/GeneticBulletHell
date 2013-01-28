@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import atouhougame.Boss;
 import atouhougame.BossSeed;
 import atouhougame.Bullet;
-import atouhougame.EvolutionManager;
+import atouhougame.LocalEvolutionManager;
 import atouhougame.Player;
 import atouhougame.TGlobal;
 import framework.FlashingText;
@@ -35,7 +35,7 @@ public class TouhouGame extends Game{
 	boolean gameRunning = true;
 	
 	public double bossScore;
-	public EvolutionManager evolutionManager;
+	public LocalEvolutionManager localEvolutionManager;
 	
 	int endGameDelay = 6000;
 	
@@ -43,10 +43,10 @@ public class TouhouGame extends Game{
 	public static Point playFieldLeft = new Point(10,10),
 						playFieldRight = new Point(475, 562);
 	
-	public TouhouGame(EvolutionManager evolutionManager){
+	public TouhouGame(LocalEvolutionManager localEvolutionManager){
 		super();
-		this.evolutionManager=evolutionManager;
-		this.seed=evolutionManager.currentSeed();
+		this.localEvolutionManager=localEvolutionManager;
+		this.seed=localEvolutionManager.currentSeed();
 		this.baseColor = this.seed.color;
 		
 		this.bossBullets = new Group<Bullet>(true);

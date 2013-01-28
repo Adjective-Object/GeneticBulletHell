@@ -24,6 +24,7 @@ public class BossSeed implements Serializable{
 	//stat priorities
 	
 	public int timesTested=0;
+	public int bossID=0;
 	public double score;
 	
 	public BossSeed(){
@@ -101,6 +102,10 @@ public class BossSeed implements Serializable{
 				);
 		
 		this.patterns = patterns;
+	}
+	
+	public void setID(int ID){
+		this.bossID=ID;
 	}
 	
 	public static Color getTColor(){

@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class EvolutionManager{
+public class LocalEvolutionManager{
 
 	ArrayList<BossSeed> currentGeneration;
 	
@@ -18,7 +18,7 @@ public class EvolutionManager{
 	int currentBoss,generationNumber=0;
 	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
-	public EvolutionManager(){
+	public LocalEvolutionManager(){
 		ArrayList<ArrayList<BossSeed>> seeds = loadGenerations();
 		if(seeds.size()==0){
 			this.currentGeneration= new ArrayList<BossSeed>(0);
