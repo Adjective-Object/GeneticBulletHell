@@ -1,15 +1,22 @@
 package anetworkcode;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import atouhougame.BossSeed;
+import atouhougame.LocalEvolutionManager;
 
 public class Client{
 
 	
-	public static void getGeneration(int gen){
+	public static ArrayList<BossSeed> getGeneration(int gen){
 		try{
 			Socket s = makeHandshake("localhost", Server.serverPort);
 			
@@ -25,19 +32,34 @@ public class Client{
 			w.write(Server.GET_GENERATION);
 			w.write(gen);
 			
-			int response=r.read();
+			int response=r.read();	
+			int genNumber=r.read();
 			if(response==Server.GET_GENERATION){
-				//TODO read generation
+				return LocalEvolutionManager.getGeneration(
+						getGenFile(r,genNumber) );
 			}	
 			else if(response==Server.ERROR){
 				System.err.println("SERVER reported error:");
 				System.err.println(r.readLine());
-				return;
+				return null;
 			}
 			
 		} catch(IOException e){
 			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	public static File getGenFile(BufferedReader r, int gen) throws IOException{
+		File f = new File("generation_"+gen+".gen");
+		FileOutputStream fout = new FileOutputStream(f);
+		int p = r.read();
+		while (p != -1){
+			fout.write(p);
+			p = r.read();
+		}
+		fout.close();
+		return f;
 	}
 	
 	public static void submitScore(int score, int bossID){

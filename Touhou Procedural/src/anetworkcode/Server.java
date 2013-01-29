@@ -1,9 +1,15 @@
 package anetworkcode;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -42,10 +48,9 @@ public class Server extends Thread{
 	     while(running){
 	    	 try {
 	             Socket clientSocket = serverSocket.accept();
+	    		 System.out.println("accepting new client");
 	             clientCommunications(clientSocket);
 	         } catch (IOException e) {
-	             System.err.println("Accept failed.");
-	             System.exit(1);
 	         }
 	     }
 	        
@@ -71,7 +76,7 @@ public class Server extends Thread{
         	out.write(HANDSHAKE_SUCESS);
         	switch(in.read()){
         	case GET_GENERATION:
-        		sendGeneration(in,out);
+        		sendGeneration(in,clientSocket.getOutputStream());
         	case SUBMIT_SCORE:
         		acceptScore(in,out);
         	}
@@ -84,26 +89,39 @@ public class Server extends Thread{
         out.flush();
         out.close();
         in.close();
+        clientSocket.close();
 	}
 
 	
-	private void sendGeneration(BufferedReader in, PrintWriter out) throws IOException{
+	private void sendGeneration(BufferedReader in, OutputStream out) throws IOException{
 		int gen = in.read();
+		PrintWriter writer = new PrintWriter(out);
+		if(gen==-1){
+			gen=evoManager.generationNumber;
+		}
 		File f = new File("generation_"+gen+".gen");
+		
 		if(f.exists()){
 			System.out.println("sending generation "+gen+" to client ");
-			out.write(GET_GENERATION);
-			//TODO send generation
+			writer.write(GET_GENERATION);
+			writer.write(gen);
+			sendFile(out, f);
+			return;
 		} else{
-			out.write(ERROR);
-			out.write("Cannot send generation "+gen+": no such file\n");
+			writer.write(ERROR);
+			writer.write("Cannot send generation "+gen+": no such file\n");
 			System.err.println("cannot send generation "+gen+" to client: no such file");
 		}
-		
-		
-		
 	}
 	
+	 public void sendFile(OutputStream os, File file) throws IOException {
+		 FileInputStream r = new FileInputStream(file);
+		 while (r.available()>0){
+			os.write(r.read()); 
+		 }
+		 os.flush();
+	 }
+
 	private void acceptScore(BufferedReader in, PrintWriter out) throws IOException{
 		System.out.println("getting score");
 		int score = in.read();

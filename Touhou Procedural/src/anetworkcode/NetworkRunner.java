@@ -21,7 +21,7 @@ public class NetworkRunner {
 	    }
 	
 	public static Game makeTheGame(){
-		TGlobal.localEvolutionManager = new LocalEvolutionManager();
+		TGlobal.localEvolutionManager = new ClientEvolutionManager();
 		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.localEvolutionManager);
 		
 		TGlobal.mainMenu = new Menu(

@@ -11,7 +11,6 @@ import framework.TopFrame;
 public class Runner  {
     
     public static void main(String[] args){
-    	Runner r = new Runner();
     	Game g = makeTheGame();
     	TopFrame t = new TopFrame(g,800,600);
     	g.start();

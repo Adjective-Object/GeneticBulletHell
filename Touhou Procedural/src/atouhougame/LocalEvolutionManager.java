@@ -108,7 +108,7 @@ public class LocalEvolutionManager{
 		 
 	}
 	
-	public ArrayList<BossSeed> getGeneration(File f){
+	public static ArrayList<BossSeed> getGeneration(File f){
 		ArrayList<BossSeed> seeds=null;
 		try {
 	        FileInputStream fileIn = new FileInputStream(f);
