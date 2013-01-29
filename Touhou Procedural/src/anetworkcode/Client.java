@@ -1,11 +1,11 @@
 package anetworkcode;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -15,6 +15,7 @@ public class Client{
 	//not even close to thread safe
 	
 	private static BufferedReader r;
+	private static OutputStream os;
 	private static PrintWriter w;
 	
 	
@@ -40,28 +41,19 @@ public class Client{
 		return null;
 	}
 	
-	public static File getGenFile(BufferedReader r, int gen) throws IOException{
-		File f = new File("generation_"+gen+".gen");
-		FileOutputStream fout = new FileOutputStream(f);
-		int p = r.read();
-		while (p != -1){
-			fout.write(p);
-			p = r.read();
-		}
-		fout.close();
-		return f;
-	}
-	
-	public static void submitScore(int score, int bossID){
+	public static void submitScore(double score, int bossID){
 		try{
 			Socket s = makeHandshake("localhost", Server.serverPort);
 			
 			System.out.println("CLIENT: now attempting to submit score");
 			
+
 			w.write(Server.SUBMIT_SCORE);
-			w.write(score);
-			w.write(bossID);
 			w.flush();
+			DataOutputStream dataOut = new DataOutputStream(os);
+			dataOut.writeDouble(score);
+			dataOut.writeInt(bossID);
+			dataOut.flush();
 			
 			int response=r.read();
 			if(response==Server.SUBMIT_SCORE){
@@ -86,11 +78,15 @@ public class Client{
 				new InputStreamReader(
 						s.getInputStream()));
 		
+		os = s.getOutputStream();
+		
 		w = 
 			new PrintWriter(
-					s.getOutputStream(),
+					os,
 					true
 			);
+		
+		System.out.println("CLIENT: Initiating handshake");
 		
 		String handshake = r.readLine();
 		

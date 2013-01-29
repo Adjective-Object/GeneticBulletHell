@@ -1,9 +1,11 @@
 package anetworkcode;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -48,7 +50,7 @@ public class Server extends Thread{
 	     while(running){
 	    	 try {
 	             Socket clientSocket = serverSocket.accept();
-	    		 System.out.println("accepting new client");
+	    		 System.out.println("SERVER: accepting new client");
 	             clientCommunications(clientSocket);
 	         } catch (IOException e) {
 	         }
@@ -57,41 +59,39 @@ public class Server extends Thread{
 	}
 
 	private void clientCommunications(Socket clientSocket) throws IOException {
-		clientSocket.setSoTimeout(60000);
+		clientSocket.setSoTimeout(1000);
 		
 		try{
-			PrintWriter out = 
-				new PrintWriter(
-						clientSocket.getOutputStream(),
-						true
-				);
-	        BufferedReader in =
-	        	new BufferedReader(
-					new InputStreamReader(
-					clientSocket.getInputStream()));
+			OutputStream out = clientSocket.getOutputStream();
+	        InputStream in = clientSocket.getInputStream();
 	        
-			out.write(Server.handshake_1);
-			out.flush();
+	        PrintWriter printOut = new PrintWriter(out);
+	        BufferedReader bufferIn = new BufferedReader(new InputStreamReader((in)));
+	        
+	        printOut.write(Server.handshake_1);
+			printOut.flush();
 			
-	        String handshakeResponse=in.readLine();
+	        String handshakeResponse=bufferIn.readLine();
 	        if(Server.handshake_2.startsWith(handshakeResponse)){
 	        	System.out.println("SERVER: correct handshake response!");
-	        	out.write(HANDSHAKE_SUCESS);
-	        	out.flush();
+	        	printOut.write(HANDSHAKE_SUCESS);
+	        	printOut.flush();
 	        	switch(in.read()){
 	        	case GET_BOSS:
-	        		sendSeed(in,clientSocket.getOutputStream());
+	        		sendSeed(bufferIn,clientSocket.getOutputStream());
+	        		break;
 	        	case SUBMIT_SCORE:
-	        		acceptScore(in,out);
+	        		acceptScore(in,printOut);
+	        		break;
 	        	}
 	        }
 	        else{
-	        	out.write(ERROR);
-	        	out.write("Handshake Failed - Incorrect Version?\n");
+	        	printOut.write(ERROR);
+	        	printOut.write("Handshake Failed - Incorrect Version?\n");
 	        }
 	        
-	        out.flush();
-	        out.close();
+	        printOut.flush();
+	        printOut.close();
 	        in.close();
 	        clientSocket.close();
 		}catch ( java.net.SocketTimeoutException e ){
@@ -118,20 +118,23 @@ public class Server extends Thread{
 		 }
 	 }
 
-	private void acceptScore(BufferedReader in, PrintWriter out) throws IOException{
+	private void acceptScore(InputStream in, PrintWriter printOut) throws IOException{
 		System.out.println("SERVER: accepting score from client");
-		int score = in.read();
-		int bossID = in.read();
+		
+		DataInputStream dataIn = new DataInputStream(in);
+		
+		double score = dataIn.readDouble();
+		int bossID = dataIn.readInt();
 		
 		//scores seed
 		if(evoManager.scoreSeed(bossID, score)){
 			System.out.println("SERVER: scored boss "+bossID+" sucessfully "+score);
-			out.write(Server.SUBMIT_SCORE);
+			printOut.write(Server.SUBMIT_SCORE);
 			return;
 		}
 		else{//if the seed doesn't exist;
-			out.write(Server.ERROR);
-			out.write("Boss with given ID does not exist in this generation.\n");
+			printOut.write(Server.ERROR);
+			printOut.write("Boss with given ID does not exist in this generation.\n");
 			return;
 		}
 		
