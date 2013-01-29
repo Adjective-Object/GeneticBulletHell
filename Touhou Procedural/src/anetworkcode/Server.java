@@ -1,11 +1,8 @@
 package anetworkcode;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
@@ -13,6 +10,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import atouhougame.BossSeed;
+import atouhougame.LocalEvolutionManager;
 
 public class Server extends Thread{
 	
@@ -22,14 +22,14 @@ public class Server extends Thread{
 	
 	static final int ERROR = 0;
 	
-	static final int GET_GENERATION = 1;
+	static final int GET_BOSS = 1;
 	static final int SUBMIT_SCORE = 2;
 	static final int HANDSHAKE_SUCESS = 3;
 	
 	static final String handshake_1 = "Handshake_SI_COOL\n";
 	static final String handshake_2 = "Handshake_YEAH_COOL\n";
 	
-	ServerEvolutionManager evoManager;
+	LocalEvolutionManager evoManager;
 	
 	@Override
 	public void run(){
@@ -42,7 +42,7 @@ public class Server extends Thread{
 	         System.exit(1);
 	     }
 	     
-	     evoManager = new ServerEvolutionManager();
+	     evoManager = new LocalEvolutionManager();
 	     running=true;
 	     
 	     while(running){
@@ -57,61 +57,58 @@ public class Server extends Thread{
 	}
 
 	private void clientCommunications(Socket clientSocket) throws IOException {
-		clientSocket.setSoTimeout(1000);
+		clientSocket.setSoTimeout(60000);
 		
-		PrintWriter out = 
-			new PrintWriter(
-					clientSocket.getOutputStream(),
-					true
-			);
-        BufferedReader in =
-        	new BufferedReader(
-				new InputStreamReader(
-				clientSocket.getInputStream()));
-        
-		out.write(Server.handshake_1);
-        String handshakeResponse=in.readLine();
-        
-        if(handshakeResponse.equals(handshake_2)){
-        	out.write(HANDSHAKE_SUCESS);
-        	switch(in.read()){
-        	case GET_GENERATION:
-        		sendGeneration(in,clientSocket.getOutputStream());
-        	case SUBMIT_SCORE:
-        		acceptScore(in,out);
-        	}
-        }
-        else{
-        	out.write(ERROR);
-        	out.write("Handshake Failed - Incorrect Version?\n");
-        }
-        
-        out.flush();
-        out.close();
-        in.close();
-        clientSocket.close();
+		try{
+			PrintWriter out = 
+				new PrintWriter(
+						clientSocket.getOutputStream(),
+						true
+				);
+	        BufferedReader in =
+	        	new BufferedReader(
+					new InputStreamReader(
+					clientSocket.getInputStream()));
+	        
+			out.write(Server.handshake_1);
+			out.flush();
+			
+	        String handshakeResponse=in.readLine();
+	        if(Server.handshake_2.startsWith(handshakeResponse)){
+	        	System.out.println("SERVER: correct handshake response!");
+	        	out.write(HANDSHAKE_SUCESS);
+	        	out.flush();
+	        	switch(in.read()){
+	        	case GET_BOSS:
+	        		sendSeed(in,clientSocket.getOutputStream());
+	        	case SUBMIT_SCORE:
+	        		acceptScore(in,out);
+	        	}
+	        }
+	        else{
+	        	out.write(ERROR);
+	        	out.write("Handshake Failed - Incorrect Version?\n");
+	        }
+	        
+	        out.flush();
+	        out.close();
+	        in.close();
+	        clientSocket.close();
+		}catch ( java.net.SocketTimeoutException e ){
+			System.out.println("you're too slow!");
+		}
 	}
 
 	
-	private void sendGeneration(BufferedReader in, OutputStream out) throws IOException{
-		int gen = in.read();
-		PrintWriter writer = new PrintWriter(out);
-		if(gen==-1){
-			gen=evoManager.generationNumber;
-		}
-		File f = new File("generation_"+gen+".gen");
+	private void sendSeed(BufferedReader in, OutputStream out) throws IOException{
+		System.out.println("SEVER: Client requested a boss ");
+		BossSeed b = evoManager.getTestingSeed();
 		
-		if(f.exists()){
-			System.out.println("sending generation "+gen+" to client ");
-			writer.write(GET_GENERATION);
-			writer.write(gen);
-			sendFile(out, f);
-			return;
-		} else{
-			writer.write(ERROR);
-			writer.write("Cannot send generation "+gen+": no such file\n");
-			System.err.println("cannot send generation "+gen+" to client: no such file");
-		}
+		ObjectOutputStream objectOut = new ObjectOutputStream(out);
+		objectOut.writeObject(b);
+		objectOut.flush();
+		
+		System.out.println("SEVER: Boss "+b.bossID+" sent to client");
 	}
 	
 	 public void sendFile(OutputStream os, File file) throws IOException {
@@ -119,16 +116,16 @@ public class Server extends Thread{
 		 while (r.available()>0){
 			os.write(r.read()); 
 		 }
-		 os.flush();
 	 }
 
 	private void acceptScore(BufferedReader in, PrintWriter out) throws IOException{
-		System.out.println("getting score");
+		System.out.println("SERVER: accepting score from client");
 		int score = in.read();
 		int bossID = in.read();
 		
 		//scores seed
-		if(evoManager.scoreSeed(score, bossID)){
+		if(evoManager.scoreSeed(bossID, score)){
+			System.out.println("SERVER: scored boss "+bossID+" sucessfully "+score);
 			out.write(Server.SUBMIT_SCORE);
 			return;
 		}

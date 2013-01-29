@@ -9,7 +9,7 @@ import framework.Game;
 public class TGlobal {
 	public static Game mainMenu;
 	public static BossRushRouter bossRushRouter;
-	public static LocalEvolutionManager localEvolutionManager;
+	public static LocalEvolutionManager evolutionManager;
 	
 	public static final Color greyBack = new Color(25,25,25);
 	public static final Color textTrans = new Color(255,255,255,180);

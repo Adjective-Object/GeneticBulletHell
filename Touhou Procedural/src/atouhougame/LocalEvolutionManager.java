@@ -52,6 +52,24 @@ public class LocalEvolutionManager{
 		archiveCurrentGeneration();
 	}
 	
+	public boolean scoreSeed(int bossID, double score){
+		for(BossSeed b:currentGeneration){
+			if(b.bossID==bossID){
+				b.score+=(score-b.score)
+				/(1+b.timesTested);
+				archiveCurrentGeneration();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public BossSeed getTestingSeed(){
+		BossSeed b =  currentGeneration.get(currentBoss);
+		advanceSeed();
+		return b;
+	}
+	
 	public void advanceSeed(){
 		int maxTrials = 0,fails=-1;
 		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<generationsize){
@@ -94,7 +112,7 @@ public class LocalEvolutionManager{
 	}
 	
 	public void archiveCurrentGeneration(){
-		System.out.println("archiving generation");
+		System.out.println("archiving generation to generation_"+generationNumber+".gen");
 		try {
 			FileOutputStream fileOut = new FileOutputStream("generation_"+generationNumber+".gen");
 			ObjectOutputStream out;

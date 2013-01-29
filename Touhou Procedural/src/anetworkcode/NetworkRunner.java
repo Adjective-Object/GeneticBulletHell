@@ -1,6 +1,5 @@
 package anetworkcode;
 
-import atouhougame.LocalEvolutionManager;
 import atouhougame.TGlobal;
 import atouhougame.gamescreens.AboutScreen;
 import atouhougame.gamescreens.BossRushRouter;
@@ -14,15 +13,14 @@ public class NetworkRunner {
 	public static void main(String[] args){
 		Server threadServer= new Server();
 		threadServer.start();
-		
 		Game g = makeTheGame();
 		TopFrame t = new TopFrame(g,800,600);
 	    g.start();
 	    }
 	
 	public static Game makeTheGame(){
-		TGlobal.localEvolutionManager = new ClientEvolutionManager();
-		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.localEvolutionManager);
+		TGlobal.evolutionManager = new ClientEvolutionManager();
+		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
 		TGlobal.mainMenu = new Menu(
 					new String[] {
@@ -32,7 +30,7 @@ public class NetworkRunner {
 						"Exit"},
 				new Game[] {
 						TGlobal.bossRushRouter,
-						new GalleryScreen(TGlobal.localEvolutionManager),
+						new GalleryScreen(TGlobal.evolutionManager),
 						new AboutScreen(),
 						new ExitGame()},
 				TGlobal.greyBack,

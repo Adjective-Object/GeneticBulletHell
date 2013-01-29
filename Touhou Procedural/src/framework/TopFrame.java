@@ -52,7 +52,6 @@ public class TopFrame extends JFrame implements ActionListener{
 		this.getContentPane().add(game);
 		this.getContentPane().doLayout();
 		
-		System.out.println("switching game to "+game);
 		this.game.onSwitch();
 		this.game.start();
 	}

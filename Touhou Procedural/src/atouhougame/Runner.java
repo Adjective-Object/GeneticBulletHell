@@ -17,8 +17,8 @@ public class Runner  {
     }
     
 	public static Game makeTheGame(){
-		TGlobal.localEvolutionManager = new LocalEvolutionManager();
-		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.localEvolutionManager);
+		TGlobal.evolutionManager = new LocalEvolutionManager();
+		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
 		TGlobal.mainMenu = new Menu(
 				new String[] {
@@ -28,7 +28,7 @@ public class Runner  {
 						"Exit"},
 				new Game[] {
 						TGlobal.bossRushRouter,
-						new GalleryScreen(TGlobal.localEvolutionManager),
+						new GalleryScreen(TGlobal.evolutionManager),
 						new AboutScreen(),
 						new ExitGame()},
 				TGlobal.greyBack,
