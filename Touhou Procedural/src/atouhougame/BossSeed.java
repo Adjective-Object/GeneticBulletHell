@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import atouhougame.gamescreens.TouhouGame;
 import atouhougame.patterncommands.AttackPattern;
@@ -24,7 +25,10 @@ public class BossSeed implements Serializable{
 	//stat priorities
 	
 	public int timesTested=0;
-	public int bossID=0;
+	public long bossID=UUID.randomUUID().getMostSignificantBits();
+	//because chance of collision is low and I don't want to send UUID over network
+	//may fix if it becomes more than a minor issue in the future.
+	//but it shouldn't.
 	public double score;
 	
 	public BossSeed(){
@@ -151,6 +155,11 @@ public class BossSeed implements Serializable{
 			seed.add( b.rotatedCopy(2*Math.PI*d/numBullets) );
 		}
 		return seed;
+	}
+	
+	@Override
+	public String toString(){
+		return "<Boss id="+this.bossID+" >";
 	}
 	
 	public double mutationRate = 0.1;

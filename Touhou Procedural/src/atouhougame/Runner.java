@@ -1,23 +1,52 @@
 package atouhougame;
 
-import atouhougame.gamescreens.AboutScreen;
+import java.io.IOException;
+
+import anetworkcode.Client;
+import anetworkcode.ClientEvolutionManager;
+import anetworkcode.Server;
 import atouhougame.gamescreens.BossRushRouter;
 import atouhougame.gamescreens.ExitGame;
 import atouhougame.gamescreens.GalleryScreen;
+import atouhougame.gamescreens.TextForwardScreen;
 import framework.Game;
+import framework.Global;
 import framework.Menu;
 import framework.TopFrame;
 
 public class Runner  {
-    
+	
     public static void main(String[] args){
+    	//TODO separate server and client stuff, also not so hardcoded localhost.
+		System.out.println("Server");
+		Server threadServer= new Server();
+		threadServer.start();
     	Game g = makeTheGame();
-    	TopFrame t = new TopFrame(g,800,600);
+    	TopFrame t = new TopFrame(g,Global.width,Global.height);
     	g.start();
     }
     
-	public static Game makeTheGame(){
-		TGlobal.evolutionManager = new LocalEvolutionManager();
+    private static boolean serverExists(){
+    	try {
+			if(Client.serverExists()){
+				return true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+    }
+    
+	private static Game makeTheGame(){
+		boolean p = serverExists();
+		Game galleryScreen;
+		if(p){
+			TGlobal.evolutionManager = new ClientEvolutionManager();
+			galleryScreen = new TextForwardScreen("Sorry.",new String[] {"The gallery function has not been implemented for networked games."});
+		} else{
+			TGlobal.evolutionManager = new LocalEvolutionManager();
+			galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
+		}
 		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
 		TGlobal.mainMenu = new Menu(
@@ -28,14 +57,21 @@ public class Runner  {
 						"Exit"},
 				new Game[] {
 						TGlobal.bossRushRouter,
-						new GalleryScreen(TGlobal.evolutionManager),
-						new AboutScreen(),
+						galleryScreen,
+						new TextForwardScreen(TGlobal.aboutScreenTitle,TGlobal.aboutScreenText),
 						new ExitGame()},
 				TGlobal.greyBack,
 				TGlobal.fbig
 			);
     	
-		return TGlobal.mainMenu;
+		if(p){
+			return TGlobal.mainMenu;
+		}
+		else{
+			return new TextForwardScreen("Fuck.",new String[] {
+					"Cannot connect to server.",
+					"Playing with locally generated content instead."});
+		}
 	}
     
 }

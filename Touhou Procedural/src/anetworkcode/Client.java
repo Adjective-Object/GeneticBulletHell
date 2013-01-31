@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 
 import atouhougame.BossSeed;
@@ -18,10 +19,11 @@ public class Client{
 	private static OutputStream os;
 	private static PrintWriter w;
 	
+	private static final String serverAddr = "localhost";
 	
 	public static BossSeed requestBoss(){
 		try{
-			Socket s = makeHandshake("localhost", Server.serverPort);
+			Socket s = makeHandshake(serverAddr, Server.serverPort);
 
 			System.out.println("CLIENT: now attempting to download a boss");
 			
@@ -41,9 +43,9 @@ public class Client{
 		return null;
 	}
 	
-	public static void submitScore(double score, int bossID){
+	public static void submitScore(double score, long bossID){
 		try{
-			Socket s = makeHandshake("localhost", Server.serverPort);
+			Socket s = makeHandshake(serverAddr, Server.serverPort);
 			
 			System.out.println("CLIENT: now attempting to submit score");
 			
@@ -52,7 +54,7 @@ public class Client{
 			w.flush();
 			DataOutputStream dataOut = new DataOutputStream(os);
 			dataOut.writeDouble(score);
-			dataOut.writeInt(bossID);
+			dataOut.writeLong(bossID);
 			dataOut.flush();
 			
 			int response=r.read();
@@ -70,8 +72,41 @@ public class Client{
 		}
 	}
 	
+	public static boolean serverExists() throws IOException{
+		try{
+			Socket s = makeHandshake(serverAddr, Server.serverPort);
+			
+			r =
+	        	new BufferedReader(
+					new InputStreamReader(
+							s.getInputStream()));
+			
+			w = 
+				new PrintWriter(
+						s.getOutputStream(),
+						true
+				);
+			
+			w.write(Server.CHECK_EXISTS);
+			w.flush();
+			
+			int conf = r.read();
+			if(conf==Server.CHECK_EXISTS){
+				return true;
+			}
+			else{
+				System.out.println("Incorrect response from server. GGOUT!");
+				return false;
+			}
+		} catch (ConnectException ce){
+			return false;
+		}
+		
+	}
+	
 	private static Socket makeHandshake(String address, int port) throws IOException{
 		Socket s = new Socket(address,port);
+		s.setSoTimeout(1000);
 		
 		r =
         	new BufferedReader(

@@ -27,6 +27,7 @@ public class Server extends Thread{
 	static final int GET_BOSS = 1;
 	static final int SUBMIT_SCORE = 2;
 	static final int HANDSHAKE_SUCESS = 3;
+	static final int CHECK_EXISTS = 3;
 	
 	static final String handshake_1 = "Handshake_SI_COOL\n";
 	static final String handshake_2 = "Handshake_YEAH_COOL\n";
@@ -83,6 +84,9 @@ public class Server extends Thread{
 	        	case SUBMIT_SCORE:
 	        		acceptScore(in,printOut);
 	        		break;
+	        	case CHECK_EXISTS:
+	        		acknowledgeExistance(printOut);
+	        		break;
 	        	}
 	        }
 	        else{
@@ -124,7 +128,7 @@ public class Server extends Thread{
 		DataInputStream dataIn = new DataInputStream(in);
 		
 		double score = dataIn.readDouble();
-		int bossID = dataIn.readInt();
+		long bossID = dataIn.readLong();
 		
 		//scores seed
 		if(evoManager.scoreSeed(bossID, score)){
@@ -138,6 +142,12 @@ public class Server extends Thread{
 			return;
 		}
 		
+	}
+	
+	private void acknowledgeExistance(PrintWriter printOut){
+		System.out.println("SERVER: Acknowledging existance");
+		printOut.write(Server.CHECK_EXISTS);
+		printOut.flush();
 	}
 	
 }

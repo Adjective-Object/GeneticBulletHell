@@ -34,7 +34,6 @@ public class LocalEvolutionManager{
 			currentBoss=0;
 			advanceSeed();
 		}
-		
 	}
 		
 	BossSeed currentSeed=new BossSeed(System.currentTimeMillis());
@@ -52,7 +51,7 @@ public class LocalEvolutionManager{
 		archiveCurrentGeneration();
 	}
 	
-	public boolean scoreSeed(int bossID, double score){
+	public boolean scoreSeed(long bossID, double score){
 		for(BossSeed b:currentGeneration){
 			if(b.bossID==bossID){
 				b.score+=(score-b.score)
@@ -72,7 +71,7 @@ public class LocalEvolutionManager{
 	
 	public void advanceSeed(){
 		int maxTrials = 0,fails=-1;
-		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<generationsize){
+		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<generationsize*2){
 			maxTrials=this.currentGeneration.get(currentBoss).timesTested;
 			currentBoss=(currentBoss+1)%currentGeneration.size();
 			fails++;
@@ -80,9 +79,12 @@ public class LocalEvolutionManager{
 		
 		//advance
 		if(currentGeneration.get(currentBoss).timesTested>=trials){
+			System.out.println("making new genration");
 			makeNextGeneration();
 			archiveCurrentGeneration();
 		}
+		System.out.println(this.currentGeneration);
+		System.out.println(this.currentGeneration.get(currentBoss).bossID);
 	}
 	
 	//makes a new generation
