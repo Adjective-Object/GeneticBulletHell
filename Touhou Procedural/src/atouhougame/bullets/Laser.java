@@ -14,13 +14,19 @@ public class Laser extends Bullet{
 	
 	static int waittime = 500, firetime = 500;
 	
+	double slope;
 	int laserWidth;
 	int elapsed;
+	double originalPower;
 	Point destination;
 	
 	public Laser(double x, double y, double angle, double width, double power) {
-		super(x, y, width, power, Color.white);
+		super(x, y, width, power/100, Color.white);
 		this.destination=Global.rotate(0, Global.width, angle);//TODO not this.
+		slope=destination.y/destination.x;
+		this.destination.x+=x;
+		this.destination.y+=y;
+		this.originalPower=power;
 		this.laserWidth=1;
 	}
 	
@@ -34,6 +40,25 @@ public class Laser extends Bullet{
 				this.kill();
 			}
 		}
+		
+		this.power = this.originalPower*100*elapsedMillis/1000;
+	}
+	
+	@Override
+	public boolean collide(GameComponent obj){
+		if(this.elapsed<this.waittime || this.elapsed>this.waittime+this.firetime){
+			return false;
+		}
+		for(int x=0; x<obj.size.x; x++){
+			if(obj.pointWithin(new Point(obj.x + x, this.y+(obj.x-this.x+x)*this.slope )) ){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean killOnCollide(){
+		return false;
 	}
 	
 	/**

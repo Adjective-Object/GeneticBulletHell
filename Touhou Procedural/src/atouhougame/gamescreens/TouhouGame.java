@@ -113,9 +113,11 @@ public class TouhouGame extends Game{
 						this.player.hp-= bullet.power;
 						this.bossScore+=bullet.power*10;//damaging player gives boss score
 					}
-					this.bossBullets.content.remove(i);
-					this.particles.addAll(Global.createSimpleExplosion(bullet));
-					i--;
+					if(bullet.killOnCollide()){
+						this.bossBullets.content.remove(i);
+						this.particles.addAll(Global.createSimpleExplosion(bullet));
+						i--;
+					}
 				}
 			}
 		}

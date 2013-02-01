@@ -23,5 +23,9 @@ public abstract class Bullet extends RelativeColorComponent{
 		this.bulletSize=size;
 		this.power=power;
 	}
+
+	public boolean killOnCollide() {
+		return true;
+	}
 	
 }

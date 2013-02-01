@@ -269,6 +269,10 @@ public class GameComponent {
 		return (x<=obj.x+obj.getWidth()) && (obj.x<=x+this.getWidth()) && (y<=obj.y+obj.getHeight()) && (obj.y<=y+this.getHeight());
 	}
 	
+	public boolean pointWithin(Point p){
+		return (p.x>=this.x) && (p.x<=this.x+this.size.x) && (p.y<=y+this.size.y) && (p.y>=this.y);
+	}
+	
 	/**
 	 * gets the height of the Component
 	 * @return height of Component, factoring in scale

@@ -3,6 +3,9 @@ package framework;
 import java.awt.Color;
 import java.util.Random;
 
+import atouhougame.Player;
+import atouhougame.bullets.Bullet;
+
 public class Global {
 	
 	public static int width=794;
@@ -65,6 +68,16 @@ public class Global {
 			toRet.add(comp);
 		}	
 		return toRet;
+	}
+
+	public static Group<? extends GameComponent> createSimpleExplosion(
+			GameComponent b, GameComponent p) {
+		int particleSize = 5;
+		int numParts = Math.round((float)(b.getWidth()*b.getHeight())/(particleSize*particleSize));
+		if (numParts<5){
+			numParts=5;
+		}
+		return createSimpleExplosion(particleSize,numParts,b.color,p.getCenter(),b.velocity,0,1000,(p.getWidth()+p.getHeight())/4,false);
 	}
 
 }
