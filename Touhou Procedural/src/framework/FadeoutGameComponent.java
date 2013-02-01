@@ -40,7 +40,6 @@ public class FadeoutGameComponent extends BakedGameComponent{
 				}
 			}
 			g2.drawImage(image(),(int)x, (int)y, (int)(image().getWidth()*scale.x), (int)(image().getHeight()*scale.y), null);
-			//g.drawImage(bi,(int)(x),(int)(y),null);
 		}
 		return g;
 	}

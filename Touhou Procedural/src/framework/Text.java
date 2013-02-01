@@ -18,6 +18,8 @@ public class Text extends GameComponent{
 		this.color = color;
 		this.font=font;
 		
+		this.boundaryState=GameComponent.BOUNDARY_NONE;
+		
 		}
 	
 	@Override

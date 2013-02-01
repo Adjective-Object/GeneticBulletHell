@@ -11,17 +11,18 @@ import atouhougame.LocalEvolutionManager;
 import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
+import framework.GameComponent;
 import framework.Keys;
 import framework.ParagraphText;
 import framework.SwitchGameEvent;
 import framework.Text;
 
 public class GalleryScreen extends Game{
-
 	
 	static final int boxsize = 150;
 	static final int textheight = 50;
 	static final int margin = 10;
+	static final int speed = 500;
 	
 	LocalEvolutionManager manager;
 	
@@ -94,6 +95,28 @@ public class GalleryScreen extends Game{
 					new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TGlobal.mainMenu,endGameDelay)
 					);
 		}
+		
+		int offx=0, offy=0;
+		double spd = speed*this.elapsedTime/1000;
+		
+		if(Keys.isKeyDown(KeyEvent.VK_LEFT)){
+			offx+=spd;
+		}
+		if(Keys.isKeyDown(KeyEvent.VK_RIGHT)){
+			offx-=spd;
+		}
+		if(Keys.isKeyDown(KeyEvent.VK_UP)){
+			offy+=spd;
+		}
+		if(Keys.isKeyDown(KeyEvent.VK_DOWN)){
+			offy-=spd;
+		}
+		
+		for (GameComponent g: this.content.content){
+			g.x+=offx;
+			g.y+=offy;
+		}
+
 	}
 	
 }
