@@ -18,9 +18,8 @@ public class Runner  {
 	
     public static void main(String[] args){
     	//TODO separate server and client stuff, also not so hardcoded localhost.
-		System.out.println("Server");
-		Server threadServer= new Server();
-		threadServer.start();
+		//Server threadServer= new Server();
+		//threadServer.start();
     	Game g = makeTheGame();
     	TopFrame t = new TopFrame(g,Global.width,Global.height);
     	g.start();

@@ -1,32 +1,40 @@
-package atouhougame;
+package atouhougame.bullets;
 import java.awt.Color;
 
 import atouhougame.gamescreens.TouhouGame;
 
 import framework.*;
 
-public class Bullet extends RelativeColorComponent{
+public class ParticleBullet extends Bullet{
 
 	public double torque;
-	public double acceleration;
-	public int power, lifetime=0, maxLifetime;
+	public double friction;
+	public Point acceleration;
+	public int lifetime=0, maxLifetime;
 	
-	public Bullet(int x, int y, int power,
+	public ParticleBullet(int x, int y, int power,
 			double speed, double direction,
 			double acceleration, double torque,
-			int size, 
+			double friction, int size, 
 			Color color, double relativeRed, double relativeGreen, double relativeBlue){
-		super(x-size/2,y-size/2,size,size, color, (int)relativeRed,(int)relativeGreen,(int)relativeBlue, TouhouGame.playFieldLeft, TouhouGame.playFieldRight, GameComponent.BOUNDARY_KILL_ON_CROSS);
-		this.power = power;
+		super(x-size/2,y-size/2,size,
+				power, color, (int)relativeRed,(int)relativeGreen,(int)relativeBlue);
 		this.torque=torque;
-		this.acceleration = acceleration;
 		this.velocity = Global.rotate(0, speed, direction);
+		this.acceleration = new Point(acceleration*velocity.x, acceleration*velocity.y);
 		this.maxLifetime = (int) (20000/(10+power));
+		this.friction=friction;
 	}
 
 	public void update(long elapsedTime){
-		this.velocity = Global.rotate(this.velocity.scale(acceleration),torque);
+		this.velocity = Global.rotate(this.velocity,torque);
+		this.velocity.x += this.acceleration.x*elapsedTime/1000;
+		this.velocity.y += this.acceleration.y*elapsedTime/1000;
+		this.acceleration=this.acceleration.scale(this.friction);
+		this.velocity=this.velocity.scale(this.friction);
+		
 		super.update(elapsedTime);
+		
 		if(Math.abs(this.velocity.x)<=1 && Math.abs(this.velocity.y)<=1){
 			lifetime+=elapsedTime;
 		}
@@ -38,13 +46,6 @@ public class Bullet extends RelativeColorComponent{
 					this.color, 0, 100, GameComponent.BOUNDARY_NONE, true));
 			this.kill();
 		}
-	}
-	
-	/**
-	 * for updating bullet arcs in bullet subtypes.
-	 * @return double [] with {x,y}
-	 */
-	public void updateBulletArc(){
 		
 	}
 	

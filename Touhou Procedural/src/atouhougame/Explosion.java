@@ -4,12 +4,13 @@ package atouhougame;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import atouhougame.bullets.Bullet;
 import atouhougame.gamescreens.TouhouGame;
 import framework.GameComponent;
 import framework.Global;
 import framework.Group;
 
-public class Explosion extends GameComponent{
+public class Explosion extends Bullet{
 	
 	private double endSize, alpha=255;
 	
@@ -21,8 +22,8 @@ public class Explosion extends GameComponent{
 	}
 	
 	@Override
-	public void update( long elapsedTime){
-		
+	public void update(long elapsedTime){
+		super.update(elapsedTime);
 		elapsedExplosion+= elapsedTime;
 		
 		this.scale.x = endSize - (250.0/elapsedExplosion)*endSize;

@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
+import atouhougame.bullets.BulletSeed;
 import atouhougame.gamescreens.TouhouGame;
 import atouhougame.patterncommands.AttackPattern;
-import atouhougame.patterncommands.BulletSeed;
 import atouhougame.patterncommands.Command;
 import atouhougame.patterncommands.FireCommand;
+import atouhougame.patterncommands.FireLaserCommand;
 import atouhougame.patterncommands.MoveCommand;
 import atouhougame.patterncommands.SleepCommand;
 
@@ -133,6 +134,11 @@ public class BossSeed implements Serializable{
 					(int)(TouhouGame.playFieldLeft.y+r.nextDouble()*(TouhouGame.playFieldRight.y-TouhouGame.playFieldLeft.y)),
 					r.nextDouble());
 		}
+		else if (d<0.8){
+			ArrayList<BulletSeed> seeds = new ArrayList<BulletSeed>(0);
+			seeds.add(new BulletSeed());
+			return new FireLaserCommand(seeds);
+		}
 		else if (d<0.9){
 			return new FireCommand(getRadialBulletArr(volleySize/10));
 		}
@@ -164,7 +170,7 @@ public class BossSeed implements Serializable{
 	
 	public double mutationRate = 0.1;
 	
-	public BossSeed breedWith(BossSeed seed){
+	public BossSeed breedWith(BossSeed seed){//TODO mixing and mutating actual bullets/commands
 		Random r = new Random(System.currentTimeMillis());
 		
 		//generate new set of attack patterns

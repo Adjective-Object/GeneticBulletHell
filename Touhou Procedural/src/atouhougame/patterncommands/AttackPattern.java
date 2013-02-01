@@ -8,7 +8,7 @@ import atouhougame.Boss;
 public class AttackPattern implements Serializable{
 	public ArrayList<Command> commands;
 	protected int currentCommand;
-	
+		
 	public AttackPattern(ArrayList<Command> commands){
 		this.commands = commands;
 	}

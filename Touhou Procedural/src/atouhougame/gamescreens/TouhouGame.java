@@ -5,10 +5,11 @@ import java.awt.event.KeyEvent;
 
 import atouhougame.Boss;
 import atouhougame.BossSeed;
-import atouhougame.Bullet;
 import atouhougame.LocalEvolutionManager;
 import atouhougame.Player;
 import atouhougame.TGlobal;
+import atouhougame.bullets.Bullet;
+import atouhougame.bullets.ParticleBullet;
 import framework.FlashingText;
 import framework.Game;
 import framework.GameComponent;
@@ -22,8 +23,8 @@ import framework.Text;
 
 public class TouhouGame extends Game{
 	
-	public Group<Bullet> bossBullets;
-	public Group<GameComponent> playerBullets, uiBorder, GUIBombs, particles;
+	public Group<Bullet> bossBullets, playerBullets;
+	public Group<GameComponent> uiBorder, GUIBombs, particles;
 	public Player player;
 	public Boss boss;
 	public RelativeColorComponent hpBar,bossHpBar, bossMpBar, bossHpBarB, bossMpBarB;
@@ -50,7 +51,7 @@ public class TouhouGame extends Game{
 		this.baseColor = this.seed.color;
 		
 		this.bossBullets = new Group<Bullet>(true);
-		this.playerBullets = new Group<GameComponent>(true);
+		this.playerBullets = new Group<Bullet>(true);
 		this.particles = new Group<GameComponent>(true);
 
 		this.boss = new Boss(200,50,this.seed);
@@ -62,8 +63,9 @@ public class TouhouGame extends Game{
 		this.makeUI(this.baseColor);
 
 		
-		this.add(this.bossBullets);
 		this.add(this.boss);
+		this.add(this.bossBullets);
+
 		this.add(this.player);
 		this.add(this.playerBullets);
 		this.add(this.particles);
@@ -123,7 +125,7 @@ public class TouhouGame extends Game{
 		if(this.boss.alive){
 			for(int i=0; i<this.playerBullets.content.size();i++){
 				if(this.playerBullets.content.get(i).collide(this.boss)){
-					Bullet bullet = (Bullet)(this.playerBullets.content.get(i));
+					ParticleBullet bullet = (ParticleBullet)(this.playerBullets.content.get(i));
 					this.boss.HP-= bullet.power;
 					this.playerBullets.content.remove(i);
 					this.particles.addAll(Global.createSimpleExplosion(bullet));
@@ -137,7 +139,6 @@ public class TouhouGame extends Game{
 			this.boss.active=true;
 			this.player.responsive=true;
 			this.player.canshoot=true;
-			this.bossScore+=this.elapsedTime/10;//surviving long periods of time gives boss score
 		}
 		
 		super.update();

@@ -7,12 +7,12 @@ public class RelativeColorComponent extends GameComponent{
 	public Color baseColor;
 	protected Color currentColor;
 	
-	public RelativeColorComponent(int x,int y, int width, int height, Color baseColor,
+	public RelativeColorComponent(double x,double y, double width, double height, Color baseColor,
 			int relativeRed, int relativeGreen, int relativeBlue){
 		this(x,y,width,height,baseColor,relativeRed, relativeGreen,relativeBlue,new Point(0,0),new Point(Global.width,Global.height),GameComponent.BOUNDARY_BLOCK);
 	}
 	
-	public RelativeColorComponent(int x, int y, int width, int height,
+	public RelativeColorComponent(double x, double y, double width, double height,
 			Color baseColor, int relativeRed, int relativeGreen, int relativeBlue,
 			Point point, Point point2, int bindMode) {
 		super(x,y,width,height,new Color(

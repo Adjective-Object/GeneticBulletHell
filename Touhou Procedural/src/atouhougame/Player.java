@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
+import atouhougame.bullets.ParticleBullet;
 import atouhougame.gamescreens.TouhouGame;
 import framework.Game;
 import framework.Global;
@@ -21,7 +22,7 @@ public class Player extends RelativeColorComponent{
 	
 	public boolean responsive=true, canshoot=false;
 	
-	protected ArrayList<Bullet> bullets;
+	protected ArrayList<ParticleBullet> bullets;
 	
 	TouhouGame tg;
 	
@@ -34,7 +35,7 @@ public class Player extends RelativeColorComponent{
 		super(x,y,10,10,c,0,0,0);
 		drag.x=0.85;
 		drag.y=0.85;
-		this.bullets = new ArrayList<Bullet>(0);
+		this.bullets = new ArrayList<ParticleBullet>(0);
 		
 		this.tg  = (TouhouGame) parentGame;
 	}
@@ -66,9 +67,9 @@ public class Player extends RelativeColorComponent{
 			if(canshoot){
 				if (Keys.isKeyDown(KeyEvent.VK_Z)){
 					double bulletRange = 0.05;
-					bullets.add(new Bullet((int)(this.getCenter().x), (int)(this.y+this.getHeight()/4),
+					bullets.add(new ParticleBullet((int)(this.getCenter().x), (int)(this.y+this.getHeight()/4),
 							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2,
-							1,0,
+							0,0,1,
 							this.getWidth()/2, this.baseColor, 1,1,1));
 				}
 				
@@ -103,8 +104,8 @@ public class Player extends RelativeColorComponent{
 		super.kill();
 	}
 	
-	public ArrayList<Bullet> getBullets(boolean clear){
-		ArrayList<Bullet> toRet = (ArrayList<Bullet>) this.bullets.clone();
+	public ArrayList<ParticleBullet> getBullets(boolean clear){
+		ArrayList<ParticleBullet> toRet = (ArrayList<ParticleBullet>) this.bullets.clone();
 		if(clear){this.bullets.clear();}
 		return toRet;
 	}

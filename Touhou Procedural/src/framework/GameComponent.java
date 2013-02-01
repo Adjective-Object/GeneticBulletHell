@@ -44,7 +44,7 @@ public class GameComponent {
 	public static final int BOUNDARY_NONE = 0, BOUNDARY_BLOCK = 1, BOUNDARY_KILL_ON_TOUCH = 2, BOUNDARY_KILL_ON_CROSS = 3, BOUNDARY_BOUNCE=4;
 	
 	
-	public GameComponent(double x, double y, int width, int height, Color color,
+	public GameComponent(double x, double y, double width, double height, Color color,
 			Point boundingSmall, Point boundingLarge, int boundaryState){
 		this.x=x;
 		this.y=y;
@@ -68,7 +68,7 @@ public class GameComponent {
 	 * @param boundarySmall : top-left corner of bounding rectangle that denotes borders
 	 * @param boundaryLarge : bottom-Right corner of bounding rectangle that denotes borders
 	 */
-	public GameComponent(double x, double y, int width, int height, Color color, Point boundingSmall, Point boundingLarge){
+	public GameComponent(double x, double y, double width, double height, Color color, Point boundingSmall, Point boundingLarge){
 		this(x,y,width,height,color,boundingSmall,boundingLarge,GameComponent.BOUNDARY_BLOCK);
 	}
 	
@@ -80,7 +80,7 @@ public class GameComponent {
 	 * @param height: height of auto-generated image
 	 * @param color: the color of auto-generated image
 	 */
-	public GameComponent(double x, double y, int width, int height, Color color){
+	public GameComponent(double x, double y, double width, double height, Color color){
 		this(x,y,width,height,color,new Point(0,0),new Point(Global.width,Global.height));
 	}
 	
@@ -91,7 +91,7 @@ public class GameComponent {
 	 * @param width: width of auto generated image
 	 * @param height: height of auto-generated image
 	 */
-	public GameComponent(int x, int y, int width, int height){
+	public GameComponent(double x, double y, double width, double height){
 		this(x,y,width,height,new Color(50,50,100));
 	}
 	
@@ -100,7 +100,7 @@ public class GameComponent {
 	 * @param x : x location of Component
 	 * @param y : y location of Component
 	 */
-	public GameComponent(int x, int y){
+	public GameComponent(double x, double y){
 		this(x,y,10,10);
 	}
 	

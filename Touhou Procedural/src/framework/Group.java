@@ -34,7 +34,7 @@ public class Group<T extends GameComponent> extends GameComponent{
 		
 	}
 	
-	public void addAll(Group<T> Component){
+	public void addAll(Group<? extends T> Component){
 		for(int i=0; i<Component.content.size(); i++){
 			Component.content.get(i).setParent(this.parentGame);
 		}

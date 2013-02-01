@@ -61,7 +61,7 @@ public class Menu extends Game{
 		
 		super.update();
 		
-		if(Keys.isKeyPressed(KeyEvent.VK_ENTER)){
+		if(Keys.isKeyPressed(KeyEvent.VK_ENTER) || Keys.isKeyPressed(KeyEvent.VK_Z)){
 			switchGame(
 					new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,this.results[this.currentSelection],endGameDelay)
 							);

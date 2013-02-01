@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
+import atouhougame.bullets.Bullet;
 import atouhougame.gamescreens.TouhouGame;
 import atouhougame.patterncommands.AttackPattern;
 import framework.BakedGameComponent;
@@ -47,7 +48,7 @@ public class Boss extends BakedGameComponent{
 		this.bulletSpeed	=seed.DEX;
 		this.patterns		=seed.patterns;
 		this.weight			=(seed.STR/5.0+seed.CON)/2;
-		this.maxHP			=50+(int) seed.CON;
+		this.maxHP			=(50+(int) seed.CON)*4;
 		this.HP				=maxHP;
 		this.maxMP			=(int) seed.WIS/2;
 		this.MP				=maxMP/4.0;

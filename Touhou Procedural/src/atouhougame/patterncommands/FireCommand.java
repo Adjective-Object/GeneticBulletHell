@@ -2,6 +2,7 @@ package atouhougame.patterncommands;
 import java.util.ArrayList;
 
 import atouhougame.Boss;
+import atouhougame.bullets.BulletSeed;
 
 public class FireCommand extends Command{
 	protected ArrayList<BulletSeed> bullets = new ArrayList<BulletSeed>(0);
