@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import atouhougame.Boss;
+import atouhougame.BossScoring;
 import atouhougame.BossSeed;
 import atouhougame.LocalEvolutionManager;
 import atouhougame.Player;
@@ -33,12 +34,14 @@ public class TouhouGame extends Game{
 	public FlashingText readyStart;
 	public Color baseColor;
 	
-	boolean gameRunning = true;
+	boolean gameRunning = false;
 	
 	public double bossScore;
 	public LocalEvolutionManager localEvolutionManager;
 	
 	int endGameDelay = 6000;
+	
+	long startTime;
 	
 	//Global variables
 	public static Point playFieldLeft = new Point(10,10),
@@ -111,7 +114,7 @@ public class TouhouGame extends Game{
 					Bullet bullet = (this.bossBullets.content.get(i));
 					if(this.boss.alive){
 						this.player.hp-= bullet.power;
-						this.bossScore+=bullet.power*10;//damaging player gives boss score
+						this.bossScore=BossScoring.scoreDamage(bullet.power);//damaging player gives boss score
 					}
 					if(bullet.killOnCollide()){
 						this.bossBullets.content.remove(i);
@@ -137,10 +140,12 @@ public class TouhouGame extends Game{
 		}
 		
 		//TODO trigger based, not this looping forever
-		if(!this.readyStart.alive && this.boss.alive && this.player.alive){
+		if(!this.gameRunning && !this.readyStart.alive && this.boss.alive && this.player.alive){
 			this.boss.active=true;
 			this.player.responsive=true;
 			this.player.canshoot=true;
+			this.gameRunning=true;
+			this.startTime=System.currentTimeMillis();
 		}
 		
 		super.update();
@@ -148,16 +153,17 @@ public class TouhouGame extends Game{
 		if (this.player.alive && !this.boss.alive && this.gameRunning){
 			this.gameRunning=false;
 			this.bossClearText.visible=true;
+			this.bossScore=BossScoring.scoreBossKill(System.currentTimeMillis()-startTime);//killing the player is a huge score boost
 			//player win
 		}
 		else if (!this.player.alive && this.boss.alive && this.gameRunning){
 			this.gameRunning=false;
 			this.gameOverText.visible=true;
-			this.bossScore=this.bossScore*2;//killing the player is a huge score boost
+			this.bossScore=BossScoring.scorePlayerKill(System.currentTimeMillis()-startTime);//killing the player is a huge score boost
 			//boss win
 		}
 		
-		if(!gameRunning && endGameDelay>0){
+		if(!this.readyStart.alive && !gameRunning && endGameDelay>0){
 			endGameDelay-=this.elapsedTime;
 		}
 		if(!gameRunning && (endGameDelay<=0 || Keys.isKeyPressed(KeyEvent.VK_ENTER))){

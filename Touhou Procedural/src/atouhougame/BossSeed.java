@@ -134,7 +134,7 @@ public class BossSeed implements Serializable{
 					(int)(TouhouGame.playFieldLeft.y+r.nextDouble()*(TouhouGame.playFieldRight.y-TouhouGame.playFieldLeft.y)),
 					r.nextDouble());
 		}
-		else if (d<0.8){
+		else if (d<0.6){
 			ArrayList<BulletSeed> seeds = new ArrayList<BulletSeed>(0);
 			seeds.add(new BulletSeed());
 			return new FireLaserCommand(seeds);

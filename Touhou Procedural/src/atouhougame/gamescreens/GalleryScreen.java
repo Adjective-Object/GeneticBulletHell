@@ -12,6 +12,7 @@ import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
 import framework.GameComponent;
+import framework.Group;
 import framework.Keys;
 import framework.ParagraphText;
 import framework.SwitchGameEvent;
@@ -25,6 +26,8 @@ public class GalleryScreen extends Game{
 	static final int speed = 500;
 	
 	LocalEvolutionManager manager;
+	
+	Group<Text> lockX = new Group<Text>();
 	
 	public GalleryScreen(LocalEvolutionManager evomanager){
 		super();
@@ -46,6 +49,14 @@ public class GalleryScreen extends Game{
 	
 	private void makeFromBosses(ArrayList<ArrayList<BossSeed>> generations){
 		for(int i=0; i< generations.size(); i++){
+			Text t = new Text(
+					"Generation "+i,
+					TGlobal.textLight,TGlobal.fmed,
+					margin,
+					(i)*(boxsize+textheight)+margin+TGlobal.fmed.getSize()
+				);
+			lockX.add(t);
+			this.add(t);
 			for(int y=0; y< generations.get(i).size(); y++){
 				BossSeed s = generations.get(i).get(y);
 				BufferedImage d = Boss.makeImage(s);
@@ -115,6 +126,10 @@ public class GalleryScreen extends Game{
 		for (GameComponent g: this.content.content){
 			g.x+=offx;
 			g.y+=offy;
+		}
+		
+		for(GameComponent g:this.lockX.content){
+			g.x=margin;
 		}
 
 	}

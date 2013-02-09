@@ -13,7 +13,7 @@ public class LocalEvolutionManager{
 
 	ArrayList<BossSeed> currentGeneration;
 	
-	static final int generationsize = 10, trials = 10;
+	static final int generationsize = 4, trials = 3;
 	
 	int currentBoss,generationNumber=0;
 	

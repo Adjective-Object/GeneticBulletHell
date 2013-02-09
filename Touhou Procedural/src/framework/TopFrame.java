@@ -1,5 +1,6 @@
 package framework;
 
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -19,10 +20,16 @@ public class TopFrame extends JFrame implements ActionListener{
 		this.pack();
         setTitle("Procedural Touhou");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(width, height);
+        
+        Insets insets = this.getInsets();
+        setSize(insets.left+insets.right+width, insets.top+insets.bottom+height);
+        
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(true);
+        
+        this.setVisible(true);
+        this.setResizable(false);
     }
     
     private class TAdapter extends KeyAdapter {
