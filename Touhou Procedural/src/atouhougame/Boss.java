@@ -180,6 +180,8 @@ public class Boss extends BakedGameComponent{
 		
 		for(int i=0; i<numstep; i++){
 			tempradius = radius+spikeyness*(r.nextDouble()-r.nextDouble());
+			if(tempradius<radius/2){tempradius=radius/2;}
+			
 			Point p = Global.rotate(new Point(0, -tempradius),anglestep*i);
 			
 			poly.addPoint(center+(int)p.x, center+(int)p.y);

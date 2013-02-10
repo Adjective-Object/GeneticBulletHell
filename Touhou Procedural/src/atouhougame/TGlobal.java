@@ -11,6 +11,8 @@ public class TGlobal {
 	public static BossRushRouter bossRushRouter;
 	public static LocalEvolutionManager evolutionManager;
 	
+	public static boolean playNetworked=true;
+	
 	public static final Color greyBack = new Color(25,25,25);
 	public static final Color textTrans = new Color(255,255,255,180);
 	public static final Color textLight = Color.white;

@@ -7,11 +7,13 @@ import java.util.ArrayList;
 
 import atouhougame.Boss;
 import atouhougame.BossSeed;
+import atouhougame.Generation;
 import atouhougame.LocalEvolutionManager;
 import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.Game;
 import framework.GameComponent;
+import framework.Global;
 import framework.Group;
 import framework.Keys;
 import framework.ParagraphText;
@@ -25,68 +27,91 @@ public class GalleryScreen extends Game{
 	static final int margin = 10;
 	static final int speed = 500;
 	
+	int generationHeight = (boxsize+textheight)+margin;
+	
+	int xoff,yoff, startingGeneration=0, loadedGenerations = 0;
+	
+	boolean hasBosses=true;
+	
 	LocalEvolutionManager manager;
 	
 	Group<Text> lockX = new Group<Text>();
+	Group<GameComponent> images = new Group<GameComponent>();
+	Group<GameComponent> text = new Group<GameComponent>();
 	
 	public GalleryScreen(LocalEvolutionManager evomanager){
 		super();
 		this.manager = evomanager;
 		this.bkgColor=TGlobal.greyBack;
+
+		this.add(images);
+		this.add(text);
+		
+		if(!TGlobal.playNetworked){
+			ArrayList<Generation> generations = manager.loadGenerations();
+			if (generations.size()<=0){
+				makeDefaultScreen();
+				hasBosses=false;
+			}
+		}
 	}
 	
 	@Override
 	public void onSwitch(){
-		this.content.clear();
-		ArrayList<ArrayList<BossSeed>> generations = manager.loadGenerations();
-		if(generations.size()>0){
-			makeFromBosses(generations);
+		for (GameComponent g: this.images.content){
+			g.x-=xoff;
+			g.y-=yoff;
 		}
-		else{
-			makeDefaultScreen();
+		for (GameComponent g: this.text.content){
+			g.x-=xoff;
+			g.y-=yoff;
 		}
+		xoff=0;
+		yoff=0;
 	}
 	
-	private void makeFromBosses(ArrayList<ArrayList<BossSeed>> generations){
-		for(int i=0; i< generations.size(); i++){
-			Text t = new Text(
-					"Generation "+i,
-					TGlobal.textLight,TGlobal.fmed,
-					margin,
-					(i)*(boxsize+textheight)+margin+TGlobal.fmed.getSize()
-				);
-			lockX.add(t);
-			this.add(t);
-			for(int y=0; y< generations.get(i).size(); y++){
-				BossSeed s = generations.get(i).get(y);
-				BufferedImage d = Boss.makeImage(s);
-				this.add(new BakedGameComponent(
-						y*boxsize+margin+boxsize/2-d.getWidth()/2,
-						i*(boxsize+textheight+margin)+boxsize/2-d.getHeight()/2,
-						d)
-				);
-				this.add(
-					new Text(
-						s.getName(),
-						TGlobal.textLight,TGlobal.fsmall,
-						y*boxsize+margin,
-						(1+i)*(boxsize+textheight)-textheight+margin
-					)
-				);
-				
-				this.add(
-					new ParagraphText(
-						new String[]{
-							"Times Tested: "+s.timesTested,
-							"Overall Score: "+(int)s.score
-						},
-						TGlobal.textTrans,TGlobal.fsmall,
-						y*boxsize+margin+20,
-						(1+i)*(boxsize+textheight)-textheight+margin+TGlobal.fsmall.getSize()+8,
-						8
-					)
-				);
-			}
+	private void makeRowFromGeneration(Generation gen){
+		int effGenNumber = gen.generationNumber-startingGeneration;
+		Text t = new Text(
+				"Generation "+gen.generationNumber,
+				TGlobal.textLight,TGlobal.fmed,
+				margin-xoff,
+				(effGenNumber)*generationHeight+TGlobal.fmed.getSize()-yoff+margin
+			);
+		lockX.add(t);
+		text.add(t);
+		for(int y=0; y< gen.size(); y++){
+			BossSeed s = gen.get(y);
+			BufferedImage d = Boss.makeImage(s);
+			images.add(new BakedGameComponent(
+					y*boxsize+margin+boxsize/2-d.getWidth()/2-xoff,
+					effGenNumber*generationHeight+boxsize/2-d.getHeight()/2-yoff+margin,
+					d)
+			);
+		}
+		for(int y=0; y< gen.size(); y++){
+			BossSeed s = gen.get(y);
+			text.add(
+				new Text(
+					s.getName(),
+					TGlobal.textLight,TGlobal.fsmall,
+					y*boxsize+margin-xoff,
+					(1+effGenNumber)*generationHeight-textheight-yoff+margin
+				)
+			);
+			
+			text.add(
+				new ParagraphText(
+					new String[]{
+						"Times Tested: "+s.timesTested,
+						"Overall Score: "+(int)s.score
+					},
+					TGlobal.textTrans,TGlobal.fsmall,
+					y*boxsize+margin+20-xoff,
+					(1+effGenNumber)*generationHeight-textheight+TGlobal.fsmall.getSize()+8-yoff+margin,
+					8
+				)
+			);
 		}
 	}
 	
@@ -107,6 +132,7 @@ public class GalleryScreen extends Game{
 					);
 		}
 		
+		//calculating object move
 		int offx=0, offy=0;
 		double spd = speed*this.elapsedTime/1000;
 		
@@ -122,14 +148,31 @@ public class GalleryScreen extends Game{
 		if(Keys.isKeyDown(KeyEvent.VK_DOWN)){
 			offy-=spd;
 		}
+		//tracking object move
+		xoff+=offx;
+		yoff+=offy;
 		
-		for (GameComponent g: this.content.content){
+		//implementing object move
+		for (GameComponent g: this.images.content){
+			g.x+=offx;
+			g.y+=offy;
+		}
+		for (GameComponent g: this.text.content){
 			g.x+=offx;
 			g.y+=offy;
 		}
 		
+		//locking X value on certain objects
 		for(GameComponent g:this.lockX.content){
 			g.x=margin;
+		}
+		
+		//loading more rows
+		if(loadedGenerations*generationHeight-offx<Global.height){
+			if(manager.hasGeneration(loadedGenerations)){
+				makeRowFromGeneration(manager.getGeneration(loadedGenerations));
+				loadedGenerations++;
+			}
 		}
 
 	}

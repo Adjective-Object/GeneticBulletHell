@@ -27,7 +27,8 @@ public class Server extends Thread{
 	static final int GET_BOSS = 1;
 	static final int SUBMIT_SCORE = 2;
 	static final int HANDSHAKE_SUCESS = 3;
-	static final int CHECK_EXISTS = 3;
+	static final int CHECK_EXISTS = 4;
+	static final int SEND_GENERATION = 5;
 	
 	static final String handshake_1 = "Handshake_SI_COOL\n";
 	static final String handshake_2 = "Handshake_YEAH_COOL\n";
@@ -87,7 +88,11 @@ public class Server extends Thread{
 	        	case CHECK_EXISTS:
 	        		acknowledgeExistance(printOut);
 	        		break;
+	        	case SEND_GENERATION:
+	        		sendGeneration(in,out);
+	        		break;
 	        	}
+	        	
 	        }
 	        else{
 	        	printOut.write(ERROR);
@@ -148,6 +153,18 @@ public class Server extends Thread{
 		System.out.println("SERVER: Acknowledging existance");
 		printOut.write(Server.CHECK_EXISTS);
 		printOut.flush();
+	}
+	
+	private void sendGeneration(InputStream in, OutputStream out) throws IOException{
+		System.out.println("SERVER: sending generation to client");
+		int requestedGeneration=in.read();
+		File genFile = new File("generation+"+requestedGeneration+".gen");
+		if(genFile.exists()){
+			
+		}
+		else{
+			out.write(0);
+		}
 	}
 	
 }

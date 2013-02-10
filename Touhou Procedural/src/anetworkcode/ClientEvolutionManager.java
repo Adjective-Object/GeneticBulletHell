@@ -8,9 +8,6 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 	BossSeed current;
 	BossSeed next;
 	
-	static final int generationsize = 5, trials = 10;
-	
-	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
 	public ClientEvolutionManager(){
 		current=Client.requestBoss();

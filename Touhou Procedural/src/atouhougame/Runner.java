@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import anetworkcode.Client;
 import anetworkcode.ClientEvolutionManager;
-import anetworkcode.Server;
 import atouhougame.gamescreens.BossRushRouter;
 import atouhougame.gamescreens.ExitGame;
 import atouhougame.gamescreens.GalleryScreen;
@@ -37,9 +36,9 @@ public class Runner  {
     }
     
 	private static Game makeTheGame(){
-		boolean p = serverExists();
+		TGlobal.playNetworked = serverExists();
 		Game galleryScreen;
-		if(p){
+		if(TGlobal.playNetworked){
 			TGlobal.evolutionManager = new ClientEvolutionManager();
 			galleryScreen = new TextForwardScreen("Sorry.",new String[] {"The gallery function has not been implemented for networked games."});
 		} else{
@@ -63,7 +62,7 @@ public class Runner  {
 				TGlobal.fbig
 			);
     	
-		if(p){
+		if(TGlobal.playNetworked){
 			return TGlobal.mainMenu;
 		}
 		else{

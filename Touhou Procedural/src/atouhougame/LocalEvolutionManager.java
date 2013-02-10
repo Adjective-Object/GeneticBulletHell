@@ -11,31 +11,40 @@ import java.util.ArrayList;
 
 public class LocalEvolutionManager{
 
-	ArrayList<BossSeed> currentGeneration;
+	Generation currentGeneration;
 	
-	static final int generationsize = 4, trials = 3;
+	static final int trials = 3;
 	
-	int currentBoss,generationNumber=0;
+	int currentBoss,generationNumber;
 	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
 	public LocalEvolutionManager(){
-		ArrayList<ArrayList<BossSeed>> seeds = loadGenerations();
-		if(seeds.size()==0){
-			this.currentGeneration= new ArrayList<BossSeed>(0);
+		generationNumber=getNumGenerations();
+		if(generationNumber==-1){
+			this.currentGeneration= new Generation(new ArrayList<BossSeed>(0),0);//TODO generation Numbers
 			currentBoss=0;
-			generationNumber=0;
-			for(int i=0; i<generationsize; i++){
+			for(int i=0; i<Generation.generationsize; i++){
 				currentGeneration.add(new BossSeed(System.currentTimeMillis()));
 			}
 		}
 		else{
-			this.currentGeneration = seeds.get(seeds.size()-1);
-			generationNumber=seeds.size()-1;
+			this.currentGeneration = getGeneration(new File("generation_"+generationNumber+".gen"));
 			currentBoss=0;
 			advanceSeed();
 		}
 	}
 		
+	private int getNumGenerations() {
+		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
+		int genNumber = -1;
+		
+		for (File f:genFiles){
+			genNumber++;
+		}
+		
+		return genNumber;
+	}
+
 	BossSeed currentSeed=new BossSeed(System.currentTimeMillis());
 	
 	public BossSeed currentSeed(){
@@ -71,7 +80,7 @@ public class LocalEvolutionManager{
 	
 	public void advanceSeed(){
 		int maxTrials = 0,fails=-1;
-		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<generationsize*2){
+		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<Generation.generationsize*2){
 			maxTrials=this.currentGeneration.get(currentBoss).timesTested;
 			currentBoss=(currentBoss+1)%currentGeneration.size();
 			fails++;
@@ -102,8 +111,8 @@ public class LocalEvolutionManager{
 			}
 		}
 		//mating
-		currentGeneration = new ArrayList<BossSeed>(0);
-		for (int i=0; i<generationsize-1; i++){
+		currentGeneration = new Generation(generationNumber+1);
+		for (int i=0; i<Generation.generationsize-1; i++){
 			currentGeneration.add(best.breedWith(secondBest));
 			System.out.println("breeding: "+best+" "+secondBest);
 		}
@@ -128,12 +137,12 @@ public class LocalEvolutionManager{
 		 
 	}
 	
-	public static ArrayList<BossSeed> getGeneration(File f){
-		ArrayList<BossSeed> seeds=null;
+	public static Generation getGeneration(File f){
+		Generation seeds=null;
 		try {
 	        FileInputStream fileIn = new FileInputStream(f);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			seeds = (ArrayList<BossSeed>) in.readObject();
+			seeds = (Generation) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (IOException io) {
@@ -145,18 +154,6 @@ public class LocalEvolutionManager{
 		}
 		return seeds;
 	}
-
-	public ArrayList<ArrayList<BossSeed>> loadGenerations() {
-		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
-		
-		ArrayList<ArrayList<BossSeed>> seeds = new ArrayList<ArrayList<BossSeed>>(0);
-		
-		for (File f:genFiles){
-			seeds.add(getGeneration(f));
-		}
-		
-		return seeds;
-	}
 	
 	private class GenFilter implements FilenameFilter{
 		@Override
@@ -164,5 +161,26 @@ public class LocalEvolutionManager{
 			return name.matches(".*generation_[0,1,2,3,4,5,6,7,8,9]*.gen");
 		}
 	}
+	
+	public ArrayList<Generation> loadGenerations() {
+		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
+	
+		ArrayList<Generation> seeds = new ArrayList<Generation>(0);
+		
+		for (File f:genFiles){
+			seeds.add(getGeneration(f));
+		}
+		
+		return seeds;
+	}
+
+	public Generation getGeneration(int n) {
+		return getGeneration(new File("generation_"+n+".gen"));
+	}
+
+	public boolean hasGeneration(int n) {
+		return new File("generation_"+n+".gen").exists();
+	}
+
 	
 }
