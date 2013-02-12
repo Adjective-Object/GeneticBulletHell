@@ -11,8 +11,8 @@ public class Text extends GameComponent{
 	public Color color;
 	protected Font font;
 	
-	public Text(String text, Color color, Font font, int x, int y) {
-		super(x,y,0,0,new Color (0,0,0,0));
+	public Text(String text, Color color, Font font, double x, double d) {
+		super(x,d,0,0,new Color (0,0,0,0));
 		
 		this.text=text;
 		this.color = color;

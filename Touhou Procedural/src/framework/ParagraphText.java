@@ -9,14 +9,14 @@ public class ParagraphText extends Text{
 	String[] texts;
 	int heightDiff;
 	
-	public ParagraphText(String[] texts, Color color, Font font, int x, int y, int heightDifference) {
+	public ParagraphText(String[] texts, Color color, Font font, double x, double y, int heightDifference) {
 		super("", color, font, x, y);
 		
 		this.texts = texts;
 		heightDiff=heightDifference;
 	}
 	
-	public ParagraphText(String text, Color color, Font font, int x, int y, int heightDifference) {
+	public ParagraphText(String text, Color color, Font font, double x, double y, int heightDifference) {
 		super(text, color, font, x, y);
 		
 		this.texts = text.split("\n");

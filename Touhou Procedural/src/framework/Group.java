@@ -120,4 +120,12 @@ public class Group<T extends GameComponent> extends GameComponent{
 		g.addAll(this);
 		return g;
 	}
+	
+	public void remove(T target){
+		for(T i:this.content){
+			if(target==i){
+				this.content.remove(i);
+			}
+		}
+	}
 }

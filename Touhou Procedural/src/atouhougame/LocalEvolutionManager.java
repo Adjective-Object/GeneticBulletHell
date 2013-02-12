@@ -26,6 +26,7 @@ public class LocalEvolutionManager{
 			for(int i=0; i<Generation.generationsize; i++){
 				currentGeneration.add(new BossSeed(System.currentTimeMillis()));
 			}
+			generationNumber=0;
 		}
 		else{
 			this.currentGeneration = getGeneration(new File("generation_"+generationNumber+".gen"));

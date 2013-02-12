@@ -9,17 +9,17 @@ public class BakedGameComponent extends GameComponent{
 	protected BufferedImage image;
 	protected Point imageOffset;
 	
-	public BakedGameComponent(int x, int y,BufferedImage bi){
+	public BakedGameComponent(double x, double y,BufferedImage bi){
 		this(x,y,bi,new Point(0,0), new Point(0,0), GameComponent.BOUNDARY_NONE);
 	}
 	
-	public BakedGameComponent(int x, int y,BufferedImage bi,
+	public BakedGameComponent(double x, double y,BufferedImage bi,
 			Point boundingSmall, Point boundingLarge, int boundaryState){
 		super(x,y,bi.getWidth(), bi.getHeight(), new Color(255,255,255),boundingSmall, boundingLarge,boundaryState);
 		this.image= bi;
 		this.imageOffset=new Point(0,0);
 	}
-	
+
 	@Override
 	public Graphics render(Graphics g){
 		g.drawImage(image(),(int)(x-imageOffset.x),(int)(y-imageOffset.y),null);

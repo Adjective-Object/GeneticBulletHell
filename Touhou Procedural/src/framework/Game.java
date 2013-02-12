@@ -29,7 +29,7 @@ public abstract class Game extends JPanel implements ActionListener{
 	public Color bkgColor = new Color(0,0,0);
 	public Game nextGame;
 	
-	protected Group<GameComponent> content = new Group<GameComponent>();
+	public Group<GameComponent> content = new Group<GameComponent>();
 	
 	public Game(){
 		
