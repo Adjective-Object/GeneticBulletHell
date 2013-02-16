@@ -1,6 +1,6 @@
 This is an attempt to make a game that will generate Touhou-style bullet-hell bosses and then breed/mutate them depending on how well they fare against players.
 
-For those unfamilliar with the bullet-hell genre, it is a subgenre of the shoot-em-up genre, focused more on dodging bullets than anything else.
+For those unfamiliar with the bullet-hell genre, it is a subgenre of the shoot-em-up genre, focused more on dodging bullets than anything else.
 The reason it's called a bullet hell is because at any given time, the screen will be covered with enemy bullets.
 
 ==BOSS STATS
@@ -45,5 +45,5 @@ Ctrl: Move slowly
 
 ==CLOSING
 Everything is more or less totally unbalanced, so I apologize in advance for that.
-If you have any comments, recomendation, anything, feel free to contact me with feedback.
+If you have any comments, recommendations, anything, feel free to contact me with feedback.
 
