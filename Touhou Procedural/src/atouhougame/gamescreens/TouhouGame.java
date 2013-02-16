@@ -98,6 +98,7 @@ public class TouhouGame extends Game{
 		this.bossScoreCounter.text=Integer.toString((int)this.bossScore);
 		
 		if(this.boss.alive && this.boss.visible && this.boss.HP<=0){ this.boss.kill(); }
+		
 		if(this.player.alive && this.player.visible && this.player.hp<=0){ this.player.kill(); }
 		
 		for(int i=0; i<this.GUIBombs.content.size();i++){
@@ -114,7 +115,7 @@ public class TouhouGame extends Game{
 					Bullet bullet = (this.bossBullets.content.get(i));
 					if(this.boss.alive){
 						this.player.hp-= bullet.power;
-						this.bossScore=BossScoring.scoreDamage(bullet.power);//damaging player gives boss score
+						this.bossScore+=BossScoring.scoreDamage(bullet.power);//damaging player gives boss score
 					}
 					if(bullet.killOnCollide()){
 						this.bossBullets.content.remove(i);
@@ -147,19 +148,23 @@ public class TouhouGame extends Game{
 			this.gameRunning=true;
 			this.startTime=System.currentTimeMillis();
 		}
-		
+
+		double pmana = player.mana;
 		super.update();
+		if(pmana!=player.mana){
+			bossScore+=BossScoring.scoreBombUse();
+		}
 		
 		if (this.player.alive && !this.boss.alive && this.gameRunning){
 			this.gameRunning=false;
 			this.bossClearText.visible=true;
-			this.bossScore=BossScoring.scoreBossKill(System.currentTimeMillis()-startTime);//killing the player is a huge score boost
+			this.bossScore+=BossScoring.scoreBossKill(System.currentTimeMillis()-startTime);//killing the player is a huge score boost
 			//player win
 		}
 		else if (!this.player.alive && this.boss.alive && this.gameRunning){
 			this.gameRunning=false;
 			this.gameOverText.visible=true;
-			this.bossScore=BossScoring.scorePlayerKill(System.currentTimeMillis()-startTime);//killing the player is a huge score boost
+			this.bossScore+=BossScoring.scorePlayerKill(System.currentTimeMillis()-startTime);//killing the player is a huge score boost
 			//boss win
 		}
 		
@@ -176,7 +181,7 @@ public class TouhouGame extends Game{
 
 	public void bossBulletKilled(int numberKilled) {
 		if(gameRunning){
-			this.bossScore+=numberKilled*2;//forcing the player to use bombs & clear bullets gives the boss score
+			this.bossScore+=BossScoring.scoreBulletKill(numberKilled);//forcing the player to use bombs & clear bullets gives the boss score
 		}
 	}
 	

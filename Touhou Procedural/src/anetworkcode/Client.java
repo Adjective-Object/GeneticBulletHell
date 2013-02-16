@@ -15,11 +15,17 @@ import atouhougame.Generation;
 
 public class Client{
 	
-	private static final String serverAddr = "localhost";
+	private static String serverAddr = "localhost";
+	private static int serverPort;
+	
+	public static void setCommunicationConstants(String addr, int port){
+		Client.serverPort = port;
+		Client.serverAddr=addr;
+	}
 	
 	public static BossSeed requestBoss(){
 		try{
-			Socket s = makeHandshake(serverAddr, Server.serverPort);
+			Socket s = makeHandshake(serverAddr, serverPort);
 
 			System.out.println("CLIENT: now attempting to download a boss");
 			
@@ -43,7 +49,7 @@ public class Client{
 	
 	public static void submitScore(double score, long bossID){
 		try{
-			Socket s = makeHandshake(serverAddr, Server.serverPort);
+			Socket s = makeHandshake(serverAddr, serverPort);
 			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			BufferedReader r = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
@@ -77,7 +83,7 @@ public class Client{
 	
 	public static boolean serverExists() throws IOException{
 		try{
-			Socket s = makeHandshake(serverAddr, Server.serverPort);
+			Socket s = makeHandshake(serverAddr, serverPort);
 			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			BufferedReader r = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
@@ -102,7 +108,7 @@ public class Client{
 	
 	public static Generation getGeneration(int generationNumber){	
 		try{
-			Socket s = makeHandshake(serverAddr, Server.serverPort);
+			Socket s = makeHandshake(serverAddr, serverPort);
 			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			BufferedReader r = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
@@ -135,7 +141,7 @@ public class Client{
 	
 	public static boolean checkGenerationExists(int generationNumber) {
 		try{
-			Socket s = makeHandshake(serverAddr, Server.serverPort);
+			Socket s = makeHandshake(serverAddr, serverPort);
 			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			BufferedReader r = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			

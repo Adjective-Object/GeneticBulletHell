@@ -20,7 +20,7 @@ import atouhougame.LocalEvolutionManager;
 public class Server extends Thread{
 	
 	ServerSocket serverSocket;
-	static final int serverPort = 1337;
+	int serverPort;
 	boolean running = false;
 	
 	static final int ERROR = 0;
@@ -36,6 +36,11 @@ public class Server extends Thread{
 	static final String handshake_2 = "Handshake_YEAH_COOL\n";
 	
 	LocalEvolutionManager evoManager;
+	
+	public Server(int port){
+		super();
+		this.serverPort = port;
+	}
 	
 	@Override
 	public void run(){

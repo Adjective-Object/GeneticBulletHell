@@ -48,25 +48,15 @@ public class GalleryScreen extends Game{
 				makeDefaultScreen();
 				hasBosses=false;
 			}
-			/*
-			for (Generation g: generations){
-				makeRowFromGeneration(g);
-			}*/
 		}
 	}
 	
 	@Override
 	public void onSwitch(){
-		for (GameComponent g: this.images.content){
-			g.x-=xoff;
-			g.y-=yoff;
-		}
-		for (GameComponent g: this.text.content){
-			g.x-=xoff;
-			g.y-=yoff;
-		}
-		xoff=0;
-		yoff=0;
+		this.lockX.clear();
+		this.images.clear();
+		this.text.clear();
+		loadedGenerations=0;
 	}
 	
 	private void makeDefaultScreen(){
@@ -123,7 +113,7 @@ public class GalleryScreen extends Game{
 		
 		//loading more rows
 		if(loadedGenerations*generationHeight-yoff<Global.height){
-			if(manager.hasGeneration(loadedGenerations)){//TODO remove 1st half. inserted to stop multithreading confusing debugging of netcode
+			if(manager.hasGeneration(loadedGenerations)){
 				this.images.add(new ThreadedGenerationLoader(
 						(double)margin-xoff,
 						(double)margin+generationHeight*loadedGenerations-yoff,

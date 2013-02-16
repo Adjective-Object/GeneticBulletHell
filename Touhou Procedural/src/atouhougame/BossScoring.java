@@ -17,5 +17,9 @@ public class BossScoring {
 	public static double scoreBossKill(long millisToDeath){
 		return (1000*60/millisToDeath);
 	}
+
+	public static double scoreBombUse() {
+		return 100;
+	}
 	
 }

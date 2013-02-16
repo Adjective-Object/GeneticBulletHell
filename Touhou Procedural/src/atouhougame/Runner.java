@@ -17,12 +17,42 @@ import framework.TopFrame;
 public class Runner  {
 	
     public static void main(String[] args){
-    	//TODO separate server and client stuff, also not so hardcoded localhost.
-		Server threadServer= new Server();
-		threadServer.start();
-    	Game g = makeTheGame();
-    	TopFrame t = new TopFrame(g,Global.width,Global.height);
-    	g.start();
+    	if(args.length==0){
+    		args = new String[] {"-sc"};
+    	}
+    	if( args[0].equals("-s") || args[0].equals("-server") ){
+    		int port;
+    		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
+    		
+    		Server threadServer= new Server(port);//set server port
+    		threadServer.start();
+    	}
+    	else if( args[0].equals("-c") || args[0].equals("-client") ){
+    		int port;
+    		String address;
+    		
+    		if(args.length>=2){ address=args[1]; } else{ address="localhost";} //TODO make redirect to some set web server
+    		if(args.length>=3){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
+    		
+    		Client.setCommunicationConstants(address,port);
+    		
+    		Game g = makeTheGame();
+        	TopFrame t = new TopFrame(g,Global.width,Global.height);
+        	g.start();
+    	} else if( args[0].equals("-sc") || args[0].equals("-both") ){
+    		int port;
+    		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
+    		
+    		//server make thread go
+    		Server threadServer= new Server(port);//set server port
+    		threadServer.start();
+    		
+    		//client make thread go
+    		Client.setCommunicationConstants("localhost",port);
+    		Game g = makeTheGame();
+        	TopFrame t = new TopFrame(g,Global.width,Global.height);
+        	g.start();
+    	}
     }
     
     private static boolean serverExists(){

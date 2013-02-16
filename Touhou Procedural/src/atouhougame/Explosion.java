@@ -45,7 +45,6 @@ public class Explosion extends Bullet{
 		}
 		TouhouGame tg= (TouhouGame)(this.parentGame);
 		int numberKilled = this.killonCollide(tg.bossBullets);
-		tg.bossBulletKilled(numberKilled);
 	}
 	
 	public <T extends GameComponent> int killonCollide(Group<T> g){
