@@ -66,6 +66,7 @@ public class LocalEvolutionManager{
 			if(b.bossID==bossID){
 				b.score+=(score-b.score)
 				/(1+b.timesTested);
+				b.timesTested++;
 				archiveCurrentGeneration();
 				return true;
 			}
@@ -74,8 +75,8 @@ public class LocalEvolutionManager{
 	}
 	
 	public BossSeed getTestingSeed(){
-		BossSeed b =  currentGeneration.get(currentBoss);
 		advanceSeed();
+		BossSeed b =  currentGeneration.get(currentBoss);
 		return b;
 	}
 	
@@ -182,6 +183,8 @@ public class LocalEvolutionManager{
 	public boolean hasGeneration(int n) {
 		return new File("generation_"+n+".gen").exists();
 	}
+	
+	public void refreshCache(){}//DOES NOTHING :< only exists for the purposes of the Networked subclass. oh I feel so dirty...
 
 	
 }

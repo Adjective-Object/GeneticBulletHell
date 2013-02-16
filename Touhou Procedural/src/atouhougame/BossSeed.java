@@ -1,5 +1,9 @@
 package atouhougame;
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -168,43 +172,44 @@ public class BossSeed implements Serializable{
 		return "<Boss id="+this.bossID+" >";
 	}
 	
-	public double mutationRate = 0.1;
+	public static final double mutationRate = 0.5;
+	private static int recentOffspring=0;
 	
 	public BossSeed breedWith(BossSeed seed){//TODO mixing and mutating actual bullets/commands
-		Random r = new Random(System.currentTimeMillis());
+		Random r = new Random(System.currentTimeMillis()+recentOffspring);
+		recentOffspring++;
 		
 		//generate new set of attack patterns
 		ArrayList<AttackPattern> patterns = new ArrayList<AttackPattern>(3);
 		for(int pat=0; pat<3; pat++){
+			//determine number of commands in pattern
 			ArrayList<Command> commandList = new ArrayList<Command>(0);
 			int numCommands = this.patterns.get(pat).commands.size();
 			if(seed.patterns.get(pat).commands.size()>numCommands){
 				numCommands=seed.patterns.get(pat).commands.size();
 			}
 			
-			//generating new attack pattern
+			//generating splice together the lists of commands
 			ArrayList<Command> a = seed.patterns.get(pat).commands;
 			ArrayList<Command> b = this.patterns.get(pat).commands;
 			for (int i=0; i< numCommands; i++){
-				if(r.nextBoolean()){
-					ArrayList<Command> c=b;
-					b = a;
-					a = c;
-				}
-				
-				if(a.size()>i){
-					commandList.add(a.get(i));
-				}
-				else{
-					commandList.add(b.get(i));
+				if(r.nextDouble()<=mutationRate){//if <random> then mutate
+					commandList.add(randomCommand(100));
+				} else{//elsepull from parents
+					if(r.nextBoolean()){//swap if randomly
+						ArrayList<Command> c=b;
+						b = a;
+						a = c;
+					}
+					
+					if(a.size()>i){//pull from other list if list is too short
+						commandList.add(a.get(i));
+					}
+					else{
+						commandList.add(b.get(i));
+					}
 				}
 			}
-			
-			//mutating attack pattern
-			while(r.nextDouble()<=mutationRate){
-				commandList.add(r.nextInt(commandList.size()), randomCommand(100));
-			}
-			
 			patterns.add(new AttackPattern(commandList));
 		}
 		
@@ -212,7 +217,7 @@ public class BossSeed implements Serializable{
 		double[] stats = null;
 		double someFactor = r.nextDouble();
 		switch(r.nextInt(5)){
-			case 0:
+			case 0://sum of two
 				stats = new double[]{
 					this.STR+seed.STR,
 					this.CON+seed.CON,
@@ -220,8 +225,9 @@ public class BossSeed implements Serializable{
 					this.WIS+seed.WIS,
 					this.DEX+seed.DEX,
 					this.LUK+seed.LUK};
-			break;
-			case 1:
+				System.out.println("STATS 0");
+				break;
+			case 1://weighted average of two
 				stats = new double[]{
 						this.STR+seed.STR*someFactor,
 						this.CON+seed.CON*someFactor,
@@ -229,8 +235,9 @@ public class BossSeed implements Serializable{
 						this.WIS+seed.WIS*someFactor,
 						this.DEX+seed.DEX*someFactor,
 						this.LUK+seed.LUK*someFactor};
+				System.out.println("STATS 1");
 				break;
-			case 2:
+			case 2://pull from other boss
 				stats = new double[]{
 						seed.STR,
 						seed.CON,
@@ -238,8 +245,9 @@ public class BossSeed implements Serializable{
 						seed.WIS,
 						seed.DEX,
 						seed.LUK};
+				System.out.println("STATS 2");
 				break;
-			case 3:
+			case 3://pull from one boss
 				stats = new double[]{
 						this.STR,
 						this.CON,
@@ -247,8 +255,9 @@ public class BossSeed implements Serializable{
 						this.WIS,
 						this.DEX,
 						this.LUK};
+				System.out.println("STATS 3");
 				break;
-			case 4:
+			case 4://weighted average of two in other firection
 				stats = new double[]{
 						this.STR*someFactor+seed.STR,
 						this.CON*someFactor+seed.CON,
@@ -256,6 +265,7 @@ public class BossSeed implements Serializable{
 						this.WIS*someFactor+seed.WIS,
 						this.DEX*someFactor+seed.DEX,
 						this.LUK*someFactor+seed.LUK};
+				System.out.println("STATS 4");
 				break;
 		}
 		
@@ -274,12 +284,25 @@ public class BossSeed implements Serializable{
 					
 	}
 	
-	static final String[] humanNames= new String[]{
-		"Melissa",
-		"Harold",
-		"Archer",
-		"Michael",
-	};
+	static final String[] humanNames= getHumanNames("names.txt");
+	private static String[] getHumanNames(String yeah){
+		int lengthfile = 665;//pre-known length of list of names
+		
+		String[] names = new String[lengthfile];
+		File nameFile = new File(yeah);
+		BufferedReader r;
+		try {
+			r = new BufferedReader(new FileReader(nameFile));
+
+			for(int i=0; i<lengthfile; i++){
+				names[i] = r.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return names;
+	}
 	
 	public String getName(){
 		String name="";

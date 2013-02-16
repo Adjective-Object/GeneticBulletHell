@@ -1,12 +1,10 @@
 package anetworkcode;
 
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import atouhougame.BossSeed;
 import atouhougame.Generation;
 import atouhougame.LocalEvolutionManager;
-import framework.Keys;
 
 public class ClientEvolutionManager extends LocalEvolutionManager{
 	
@@ -47,14 +45,15 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 	
 	@Override
 	public boolean hasGeneration(int n) {
-		if(Keys.isKeyDown(KeyEvent.VK_F5)){
-			existingGenerations.clear();
-		}
 		if (!existingGenerations.containsKey(n)){
 			existingGenerations.put(n,Client.checkGenerationExists(n));
 		}
 		return existingGenerations.get(n);
 
+	}
+	
+	public void refreshCache(){
+		existingGenerations.clear();
 	}
 	
 }

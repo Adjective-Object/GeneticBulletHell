@@ -2,9 +2,7 @@ package atouhougame.gamescreens;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
-import atouhougame.Generation;
 import atouhougame.LocalEvolutionManager;
 import atouhougame.TGlobal;
 import framework.Game;
@@ -21,6 +19,7 @@ public class GalleryScreen extends Game{
 	static final int textheight = 50;
 	static final int margin = 10;
 	static final int speed = 500;
+	boolean doneCheck=false;
 	
 	int generationHeight = (boxsize+textheight)+margin;
 	
@@ -41,14 +40,6 @@ public class GalleryScreen extends Game{
 
 		this.add(images);
 		this.add(text);
-		
-		if(!TGlobal.playNetworked){
-			ArrayList<Generation> generations = manager.loadGenerations();
-			if (generations.size()<=0){
-				makeDefaultScreen();
-				hasBosses=false;
-			}
-		}
 	}
 	
 	@Override
@@ -57,14 +48,27 @@ public class GalleryScreen extends Game{
 		this.images.clear();
 		this.text.clear();
 		loadedGenerations=0;
+		doneCheck=false;
+		xoff=0;
+		yoff=0;
+		manager.refreshCache();
+		
 	}
 	
 	private void makeDefaultScreen(){
-		
-		this.add(new Text("No Bosses Generated.", TGlobal.textLight ,TGlobal.fbig,margin, margin+TGlobal.fbig.getSize()));
-		this.add(new Text("Play some Boss Rush mode to understand what the fuck is going on.",
-				TGlobal.textTrans,TGlobal.fsmall,margin, margin+8+TGlobal.fbig.getSize()+TGlobal.fsmall.getSize()));
+		if(TGlobal.playNetworked){
+			this.text.add(new Text("No Bosses On Server.", TGlobal.textLight ,TGlobal.fbig,margin, margin+TGlobal.fbig.getSize()));
+			this.text.add(new Text("Don't know what just happened. Try playing some Boss Rush mode?",
+					TGlobal.textTrans,TGlobal.fsmall,margin, margin+8+TGlobal.fbig.getSize()+TGlobal.fsmall.getSize()));
+		}
+		else{
+			this.text.add(new Text("No Bosses Generated.", TGlobal.textLight ,TGlobal.fbig,margin, margin+TGlobal.fbig.getSize()));
+			this.text.add(new Text("Play some Boss Rush mode to understand what the fuck is going on.",
+					TGlobal.textTrans,TGlobal.fsmall,margin, margin+8+TGlobal.fbig.getSize()+TGlobal.fsmall.getSize()));
+		}
 	}
+	
+	
 	
 	@Override
 	public void update(){
@@ -112,17 +116,23 @@ public class GalleryScreen extends Game{
 		}
 		
 		//loading more rows
-		if(loadedGenerations*generationHeight-yoff<Global.height){
-			if(manager.hasGeneration(loadedGenerations)){
-				this.images.add(new ThreadedGenerationLoader(
-						(double)margin-xoff,
-						(double)margin+generationHeight*loadedGenerations-yoff,
-						this,
-						loadedGenerations));
-				loadedGenerations++;
+		if(!doneCheck){
+			if(loadedGenerations*generationHeight-yoff<Global.height){
+				if(manager.hasGeneration(loadedGenerations)){
+					this.images.add(new ThreadedGenerationLoader(
+							(double)margin-xoff,
+							(double)margin+generationHeight*loadedGenerations-yoff,
+							this,
+							loadedGenerations));
+					loadedGenerations++;
+				} else{
+					doneCheck=true;
+					if (loadedGenerations==0){
+						makeDefaultScreen();
+					}
+				}
 			}
 		}
-
 	}
 	
 }
