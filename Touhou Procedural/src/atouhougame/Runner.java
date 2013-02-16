@@ -21,6 +21,7 @@ public class Runner  {
     		args = new String[] {"-sc"};
     	}
     	if( args[0].equals("-s") || args[0].equals("-server") ){
+    		System.out.println("Running as Server");
     		int port;
     		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
     		
@@ -28,6 +29,7 @@ public class Runner  {
     		threadServer.start();
     	}
     	else if( args[0].equals("-c") || args[0].equals("-client") ){
+    		System.out.println("Running as Client");
     		int port;
     		String address;
     		
@@ -40,6 +42,7 @@ public class Runner  {
         	TopFrame t = new TopFrame(g,Global.width,Global.height);
         	g.start();
     	} else if( args[0].equals("-sc") || args[0].equals("-both") ){
+    		System.out.println("Running as Server-Client Hybrid");
     		int port;
     		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
     		

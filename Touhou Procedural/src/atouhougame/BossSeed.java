@@ -1,9 +1,8 @@
 package atouhougame;
 import java.awt.Color;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -289,10 +288,9 @@ public class BossSeed implements Serializable{
 		int lengthfile = 665;//pre-known length of list of names
 		
 		String[] names = new String[lengthfile];
-		File nameFile = new File(yeah);
 		BufferedReader r;
 		try {
-			r = new BufferedReader(new FileReader(nameFile));
+			r = new BufferedReader( new InputStreamReader( ClassLoader.getSystemClassLoader().getResourceAsStream(yeah) ));
 
 			for(int i=0; i<lengthfile; i++){
 				names[i] = r.readLine();
