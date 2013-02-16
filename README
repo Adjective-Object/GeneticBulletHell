@@ -1,22 +1,49 @@
+What The Fu..
+=============
+
 This is an attempt to make a game that will generate Touhou-style bullet-hell bosses and then breed/mutate them depending on how well they fare against players.
 
 For those unfamiliar with the bullet-hell genre, it is a subgenre of the shoot-em-up genre, focused more on dodging bullets than anything else.
 The reason it's called a bullet hell is because at any given time, the screen will be covered with enemy bullets.
 
-==BOSS STATS
+The "fitness function" is the score the boss gets in playing against the player.  
+Because it would be exceptionally boring and time consuming to do this on one's own, The idea is to play this on network.  
+The Jar files in the root folder are the Jar and Runnable Client Jar files.
+
+EvolvingShooterRunnableClient.jar will attempt to connect to a server at the default address and the default port. It's meant as an end-user runner. Unfortunately, it won't do much as of now, because there is no central server.
+
+
+But, How Do I..
+===============
+EvolvingShooter.jar is the all-purpose jarfile.  
+Run Server: java -jar EvolvingShooter.jar -s [port]  
+Run Client: java -jar EvolvingShooter.jar -c [address] [port]  
+Run Client/Server Hybrid: java -jar EvolvingShooter.jar -sc [address] [port]
+
+if no value is given for [address], it will default to localhost.  
+if no value is given for [port], it will default to 1337
+
+
+
+
+What is Going On?
+=================
+yeah, it's a little confusing. Keep reading, I swear I explain it.
+
+###BOSS STATS
 The way a boss behaves is determined by two things: its attack pattern and its base stats.
 The base stats are broken down into 6 stats:
 
-STR: (Strength) controls damage the boss does, and contributes to the size of its hitbox
-CON: (Constitution) controls the max Hitpoints of the boss, and contributes to the size of its hitbox
-INT: (Intelligence) controls the maximum mana of the boss
-WIS: (Wisdom) controls the mana regeneration rate of the boss
-DEX: (Dexterity) controls firing speed and contributes to the movement speed of the boss
-LUK: (Luck) controls the bullet travel speed and contributes to the movement speed of the boss
+STR: (Strength) controls damage the boss does, and contributes to the size of its hitbox  
+CON: (Constitution) controls the max Hitpoints of the boss, and contributes to the size of its hitbox  
+INT: (Intelligence) controls the maximum mana of the boss  
+WIS: (Wisdom) controls the mana regeneration rate of the boss  
+DEX: (Dexterity) controls firing speed and contributes to the movement speed of the boss  
+LUK: (Luck) controls the bullet travel speed and contributes to the movement speed of the boss  
 
 A boss's stats are pulled in ratios from a common "nutrient" pool. A boss can only put so many points into all the stats combined.
 
-==UI INFORMATION
+###UI INFORMATION
 There's a lot of information being fed to you at any given time about the stats of the boss and bullets.
 
 The color denotes the stat distribution of the boss.
@@ -24,26 +51,28 @@ STR and CON increase the red channel
 LUK and DEX increase the green channel
 INT and WIS increase the blue channel
 
-the bars at the top of the combat area are the health and mana of the boss's current form.
+the bars at the top of the combat area are the health and mana of the boss's current form.  
 A boss has 3 forms -> when a form is defeated, the boss's health is restored and it changes its attack pattern. Mana, however, is maintained across forms.
 
-To the right of the playing area are the player statistics.
-The bar is the health of the player, which is always out of 100pts
+To the right of the playing area are the player statistics.  
+The bar is the health of the player, which is always out of 100pts  
 the squares beneath the bar are ammunition for bombs. A player starts with 3 bombs, and can hold up to 10 (though no method for recovering bombs has been implemented)
 
 The number displayed on the right is the current score of the boss.
 
-==CONTROLS
-Z: shoot
-X: drop bomb.
+###CONTROLS
+Z: shoot  
+X: drop bomb.  
 (bombs clear out a large area around the player of the boss's bullets)
 
-Left/Right/Up/Down: Move
-Spacebar: Move quickly
-Ctrl: Move slowly
+Left/Right/Up/Down: Move  
+Spacebar: Move quickly  
+Ctrl: Move slowly  
 (the purpose of multiple movement speeds is to allow for precision navigation of bullet patterns)
 
-==CLOSING
-Everything is more or less totally unbalanced, so I apologize in advance for that.
+CLOSING
+=======
+Everything is more or less totally unbalanced, so I apologize in advance for that.  
 If you have any comments, recommendations, anything, feel free to contact me with feedback.
+
 
