@@ -14,6 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import atouhougame.BossSeed;
+import atouhougame.Generation;
 import atouhougame.LocalEvolutionManager;
 
 public class Server extends Thread{
@@ -29,6 +30,7 @@ public class Server extends Thread{
 	static final int HANDSHAKE_SUCESS = 3;
 	static final int CHECK_EXISTS = 4;
 	static final int SEND_GENERATION = 5;
+	static final int CHECK_GENERATION = 6;
 	
 	static final String handshake_1 = "Handshake_SI_COOL\n";
 	static final String handshake_2 = "Handshake_YEAH_COOL\n";
@@ -54,7 +56,10 @@ public class Server extends Thread{
 	             Socket clientSocket = serverSocket.accept();
 	    		 System.out.println("SERVER: accepting new client");
 	             clientCommunications(clientSocket);
-	         } catch (IOException e) {
+	         } catch (java.net.SocketTimeoutException toe) {
+	         }catch (IOException e) {
+	        	 System.out.println("SERVER is faulty somehow");
+	        	 e.printStackTrace();
 	         }
 	     }
 	        
@@ -91,6 +96,9 @@ public class Server extends Thread{
 	        	case SEND_GENERATION:
 	        		sendGeneration(in,out);
 	        		break;
+	        	case CHECK_GENERATION:
+	        		checkGenerationExists(in,out);
+	        		break;
 	        	}
 	        	
 	        }
@@ -104,7 +112,8 @@ public class Server extends Thread{
 	        in.close();
 	        clientSocket.close();
 		}catch ( java.net.SocketTimeoutException e ){
-			System.out.println("you're too slow!");
+			System.out.println("SERVER: socket timeout: you're too slow!");
+			e.printStackTrace();
 		}
 	}
 
@@ -156,15 +165,33 @@ public class Server extends Thread{
 	}
 	
 	private void sendGeneration(InputStream in, OutputStream out) throws IOException{
-		System.out.println("SERVER: sending generation to client");
+		System.out.println("SERVER: attempting to send generation to client");
 		int requestedGeneration=in.read();
-		File genFile = new File("generation+"+requestedGeneration+".gen");
+		File genFile = new File(Generation.getFileName(requestedGeneration));
+		ObjectOutputStream objout = new ObjectOutputStream(out);
 		if(genFile.exists()){
-			
+			objout.writeBoolean(true);
+			objout.writeObject(evoManager.getGeneration(requestedGeneration));
 		}
 		else{
-			out.write(0);
+			System.out.println("SERVER: no appropriate generation file exists");
+			objout.writeBoolean(false);
 		}
+		objout.close();
+	}
+	
+	private void checkGenerationExists(InputStream in, OutputStream out) throws IOException{
+		System.out.println("SERVER: reporting generation status to client");
+		int requestedGeneration=in.read();
+		File genFile = new File(Generation.getFileName(requestedGeneration));
+		if(genFile.exists()){
+			out.write(1);
+			System.out.println("SERVER: "+requestedGeneration+" exists");
+		}else{
+			out.write(0);
+			System.out.println("SERVER: "+requestedGeneration+" does not exist");
+		}
+		out.close();
 	}
 	
 }

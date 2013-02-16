@@ -18,8 +18,8 @@ public class Runner  {
 	
     public static void main(String[] args){
     	//TODO separate server and client stuff, also not so hardcoded localhost.
-		//Server threadServer= new Server();
-		//threadServer.start();
+		Server threadServer= new Server();
+		threadServer.start();
     	Game g = makeTheGame();
     	TopFrame t = new TopFrame(g,Global.width,Global.height);
     	g.start();
@@ -41,11 +41,12 @@ public class Runner  {
 		Game galleryScreen;
 		if(TGlobal.playNetworked){
 			TGlobal.evolutionManager = new ClientEvolutionManager();
-			galleryScreen = new TextForwardScreen("Sorry.",new String[] {"The gallery function has not been implemented for networked games."});
+			//galleryScreen = new TextForwardScreen("Sorry.",new String[] {"The gallery function has not been implemented for networked games."});
 		} else{
 			TGlobal.evolutionManager = new LocalEvolutionManager();
-			galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
+			//galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
 		}
+		galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
 		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
 		TGlobal.mainMenu = new Menu(

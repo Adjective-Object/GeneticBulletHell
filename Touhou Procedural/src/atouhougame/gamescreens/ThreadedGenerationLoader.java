@@ -1,12 +1,12 @@
 package atouhougame.gamescreens;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import atouhougame.Boss;
 import atouhougame.BossSeed;
 import atouhougame.Generation;
 import atouhougame.TGlobal;
-
 import framework.BakedGameComponent;
 import framework.GameComponent;
 import framework.ParagraphText;
@@ -75,6 +75,13 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 				)
 			);
 		}
+	}
+	
+	@Override
+	public Graphics render(Graphics g){
+		g.setFont(TGlobal.fmed);
+		g.drawString("Loading Generation...",(int)x,(int)y+TGlobal.fmed.getSize());
+		return g;
 	}
 
 }

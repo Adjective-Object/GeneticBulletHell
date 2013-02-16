@@ -2,21 +2,16 @@ package atouhougame.gamescreens;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import atouhougame.Boss;
-import atouhougame.BossSeed;
 import atouhougame.Generation;
 import atouhougame.LocalEvolutionManager;
 import atouhougame.TGlobal;
-import framework.BakedGameComponent;
 import framework.Game;
 import framework.GameComponent;
 import framework.Global;
 import framework.Group;
 import framework.Keys;
-import framework.ParagraphText;
 import framework.SwitchGameEvent;
 import framework.Text;
 
@@ -128,7 +123,7 @@ public class GalleryScreen extends Game{
 		
 		//loading more rows
 		if(loadedGenerations*generationHeight-yoff<Global.height){
-			if(manager.hasGeneration(loadedGenerations)){
+			if(manager.hasGeneration(loadedGenerations)){//TODO remove 1st half. inserted to stop multithreading confusing debugging of netcode
 				this.images.add(new ThreadedGenerationLoader(
 						(double)margin-xoff,
 						(double)margin+generationHeight*loadedGenerations-yoff,

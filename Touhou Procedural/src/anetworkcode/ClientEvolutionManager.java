@@ -1,12 +1,19 @@
 package anetworkcode;
 
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+
 import atouhougame.BossSeed;
+import atouhougame.Generation;
 import atouhougame.LocalEvolutionManager;
+import framework.Keys;
 
 public class ClientEvolutionManager extends LocalEvolutionManager{
 	
 	BossSeed current;
 	BossSeed next;
+	
+	HashMap<Integer, Boolean> existingGenerations = new HashMap<Integer, Boolean> (0);
 	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
 	public ClientEvolutionManager(){
@@ -31,6 +38,23 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 	public void advanceSeed(){
 		current=next;
 		next=Client.requestBoss();
+	}
+	
+	@Override
+	public Generation getGeneration(int generationNumber){
+		return Client.getGeneration(generationNumber);
+	}
+	
+	@Override
+	public boolean hasGeneration(int n) {
+		if(Keys.isKeyDown(KeyEvent.VK_F5)){
+			existingGenerations.clear();
+		}
+		if (!existingGenerations.containsKey(n)){
+			existingGenerations.put(n,Client.checkGenerationExists(n));
+		}
+		return existingGenerations.get(n);
+
 	}
 	
 }
