@@ -9,7 +9,7 @@ import framework.SimpleFadeoutComponent;
 
 public class ParticleBullet extends Bullet{
 
-	static final double cutoff = 1;
+	static final double cutoff=5;
 	
 	public double torque;
 	public double friction;
@@ -23,6 +23,7 @@ public class ParticleBullet extends Bullet{
 			Color color, double relativeRed, double relativeGreen, double relativeBlue){
 		super(x-size/2,y-size/2,size,
 				power, color, (int)relativeRed,(int)relativeGreen,(int)relativeBlue);
+		
 		this.torque=torque;
 		this.velocity = Global.rotate(0, speed, direction);
 		this.acceleration = new Point(acceleration*velocity.x, acceleration*velocity.y);
@@ -40,7 +41,7 @@ public class ParticleBullet extends Bullet{
 		
 		super.update(elapsedTime);
 		
-		if(Math.abs(this.velocity.x)<=cutoff && Math.abs(this.velocity.y)<=cutoff){
+		if(this.velocity.x*this.velocity.x+this.velocity.y*this.velocity.y<=cutoff*cutoff){
 			lifetime+=elapsedTime;
 		}
 		if(lifetime>maxLifetime){

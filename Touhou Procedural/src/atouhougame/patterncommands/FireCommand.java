@@ -2,6 +2,7 @@ package atouhougame.patterncommands;
 import java.util.ArrayList;
 
 import atouhougame.Boss;
+import atouhougame.TGlobal;
 import atouhougame.bullets.BulletSeed;
 import atouhougame.bullets.WaitingBullet;
 
@@ -42,6 +43,7 @@ public class FireCommand extends Command{
 				break;
 			}
 		}
+		TGlobal.sound_fire_boss.play();
 	}
 	
 }

@@ -8,15 +8,16 @@ import anetworkcode.Server;
 import atouhougame.gamescreens.BossRushRouter;
 import atouhougame.gamescreens.ExitGame;
 import atouhougame.gamescreens.GalleryScreen;
+import atouhougame.gamescreens.TMenu;
 import atouhougame.gamescreens.TextForwardScreen;
 import framework.Game;
 import framework.Global;
-import framework.Menu;
 import framework.TopFrame;
 
 public class Runner  {
 	
     public static void main(String[] args){
+    	
     	if(args.length==0){
     		args = new String[] {"-sc"};
     	}
@@ -83,7 +84,7 @@ public class Runner  {
 		galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
 		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
-		TGlobal.mainMenu = new Menu(
+		TGlobal.mainMenu = new TMenu(
 				new String[] {
 						"Boss Rush",
 						"Gallery",
@@ -97,7 +98,7 @@ public class Runner  {
 				TGlobal.greyBack,
 				TGlobal.fbig
 			);
-    	
+		
 		if(TGlobal.playNetworked){
 			return TGlobal.mainMenu;
 		}

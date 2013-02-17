@@ -72,7 +72,7 @@ public class TouhouGame extends Game{
 		this.add(this.playerBullets);
 
 		this.add(this.particles);
-		
+
 		this.add(this.boss);
 		this.add(this.bossBullets);
 
@@ -120,6 +120,7 @@ public class TouhouGame extends Game{
 					if(this.boss.alive){
 						this.player.hp-= bullet.power;
 						this.bossScore+=BossScoring.scoreDamage(bullet.power);//damaging player gives boss score
+						TGlobal.sound_damage_player.play();
 					}
 					if(bullet.killOnCollide()){
 						this.bossBullets.content.remove(i);
@@ -139,6 +140,7 @@ public class TouhouGame extends Game{
 					this.boss.HP-= bullet.power;
 					this.playerBullets.content.remove(i);
 					this.particles.addAll(Global.createSimpleExplosion(bullet));
+					TGlobal.sound_damage_boss.play();
 					i--;
 				}
 			}

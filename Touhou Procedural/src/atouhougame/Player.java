@@ -71,6 +71,7 @@ public class Player extends GameComponent{
 							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2,
 							0,0,1,
 							this.getWidth()/2, this.color,0,0,0));
+					TGlobal.sound_fire_player.play();
 				}
 				
 				if(mana>0 && Keys.isKeyPressed(KeyEvent.VK_X)){
@@ -93,6 +94,7 @@ public class Player extends GameComponent{
 	
 	@Override
 	public void kill(){
+		TGlobal.sound_explode_player.play();
 		this.responsive=false;
 		this.canshoot=false;
 		this.visible=false;

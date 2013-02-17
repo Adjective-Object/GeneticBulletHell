@@ -127,6 +127,7 @@ public class BossSeed implements Serializable{
 	
 	public Command randomCommand(int volleySize){
 		Random r = new Random();
+		volleySize = (int)(volleySize/2+volleySize/2*r.nextDouble());
 		double d = r.nextDouble();
 		if(d<0.3){
 			return new SleepCommand();

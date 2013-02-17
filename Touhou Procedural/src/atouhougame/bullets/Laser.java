@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import atouhougame.TGlobal;
 import framework.GameComponent;
 import framework.Global;
 import framework.Point;
@@ -18,6 +19,7 @@ public class Laser extends Bullet{
 	int elapsed;
 	double originalPower;
 	Point destination;
+	boolean playedSound=false;
 	
 	public Laser(double x, double y, double angle, double width, double power, Color color) {
 		super(x, y, width, power/100, color);
@@ -35,8 +37,16 @@ public class Laser extends Bullet{
 	
 	@Override
 	public void update(long elapsedMillis){
+		if(elapsed==0){
+			TGlobal.sound_Laser_warn.play();
+		}
 		this.elapsed+=elapsedMillis;
-		if(this.elapsed>waittime & this.elapsed<waittime+firetime && this.laserWidth<=this.bulletSize){
+		if(this.elapsed>waittime && !playedSound){
+			playedSound=true;
+			TGlobal.sound_Laser_fire.play();
+		}
+		
+		if(this.elapsed>waittime && this.elapsed<waittime+firetime && this.laserWidth<=this.bulletSize){
 			this.laserWidth++;
 		} else if(this.elapsed>waittime){
 			this.laserWidth--;

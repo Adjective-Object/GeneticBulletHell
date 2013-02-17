@@ -47,6 +47,7 @@ public class TextForwardScreen extends Game{
 	public void update(){
 		super.update();
 		if (Keys.anyKeyPressed()){
+			TGlobal.sound_menu_escape.play();
 			Keys.clearpressedButtons();
 			switchGame(new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TGlobal.mainMenu,endGameDelay));
 		}

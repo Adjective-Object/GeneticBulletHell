@@ -52,6 +52,7 @@ public class Menu extends Game{
 		}
 		
 		if(this.changed){
+			onMove();
 			for (int i=0; i<this.text.length;i++){
 				if(i==this.currentSelection){this.text[i].color = this.selectColor;}
 				else{this.text[i].color = this.baseColor;}
@@ -62,9 +63,14 @@ public class Menu extends Game{
 		super.update();
 		
 		if(Keys.isKeyPressed(KeyEvent.VK_ENTER) || Keys.isKeyPressed(KeyEvent.VK_Z)){
+			onSelect();
 			switchGame(
 					new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,this.results[this.currentSelection],endGameDelay)
 							);
 		}
 	}
+	
+	protected void onMove(){}
+	
+	protected void onSelect(){}
 }

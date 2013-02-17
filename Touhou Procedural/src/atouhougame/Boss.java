@@ -131,6 +131,7 @@ public class Boss extends BakedGameComponent{
 	@Override
 	public void kill(){
 		if(this.visible && this.active){
+			TGlobal.sound_explode_boss.play();
 			this.visible=false;
 			this.active=false;
 			TouhouGame g = (TouhouGame) this.parentGame;

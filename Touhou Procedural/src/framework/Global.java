@@ -57,6 +57,8 @@ public class Global {
 	public static Group<GameComponent> createSimpleExplosion(int particleSize, int numParticles, Color color, Point location, Point initialVelocity, int particleTime, int fadeTime, int blastRadius, boolean fadeout){
 		Random r = new Random();
 		Group<GameComponent> toRet = new Group<GameComponent>(false);
+		initialVelocity.x=100/initialVelocity.x+initialVelocity.x/2;
+		initialVelocity.y=100/initialVelocity.y+initialVelocity.y/2;
 		for(int i=0; i<numParticles;i++){
 			SimpleFadeoutComponent comp = new SimpleFadeoutComponent((int)location.x, (int)location.y,particleSize,particleSize, color, particleTime,fadeTime,GameComponent.BOUNDARY_KILL_ON_CROSS,fadeout);
 			comp.velocity=Global.rotate((initialVelocity.x + initialVelocity.y)*r.nextDouble(),0, i*(2*Math.PI/numParticles)+r.nextDouble()-r.nextDouble());
