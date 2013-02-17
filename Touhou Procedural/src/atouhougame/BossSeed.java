@@ -142,11 +142,8 @@ public class BossSeed implements Serializable{
 			seeds.add(new BulletSeed());
 			return new FireLaserCommand(seeds);
 		}
-		else if (d<0.9){
-			return new FireCommand(getRadialBulletArr(volleySize/10));
-		}
 		else{
-			return new FireCommand(getRandBulletArr(volleySize));
+			return new FireCommand(getRandBulletArr(volleySize),r.nextBoolean(), r.nextBoolean());
 		}
 	}
 	

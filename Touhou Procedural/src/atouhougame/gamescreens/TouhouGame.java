@@ -45,7 +45,7 @@ public class TouhouGame extends Game{
 	
 	//Global variables
 	public static Point playFieldLeft = new Point(10,10),
-						playFieldRight = new Point(475, 562);
+						playFieldRight = new Point(475,Global.height-10);
 	
 	public TouhouGame(LocalEvolutionManager localEvolutionManager){
 		super();
@@ -57,21 +57,25 @@ public class TouhouGame extends Game{
 		this.playerBullets = new Group<Bullet>(true);
 		this.particles = new Group<GameComponent>(true);
 
-		this.boss = new Boss(200,50,this.seed);
+		this.boss = new Boss(0,0,this.seed);
+		this.boss.x = 232-boss.getWidth()/2;
+		this.boss.y = 150-boss.getHeight()/2;
 		
-		this.player = new Player(230,500,this.baseColor);
+		
+		this.player = new Player(230,500);
 		this.player.boundingSmall= new Point(10,10);
-		this.player.boundingLarge= new Point(475,562);
+		this.player.boundingLarge= new Point(475,Global.height-10);
 		
 		this.makeUI(this.baseColor);
 
+		this.add(this.player);
+		this.add(this.playerBullets);
+
+		this.add(this.particles);
 		
 		this.add(this.boss);
 		this.add(this.bossBullets);
 
-		this.add(this.player);
-		this.add(this.playerBullets);
-		this.add(this.particles);
 		this.add(this.bossHpBarB);
 		this.add(this.bossHpBar);
 		this.add(this.bossMpBarB);
@@ -224,10 +228,10 @@ public class TouhouGame extends Game{
 		
 		this.uiBorder = new Group();//uiborders 10,10,465,552
 		
-		this.uiBorder.add(new RelativeColorComponent(0,0,10,Global.height,baseColor,0,0,0));
-		this.uiBorder.add(new RelativeColorComponent(10,0,Global.width-10,10,baseColor,0,0,0));
-		this.uiBorder.add(new RelativeColorComponent(10,Global.height-10,Global.width-10,10,baseColor,0,0,0));
-		this.uiBorder.add(new RelativeColorComponent(475,10,Global.width-475,Global.height-20,baseColor,0,0,0));
+		this.uiBorder.add(new GameComponent(0,0,10,Global.height,baseColor));
+		this.uiBorder.add(new GameComponent(10,0,Global.width-10,10,baseColor));
+		this.uiBorder.add(new GameComponent(10,Global.height-10,Global.width-10,10,baseColor));
+		this.uiBorder.add(new GameComponent(475,10,Global.width-475,Global.height-20,baseColor));
 		
 		this.bossScoreCounter=new Text("0",new Color(baseColor.getRed()+40,baseColor.getGreen()+40,baseColor.getBlue()+40),
 				TGlobal.fmed,(int)playFieldRight.x+10,370);

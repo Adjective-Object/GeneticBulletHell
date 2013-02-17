@@ -19,6 +19,9 @@ public class GalleryScreen extends Game{
 	static final int textheight = 50;
 	static final int margin = 10;
 	static final int speed = 500;
+	
+	int maxoffx = 0, maxoffy=0;
+	
 	boolean doneCheck=false;
 	
 	int generationHeight = (boxsize+textheight)+margin;
@@ -100,6 +103,25 @@ public class GalleryScreen extends Game{
 		xoff-=offx;
 		yoff-=offy;
 		
+		
+		if(xoff<0){
+			offx+=xoff;
+			xoff=0;
+		}
+		if(yoff<0){
+			offy+=yoff;
+			yoff=0;
+		}
+		
+		if(xoff>maxoffx){
+			offx+=(xoff-maxoffx);
+			xoff=maxoffx;
+		}
+		if(yoff>maxoffy){
+			offy+=(yoff-maxoffy);
+			yoff=maxoffy;
+		}
+		
 		//implementing object move
 		for (GameComponent g: this.images.content){
 			g.x+=offx;
@@ -125,6 +147,8 @@ public class GalleryScreen extends Game{
 							this,
 							loadedGenerations));
 					loadedGenerations++;
+					maxoffy=generationHeight*loadedGenerations-Global.height+margin*2;
+					if(maxoffy<0){maxoffy=0;}
 				} else{
 					doneCheck=true;
 					if (loadedGenerations==0){

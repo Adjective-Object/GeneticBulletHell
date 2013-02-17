@@ -36,9 +36,9 @@ public class BetweenScreen extends Game{
 			new ParagraphText(
 				new String[]{
 					lastSeed.getName(),
-					"Times Tested: "+lastSeed.timesTested,
+					"Times Tested:  "+lastSeed.timesTested,
 					"Overall Score: "+(int)lastSeed.score,
-					"Vs You: "+score
+					"Vs You:        "+(int)score
 				},
 				TGlobal.textTrans,TGlobal.fsmall,
 				30,200,8
@@ -52,8 +52,8 @@ public class BetweenScreen extends Game{
 			new ParagraphText(
 				new String[]{
 					nextSeed.getName(),
-					"Times Tested: "+nextSeed.timesTested,
-					"Overall Score: "+(int)nextSeed.score
+					"Times Tested:  "+lastSeed.timesTested,
+					"Overall Score: "+(int)nextSeed.score,
 				},
 				TGlobal.textTrans,TGlobal.fsmall,
 				500,200,8

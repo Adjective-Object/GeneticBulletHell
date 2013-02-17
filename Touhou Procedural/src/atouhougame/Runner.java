@@ -21,9 +21,10 @@ public class Runner  {
     		args = new String[] {"-sc"};
     	}
     	if( args[0].equals("-s") || args[0].equals("-server") ){
-    		System.out.println("Running as Server");
     		int port;
     		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
+
+    		System.out.println("Running as Server "+port);
     		
     		Server threadServer= new Server(port);//set server port
     		threadServer.start();
@@ -102,7 +103,7 @@ public class Runner  {
 		}
 		else{
 			return new TextForwardScreen("Fuck.",new String[] {
-					"Cannot connect to server.",
+					"Cannot connect to server at "+Client.serverAddr+".",
 					"Playing with locally generated content instead."});
 		}
 	}

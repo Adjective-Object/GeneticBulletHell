@@ -31,7 +31,7 @@ public class Boss extends BakedGameComponent{
 	 * fireMillis: milliseconds since last bullet fired
 	 * manaRegenRate: rate of mana regeneration in mana / second
 	 */
-	public int lastfired=0, HP, maxHP, maxMP, volleySize, currentPhase=0, totalPhases;
+	public int lastfired=0, HP, maxHP, maxMP, volleySize, currentPhase=0, totalPhases, symmetry;
 	public long comMillis=0;
 	public double MP, manaRegenRate, comRate, weight, moveSpeed,dashDist, power,bulletSpeed,torquePower;
 	double radius;
@@ -55,17 +55,19 @@ public class Boss extends BakedGameComponent{
 		this.manaRegenRate	=seed.INT/6000;
 		this.moveSpeed		=5+10*seed.LUK/seed.CON;
 		this.volleySize		=(int)(seed.INT*0.8+seed.STR*0.6+seed.DEX*0.4);//most # of bulltets onscreen at the time
+		
 		this.comRate		=500+seed.CON/2+seed.STR/4-seed.INT-seed.DEX*2-seed.WIS;
+		this.symmetry 		=(int) (seed.INT/30);
 		
 		destX=x;
 		destY=y;
 
 		
 		this.radius			=(seed.CON*0.25);
-		this.size			= new Point(radius,radius);
+		this.size			= new Point(radius*2,radius*2);
 		this.imageOffset 	= new Point(
-				this.image.getWidth()/2-this.radius/2,
-				this.image.getWidth()/2-this.radius/2
+				this.image.getWidth()/2-this.radius,
+				this.image.getWidth()/2-this.radius
 				);
 		
 	}
@@ -172,7 +174,6 @@ public class Boss extends BakedGameComponent{
 		Graphics g = img.getGraphics();
 		
 		Polygon poly = new Polygon();
-		
 		
 		Random r = new Random((long) (seed.CON+seed.DEX+seed.INT+seed.LUK+seed.STR+seed.WIS));
 		

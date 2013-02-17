@@ -13,7 +13,9 @@ public class TopFrame extends JFrame implements ActionListener{
 	public static Game game;
 	
     public TopFrame(Game startGame, int width, int height) {
-    	
+
+        setResizable(false);
+        
     	this.game=startGame;
     	this.addKeyListener(new TAdapter());
     	this.getContentPane().add(game);
@@ -21,12 +23,12 @@ public class TopFrame extends JFrame implements ActionListener{
         setTitle("Procedural Touhou");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        Insets insets = this.getInsets();
-        setSize(insets.left+insets.right+width, insets.top+insets.bottom+height);
-        
         setLocationRelativeTo(null);
         setVisible(true);
-        setResizable(true);
+
+        Insets insets = this.getInsets();
+        
+        setSize(insets.left+insets.right+width, insets.top+insets.bottom+height);
         
         this.setVisible(true);
         this.setResizable(false);

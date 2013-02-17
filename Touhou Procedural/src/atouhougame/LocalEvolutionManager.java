@@ -21,7 +21,7 @@ public class LocalEvolutionManager{
 	public LocalEvolutionManager(){
 		generationNumber=getNumGenerations();
 		if(generationNumber==-1){
-			this.currentGeneration= new Generation(new ArrayList<BossSeed>(0),0);//TODO generation Numbers
+			this.currentGeneration= new Generation(new ArrayList<BossSeed>(0),0);
 			currentBoss=0;
 			for(int i=0; i<Generation.generationsize; i++){
 				currentGeneration.add(new BossSeed(System.currentTimeMillis()));
@@ -30,7 +30,7 @@ public class LocalEvolutionManager{
 		}
 		else{
 			this.currentGeneration = getGeneration(new File("generation_"+generationNumber+".gen"));
-			currentBoss=0;
+			currentBoss=this.currentGeneration.size()-1;
 			advanceSeed();
 		}
 	}
@@ -102,21 +102,13 @@ public class LocalEvolutionManager{
 	private void makeNextGeneration(){
 		System.out.println("generating new generation");
 		
-		BossSeed best = currentGeneration.get(0), secondBest= null;//find the best two
-		for(BossSeed seed:currentGeneration){
-			if (best.score<seed.score){
-				secondBest=best;
-				best=seed;
-			}
-			else if( (secondBest==null || seed.score>secondBest.score) && seed.score<best.score){
-				secondBest=seed;
-			}
-		}
+		BossSeed[] winners = currentGeneration.getWinners();
+		
 		//mating
 		currentGeneration = new Generation(generationNumber+1);
 		for (int i=0; i<Generation.generationsize-1; i++){
-			currentGeneration.add(best.breedWith(secondBest));
-			System.out.println("breeding: "+best+" "+secondBest);
+			currentGeneration.add(winners[0].breedWith(winners[1]));
+			System.out.println("breeding: "+winners[0]+" "+winners[1]);
 		}
 		//add one more random for faster solution finding.
 		currentGeneration.add(new BossSeed(System.currentTimeMillis()));

@@ -3,7 +3,6 @@ package atouhougame.bullets;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 
 import framework.GameComponent;
@@ -20,9 +19,13 @@ public class Laser extends Bullet{
 	double originalPower;
 	Point destination;
 	
-	public Laser(double x, double y, double angle, double width, double power) {
-		super(x, y, width, power/100, Color.white);
-		this.destination=Global.rotate(0, Global.width, angle);//TODO not this.
+	public Laser(double x, double y, double angle, double width, double power, Color color) {
+		super(x, y, width, power/100, color);
+		this.destination=Global.rotate(0, Global.width, Math.PI/2-angle%(Math.PI));//TODO not this.
+		int red =  color.getRed()+(255-color.getRed())/2;
+		int green =  color.getGreen()+(255-color.getGreen())/2;
+		int blue =  color.getBlue()+(255-color.getBlue())/2;
+		this.color = new Color(red,green,blue);
 		slope=destination.y/destination.x;
 		this.destination.x+=x;
 		this.destination.y+=y;
@@ -30,6 +33,7 @@ public class Laser extends Bullet{
 		this.laserWidth=1;
 	}
 	
+	@Override
 	public void update(long elapsedMillis){
 		this.elapsed+=elapsedMillis;
 		if(this.elapsed>waittime & this.elapsed<waittime+firetime && this.laserWidth<=this.bulletSize){
@@ -57,6 +61,7 @@ public class Laser extends Bullet{
 		return false;
 	}
 	
+	@Override
 	public boolean killOnCollide(){
 		return false;
 	}
@@ -66,6 +71,7 @@ public class Laser extends Bullet{
 	 * @param bi: the target bufferedImage
 	 * @return : returns the altered BufferedImage
 	 */
+	@Override
 	public BufferedImage render(BufferedImage bi){
 		Graphics2D g = (Graphics2D) bi.getGraphics();
 		g.setColor(this.color);

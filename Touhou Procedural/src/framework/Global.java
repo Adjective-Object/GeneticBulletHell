@@ -3,13 +3,10 @@ package framework;
 import java.awt.Color;
 import java.util.Random;
 
-import atouhougame.Player;
-import atouhougame.bullets.Bullet;
-
 public class Global {
 	
-	public static int width=794;
-	public static int height=572;
+	public static int width=800;
+	public static int height=600;
 	
 	public static Point scaleAlong (double displacement, Point sincos){
 		return new Point(displacement*sincos.x,displacement*sincos.y);

@@ -43,13 +43,19 @@ LUK: (Luck) controls the bullet travel speed and contributes to the movement spe
 
 A boss's stats are pulled in ratios from a common "nutrient" pool. A boss can only put so many points into all the stats combined.
 
-###UI INFORMATION
+###IN GAME UI INFORMATION
 There's a lot of information being fed to you at any given time about the stats of the boss and bullets.
 
 The color denotes the stat distribution of the boss.
 STR and CON increase the red channel
 LUK and DEX increase the green channel
 INT and WIS increase the blue channel
+
+Moreover, the shape of the boss will tell you a little more about its stats:  
+the size of the boss is determined by its CON  
+the number of spikes on the boss is determined by its LUK  
+the extremeness of each of those spikes is determined by the ratio of DEX to STR.  
+
 
 the bars at the top of the combat area are the health and mana of the boss's current form.  
 A boss has 3 forms -> when a form is defeated, the boss's health is restored and it changes its attack pattern. Mana, however, is maintained across forms.
@@ -59,6 +65,14 @@ The bar is the health of the player, which is always out of 100pts
 the squares beneath the bar are ammunition for bombs. A player starts with 3 bombs, and can hold up to 10 (though no method for recovering bombs has been implemented)
 
 The number displayed on the right is the current score of the boss.
+
+###GALLERY SCREEN
+the gallery screen is a place to see all the bosses that have been generated up till now in the game. As of now it loads all the bosses that have been generated, ever.  
+At some point I will go back and fix that, but it hasn't been an issue on my solo testing, mainly because I keep changing up the boss code, which invalidates my savefiles.  
+
+At any rate, the grey circles around the bosses indicate the two top scoring bosses in that generation. Those are the bosses that were (or most are most likely to be) bred to form the next generation.
+
+The final boss in any generation is randomly generated, to try and inject/maintain genetic diversity as near optimal things are reached.
 
 ###CONTROLS
 Z: shoot  
@@ -72,7 +86,5 @@ Ctrl: Move slowly
 
 CLOSING
 =======
-Everything is more or less totally unbalanced, so I apologize in advance for that.  
+Everything is more or less totally unbalanced, so I apologize in advance for that. I am aware that INT and WIS are pretty much just dump stats as of now. This was not originally the case, but I cut mana costs to the point of their irrelivence.
 If you have any comments, recommendations, anything, feel free to contact me with feedback.
-
-

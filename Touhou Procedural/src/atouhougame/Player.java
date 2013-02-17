@@ -7,12 +7,12 @@ import java.util.Random;
 import atouhougame.bullets.ParticleBullet;
 import atouhougame.gamescreens.TouhouGame;
 import framework.Game;
+import framework.GameComponent;
 import framework.Global;
 import framework.Keys;
 import framework.Point;
-import framework.RelativeColorComponent;
 
-public class Player extends RelativeColorComponent{
+public class Player extends GameComponent{
 	
 	protected int fastSpeed = 4000;
 	protected int baseSpeed = 2000;
@@ -31,8 +31,8 @@ public class Player extends RelativeColorComponent{
 	 * @param x : x position
 	 * @param y : y position
 	 */
-	public Player(int x, int y,Color c){
-		super(x,y,10,10,c,0,0,0);
+	public Player(int x, int y){
+		super(x,y,10,10,Color.white);
 		drag.x=0.85;
 		drag.y=0.85;
 		this.bullets = new ArrayList<ParticleBullet>(0);
@@ -70,7 +70,7 @@ public class Player extends RelativeColorComponent{
 					bullets.add(new ParticleBullet((int)(this.getCenter().x), (int)(this.y+this.getHeight()/4),
 							1, 1000, Math.PI+new Random().nextDouble()*bulletRange-bulletRange/2,
 							0,0,1,
-							this.getWidth()/2, this.baseColor, 1,1,1));
+							this.getWidth()/2, this.color,0,0,0));
 				}
 				
 				if(mana>0 && Keys.isKeyPressed(KeyEvent.VK_X)){

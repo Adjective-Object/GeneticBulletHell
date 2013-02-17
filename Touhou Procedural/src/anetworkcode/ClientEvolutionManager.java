@@ -9,14 +9,12 @@ import atouhougame.LocalEvolutionManager;
 public class ClientEvolutionManager extends LocalEvolutionManager{
 	
 	BossSeed current;
-	BossSeed next;
 	
 	HashMap<Integer, Boolean> existingGenerations = new HashMap<Integer, Boolean> (0);
 	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
 	public ClientEvolutionManager(){
 		current=Client.requestBoss();
-		next=Client.requestBoss();
 	}
 		
 	BossSeed currentSeed=new BossSeed(System.currentTimeMillis());
@@ -30,12 +28,16 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 	@Override
 	public void scoreLastSeed(double score){
 		Client.submitScore((int)(score), current.bossID);
+		
+		current.score+=(score-current.score)
+		/(1+current.timesTested);
+
+		current.timesTested++;//purely asthetic
 	}
 	
 	@Override
 	public void advanceSeed(){
-		current=next;
-		next=Client.requestBoss();
+		current=Client.requestBoss();
 	}
 	
 	@Override
@@ -52,6 +54,7 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 
 	}
 	
+	@Override
 	public void refreshCache(){
 		existingGenerations.clear();
 	}

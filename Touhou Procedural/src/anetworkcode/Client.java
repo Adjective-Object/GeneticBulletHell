@@ -15,8 +15,8 @@ import atouhougame.Generation;
 
 public class Client{
 	
-	private static String serverAddr = "localhost";
-	private static int serverPort;
+	public static String serverAddr = "localhost";
+	public static int serverPort;
 	
 	public static void setCommunicationConstants(String addr, int port){
 		Client.serverPort = port;

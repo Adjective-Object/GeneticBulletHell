@@ -9,6 +9,7 @@ import atouhougame.Generation;
 import atouhougame.TGlobal;
 import framework.BakedGameComponent;
 import framework.GameComponent;
+import framework.Global;
 import framework.ParagraphText;
 import framework.Text;
 
@@ -16,6 +17,8 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 
 	GalleryScreen parent;
 	int genNumber;
+	
+	BufferedImage winnerCircle=null;
 	
 	public ThreadedGenerationLoader(double x, double y, GalleryScreen parent, int generationNumber) {
 		super(x,y);
@@ -28,12 +31,30 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 	
 	@Override
 	public void run() {
+		if(winnerCircle==null){//only run once: make generated grpahic
+			winnerCircle = new BufferedImage(parent.boxsize,parent.boxsize, BufferedImage.TYPE_INT_RGB);
+			int thick=20;
+			int beg=5;
+			
+			Graphics g = winnerCircle.getGraphics();
+			g.setColor(TGlobal.greyBack);
+			g.fillRect(0, 0, parent.boxsize, parent.boxsize);
+			g.setColor(TGlobal.textSubtleTrans);
+			g.fillOval(beg, beg, parent.boxsize-beg*2, parent.boxsize-beg*2);
+			g.setColor(TGlobal.greyBack);
+			g.fillOval(beg+thick, beg+thick, parent.boxsize-beg*2-thick*2, parent.boxsize-beg*2-thick*2);
+		}
+		
 		Generation g = parent.manager.getGeneration(genNumber);
-		makeRowFromGeneration(g);
+		this.visible=false;
 		this.kill();
+		makeRowFromGeneration(g);
 	}
 	
 	private void makeRowFromGeneration(Generation gen){
+		
+		long[] winners =gen.getWinnersID();
+		
 		Text t = new Text(
 				"Generation "+gen.generationNumber,
 				TGlobal.textLight,TGlobal.fmed,
@@ -44,6 +65,13 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 		parent.text.add(t);
 		for(int y=0; y< gen.size(); y++){
 			BossSeed s = gen.get(y);
+			if(winners[0]==s.bossID || winners[1]==s.bossID){//indicate who was winner
+				parent.images.add(new BakedGameComponent(
+						y*parent.boxsize+x,
+						this.y,
+						winnerCircle)
+				);
+			}
 			BufferedImage d = Boss.makeImage(s);
 			parent.images.add(new BakedGameComponent(
 					y*parent.boxsize+parent.boxsize/2-d.getWidth()/2+x,
@@ -75,12 +103,17 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 				)
 			);
 		}
+		if(parent.maxoffx<gen.size()*parent.boxsize){
+			parent.maxoffx=gen.size()*parent.boxsize-Global.width+parent.margin*2;
+		} if(parent.maxoffx<0){parent.maxoffx=0;}
 	}
 	
 	@Override
 	public Graphics render(Graphics g){
-		g.setFont(TGlobal.fmed);
-		g.drawString("Loading Generation...",(int)x,(int)y+TGlobal.fmed.getSize());
+		if(this.visible){
+			g.setFont(TGlobal.fmed);
+			g.drawString("Loading Generation...",(int)x+parent.margin,(int)y+parent.generationHeight/2+TGlobal.fmed.getSize());
+		}
 		return g;
 	}
 

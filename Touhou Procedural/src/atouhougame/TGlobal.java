@@ -15,6 +15,7 @@ public class TGlobal {
 	
 	public static final Color greyBack = new Color(25,25,25);
 	public static final Color textTrans = new Color(255,255,255,180);
+	public static final Color textSubtleTrans = new Color(255,255,255,80);
 	public static final Color textLight = Color.white;
 	
 	public static final Font fsmall = Font.decode("123123-bold-12");
