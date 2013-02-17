@@ -2,11 +2,15 @@ package atouhougame.bullets;
 import java.awt.Color;
 
 import atouhougame.gamescreens.TouhouGame;
-
-import framework.*;
+import framework.GameComponent;
+import framework.Global;
+import framework.Point;
+import framework.SimpleFadeoutComponent;
 
 public class ParticleBullet extends Bullet{
 
+	static final double cutoff = 1;
+	
 	public double torque;
 	public double friction;
 	public Point acceleration;
@@ -22,10 +26,11 @@ public class ParticleBullet extends Bullet{
 		this.torque=torque;
 		this.velocity = Global.rotate(0, speed, direction);
 		this.acceleration = new Point(acceleration*velocity.x, acceleration*velocity.y);
-		this.maxLifetime = (int) (20000/(10+power));
+		this.maxLifetime = (100);
 		this.friction=friction;
 	}
 
+	@Override
 	public void update(long elapsedTime){
 		this.velocity = Global.rotate(this.velocity,torque);
 		this.velocity.x += this.acceleration.x*elapsedTime/1000;
@@ -35,7 +40,7 @@ public class ParticleBullet extends Bullet{
 		
 		super.update(elapsedTime);
 		
-		if(Math.abs(this.velocity.x)<=1 && Math.abs(this.velocity.y)<=1){
+		if(Math.abs(this.velocity.x)<=cutoff && Math.abs(this.velocity.y)<=cutoff){
 			lifetime+=elapsedTime;
 		}
 		if(lifetime>maxLifetime){
