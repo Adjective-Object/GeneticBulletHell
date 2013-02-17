@@ -41,5 +41,33 @@ public class Generation implements Serializable, Iterable<BossSeed>{
 	public static String getFileName(int number){
 		return "generation_"+number+".gen";
 	}
+
+	public BossSeed[] getWinners() {
+		BossSeed best = this.get(0), secondBest= null;//find the best two
+		for(BossSeed seed:this){
+			if (best.score<seed.score){
+				secondBest=best;
+				best=seed;
+			}
+			else if( (secondBest==null || seed.score>secondBest.score) && seed.score<best.score){
+				secondBest=seed;
+			}
+		}
+		return new BossSeed[] {best, secondBest};
+	}
+	
+	public long[] getWinnersID() {
+		BossSeed best = this.get(0), secondBest= null;//find the best two
+		for(BossSeed seed:this){
+			if (best.score<seed.score){
+				secondBest=best;
+				best=seed;
+			}
+			else if( (secondBest==null || seed.score>secondBest.score) && seed.score<best.score){
+				secondBest=seed;
+			}
+		}
+		return new long[] {best.bossID, secondBest.bossID};
+	}
 	
 }
