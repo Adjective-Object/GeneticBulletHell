@@ -2,14 +2,13 @@ package framework;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -19,13 +18,16 @@ public class RecycleableClip{
 	DataLine.Info info;
 	AudioFormat audioFormat;
 	
-	int numThreads=0;
-	
-	static int maxThreads=10000;
+	ArrayList<Clip> concurrentClips = new ArrayList<Clip>(0);
+	int bufferSize, curClip=0;
 	
 	public RecycleableClip(InputStream is) {
+		this(is,10);
+	}
+	
+	public RecycleableClip(InputStream is, int bufferSize) {
 		try {
-			//cacheing audio data into memory
+			//caching audio data into memory
 			AudioInputStream ais = AudioSystem.getAudioInputStream(is);//get audioinputstream from IS
 			audioFormat = ais.getFormat();
 			int size = (int) (audioFormat.getFrameSize() * ais.getFrameLength());//get size of clip
@@ -38,36 +40,34 @@ public class RecycleableClip{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		this.bufferSize=bufferSize;
+		
+		for (int i=0; i<bufferSize; i++){
+			Clip c;
+			try {
+				c = (Clip) AudioSystem.getLine(info);
+				c.open( audioFormat , audio, 0, audio.length);
+				concurrentClips.add(c);
+			} catch (LineUnavailableException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public void play(){
 		new SoundSpawner().start();
 	}
 	
-	private class SoundSpawner extends Thread implements LineListener{
+	private class SoundSpawner extends Thread{
 		
 		@Override
 		public void run(){
-			if(numThreads<maxThreads){
-		        try {
-		    		Clip clip = (Clip) AudioSystem.getLine(info);
-					clip.open( audioFormat , audio, 0, audio.length);
-			        clip.start();
-			        clip.addLineListener(this);
-			        numThreads++;
-			        
-				} catch (LineUnavailableException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		@Override
-		public void update(LineEvent evt){
-			if (evt.getType() == LineEvent.Type.STOP) {
-	  	      evt.getLine().close();
-	  	      numThreads--;
-	  	    }
+			Clip clip = concurrentClips.get(curClip);
+			clip.setFramePosition(0);
+			clip.start();
+			curClip=(curClip+1)%bufferSize;
 		}
 		
 	}
