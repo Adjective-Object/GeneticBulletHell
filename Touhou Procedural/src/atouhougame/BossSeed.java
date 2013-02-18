@@ -213,58 +213,14 @@ public class BossSeed implements Serializable{
 		//generate the stats of the new Boss
 		double[] stats = null;
 		double someFactor = r.nextDouble();
-		switch(r.nextInt(5)){
-			case 0://sum of two
-				stats = new double[]{
-					this.STR+seed.STR,
-					this.CON+seed.CON,
-					this.INT+seed.INT,
-					this.WIS+seed.WIS,
-					this.DEX+seed.DEX,
-					this.LUK+seed.LUK};
-				System.out.println("STATS 0");
-				break;
-			case 1://weighted average of two
-				stats = new double[]{
-						this.STR+seed.STR*someFactor,
-						this.CON+seed.CON*someFactor,
-						this.INT+seed.INT*someFactor,
-						this.WIS+seed.WIS*someFactor,
-						this.DEX+seed.DEX*someFactor,
-						this.LUK+seed.LUK*someFactor};
-				System.out.println("STATS 1");
-				break;
-			case 2://pull from other boss
-				stats = new double[]{
-						seed.STR,
-						seed.CON,
-						seed.INT,
-						seed.WIS,
-						seed.DEX,
-						seed.LUK};
-				System.out.println("STATS 2");
-				break;
-			case 3://pull from one boss
-				stats = new double[]{
-						this.STR,
-						this.CON,
-						this.INT,
-						this.WIS,
-						this.DEX,
-						this.LUK};
-				System.out.println("STATS 3");
-				break;
-			case 4://weighted average of two in other firection
-				stats = new double[]{
-						this.STR*someFactor+seed.STR,
-						this.CON*someFactor+seed.CON,
-						this.INT*someFactor+seed.INT,
-						this.WIS*someFactor+seed.WIS,
-						this.DEX*someFactor+seed.DEX,
-						this.LUK*someFactor+seed.LUK};
-				System.out.println("STATS 4");
-				break;
-		}
+		stats = new double[]{
+			this.STR*(1-someFactor)+seed.STR*someFactor,
+			this.CON*(1-someFactor)+seed.CON*someFactor,
+			this.INT*(1-someFactor)+seed.INT*someFactor,
+			this.WIS*(1-someFactor)+seed.WIS*someFactor,
+			this.DEX*(1-someFactor)+seed.DEX*someFactor,
+			this.LUK*(1-someFactor)+seed.LUK*someFactor};
+
 		
 		//new stats w/ mutation
 		for(int i=0; i<stats.length; i++){

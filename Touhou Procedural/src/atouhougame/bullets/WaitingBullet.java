@@ -1,5 +1,6 @@
 package atouhougame.bullets;
 
+import atouhougame.TGlobal;
 import atouhougame.gamescreens.TouhouGame;
 
 
@@ -20,7 +21,7 @@ public class WaitingBullet extends Bullet{
 		if(waitTime<=0){
 			TouhouGame tgame = (TouhouGame)this.parentGame;
 			tgame.bossBullets.add(spawnBullet);
-			//TGlobal.sound_fire_boss.play();
+			TGlobal.sound_fire_boss.play();
 			this.kill();
 		}
 	}

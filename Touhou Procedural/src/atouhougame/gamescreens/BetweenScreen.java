@@ -90,6 +90,10 @@ public class BetweenScreen extends Game{
 	public void update(){
 		super.update();
 		Game targetGame = null;
+		
+		
+		
+		
 		if(Keys.isKeyPressed(KeyEvent.VK_ENTER)){
 			targetGame=TGlobal.bossRushRouter;
 		}

@@ -3,6 +3,7 @@ package framework;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 public class Text extends GameComponent{
 	
@@ -19,7 +20,11 @@ public class Text extends GameComponent{
 		this.font=font;
 		
 		this.boundaryState=GameComponent.BOUNDARY_NONE;
-		
+		this.size.y = font.getSize();
+		BufferedImage bi = new BufferedImage(1,1,BufferedImage.TYPE_3BYTE_BGR);
+		this.size.x = bi.getGraphics().getFontMetrics(font).stringWidth(text);
+		//Ugly, but avoids random improper width returning on FM found when called in render()
+		//But that was uglier anyway.
 		}
 	
 	@Override

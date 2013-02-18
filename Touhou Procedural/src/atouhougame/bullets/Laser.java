@@ -2,8 +2,8 @@ package atouhougame.bullets;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 import atouhougame.TGlobal;
 import framework.GameComponent;
@@ -64,7 +64,7 @@ public class Laser extends Bullet{
 			return false;
 		}
 		for(int x=0; x<obj.size.x; x++){
-			if(obj.pointWithin(new Point(obj.x + x, this.y+(obj.x-this.x+x)*this.slope )) ){
+			if(obj.containsPoint(new Point(obj.x + x, this.y+(obj.x-this.x+x)*this.slope )) ){
 				return true;
 			}
 		}
@@ -82,14 +82,14 @@ public class Laser extends Bullet{
 	 * @return : returns the altered BufferedImage
 	 */
 	@Override
-	public BufferedImage render(BufferedImage bi){
-		Graphics2D g = (Graphics2D) bi.getGraphics();
+	public Graphics render(Graphics g1){
+		Graphics2D g = (Graphics2D) g1;
 		g.setColor(this.color);
 		g.setStroke(new BasicStroke(laserWidth));
 		g.fillOval((int)x-laserWidth, (int)y-laserWidth,laserWidth*2, laserWidth*2);
 		g.drawLine((int)x, (int)y, (int)destination.x, (int)destination.y);
 		g.setStroke(new BasicStroke(1));
-		return bi;
+		return g1;
 	}
 
 }

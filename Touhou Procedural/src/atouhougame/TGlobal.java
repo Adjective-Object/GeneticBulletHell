@@ -27,14 +27,14 @@ public class TGlobal {
 	public static RecycleableClip sound_menu_select 	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("menu_select.wav")) ;
 	public static RecycleableClip sound_menu_escape 	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("menu_escape.wav")) ;
 	
-	public static RecycleableClip sound_fire_boss  		= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("menu_move.wav")) ;
-	public static RecycleableClip sound_fire_player  	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("menu_move.wav")) ;
+	public static RecycleableClip sound_fire_boss  		= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("menu_move.wav"),100) ;
+	public static RecycleableClip sound_fire_player  	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("menu_move.wav"),100) ;
 	
 	public static RecycleableClip sound_explode_player  = new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("se_enep01.wav")) ;
 	public static RecycleableClip sound_explode_boss  	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("se_enep00.wav")) ;
 	
-	public static RecycleableClip sound_damage_player 	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("damage_0.wav")) ;
-	public static RecycleableClip sound_damage_boss 	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("damage_1.wav")) ;
+	public static RecycleableClip sound_damage_player 	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("damage_0.wav"),100) ;
+	public static RecycleableClip sound_damage_boss 	= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("damage_1.wav"),100) ;
 	
 	public static RecycleableClip sound_Laser_warn 		= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("laser_fire_alt.wav")) ;
 	public static RecycleableClip sound_Laser_fire 		= new RecycleableClip(ClassLoader.getSystemClassLoader().getResourceAsStream("laser_fire.wav")) ;

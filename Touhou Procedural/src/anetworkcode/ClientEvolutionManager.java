@@ -8,7 +8,7 @@ import atouhougame.LocalEvolutionManager;
 
 public class ClientEvolutionManager extends LocalEvolutionManager{
 	
-	BossSeed current;
+	BossSeed current, previous;
 	
 	HashMap<Integer, Boolean> existingGenerations = new HashMap<Integer, Boolean> (0);
 	

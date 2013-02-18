@@ -51,6 +51,19 @@ public class Menu extends Game{
 			this.changed = true;
 		}
 		
+		
+		if(Mouse.updated){
+			for(int i=0; i<this.text.length; i++){
+				if(text[i].containsPoint(Mouse.position)){
+					if(this.currentSelection!=i){
+						this.changed=true;
+					}
+					this.currentSelection = i;
+				}
+			}
+		}
+		
+		
 		if(this.changed){
 			onMove();
 			for (int i=0; i<this.text.length;i++){
@@ -62,7 +75,7 @@ public class Menu extends Game{
 		
 		super.update();
 		
-		if(Keys.isKeyPressed(KeyEvent.VK_ENTER) || Keys.isKeyPressed(KeyEvent.VK_Z)){
+		if(Keys.isKeyPressed(KeyEvent.VK_ENTER) || Keys.isKeyPressed(KeyEvent.VK_Z) || Mouse.left){
 			onSelect();
 			switchGame(
 					new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,this.results[this.currentSelection],endGameDelay)

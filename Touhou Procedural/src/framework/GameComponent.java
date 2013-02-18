@@ -269,7 +269,7 @@ public class GameComponent {
 		return (x<=obj.x+obj.getWidth()) && (obj.x<=x+this.getWidth()) && (y<=obj.y+obj.getHeight()) && (obj.y<=y+this.getHeight());
 	}
 	
-	public boolean pointWithin(Point p){
+	public boolean containsPoint(Point p){
 		return (p.x>=this.x) && (p.x<=this.x+this.size.x) && (p.y<=y+this.size.y) && (p.y>=this.y);
 	}
 	

@@ -1,14 +1,18 @@
 package framework;
 
+import java.awt.AWTEvent;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
-public class TopFrame extends JFrame implements ActionListener{
+public class TopFrame extends JFrame implements ActionListener, AWTEventListener{
 	
 	public static Game game;
 	
@@ -17,24 +21,24 @@ public class TopFrame extends JFrame implements ActionListener{
         setResizable(false);
         
     	this.game=startGame;
-    	this.addKeyListener(new TAdapter());
     	this.getContentPane().add(game);
-		this.pack();
+    	this.addKeyListener(new KAdapter());
+    	Toolkit.getDefaultToolkit().addAWTEventListener(this,AWTEvent.MOUSE_EVENT_MASK+AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        this.pack();
         setTitle("Procedural Touhou");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        setLocationRelativeTo(null);
-        setVisible(true);
-
         Insets insets = this.getInsets();
         
         setSize(insets.left+insets.right+width, insets.top+insets.bottom+height);
+		
+        setLocationRelativeTo(null);
+
         
         this.setVisible(true);
-        this.setResizable(false);
     }
     
-    private class TAdapter extends KeyAdapter {
+    private class KAdapter extends KeyAdapter {
 
         @Override
 		public void keyReleased(KeyEvent e) {
@@ -47,9 +51,26 @@ public class TopFrame extends JFrame implements ActionListener{
         }
     }
 
+
+	@Override
+	public void eventDispatched(AWTEvent e) {
+		MouseEvent me = (MouseEvent)e;
+		switch(e.getID()){
+			case MouseEvent.MOUSE_PRESSED:
+				Mouse.mouseClicked(me);
+				break;
+			case MouseEvent.MOUSE_RELEASED:
+				Mouse.mouseReleased(me);
+				break;
+			case MouseEvent.MOUSE_MOVED:
+				Mouse.mouseMoved(me);
+				break;
+		}
+	}
+    
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		
+		System.out.println("TopFrame got ActionEvent: "+evt);
 	}
     
 	public void actionPerformed(SwitchGameEvent evt){
