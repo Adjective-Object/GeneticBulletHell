@@ -8,17 +8,22 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class RecycleableClip {
+public class RecycleableClip{
 	
 	byte[] audio;
 	DataLine.Info info;
 	AudioFormat audioFormat;
 	
+	int numThreads=0;
 	
-	public RecycleableClip(InputStream is){
+	static int maxThreads=10000;
+	
+	public RecycleableClip(InputStream is) {
 		try {
 			//cacheing audio data into memory
 			AudioInputStream ais = AudioSystem.getAudioInputStream(is);//get audioinputstream from IS
@@ -36,13 +41,37 @@ public class RecycleableClip {
 	}
 	
 	public void play(){
-        try {
-    		Clip clip = (Clip) AudioSystem.getLine(info);
-			clip.open( audioFormat , audio, 0, audio.length);
-	        clip.start();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
+		new SoundSpawner().start();
+	}
+	
+	private class SoundSpawner extends Thread implements LineListener{
+		
+		@Override
+		public void run(){
+			if(numThreads<maxThreads){
+		        try {
+		    		Clip clip = (Clip) AudioSystem.getLine(info);
+					clip.open( audioFormat , audio, 0, audio.length);
+			        clip.start();
+			        clip.addLineListener(this);
+			        numThreads++;
+			        
+				} catch (LineUnavailableException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		
+		@Override
+		public void update(LineEvent evt){
+			if (evt.getType() == LineEvent.Type.STOP) {
+	  	      evt.getLine().close();
+	  	      numThreads--;
+	  	    }
+		}
+		
 	}
 
+	
 }
+
