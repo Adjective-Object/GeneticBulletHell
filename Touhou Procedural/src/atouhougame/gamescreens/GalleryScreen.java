@@ -17,14 +17,14 @@ public class GalleryScreen extends Game{
 	
 	static final int boxsize = 150;
 	static final int textheight = 50;
-	static final int margin = 10;
+	static final int margin = 25;
 	static final int speed = 500;
+	static final int generationHeight = (boxsize+textheight)+margin;
 	
 	int maxoffx = 0, maxoffy=0;
 	
 	boolean doneCheck=false;
 	
-	int generationHeight = (boxsize+textheight)+margin;
 	
 	int xoff,yoff, startingGeneration=0, loadedGenerations = 0;
 	

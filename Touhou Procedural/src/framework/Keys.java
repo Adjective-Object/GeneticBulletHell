@@ -13,6 +13,7 @@ public class Keys{
 	 * mainly just for recording what keys are being held down / pressed.
 	 **/
 	public static void keyPressed(KeyEvent e) {
+		System.out.println(e.getKeyCode());
 		downKeys.add( e.getKeyCode() );
 		heldKeys.add( e.getKeyCode() );
 	}

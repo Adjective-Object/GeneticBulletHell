@@ -2,8 +2,9 @@ package framework;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Group<T extends GameComponent> extends GameComponent{
+public class Group<T extends GameComponent> extends GameComponent implements Iterable<T> {
 	
 	public boolean removeDead = false;
 	public ArrayList<T> content;
@@ -45,6 +46,7 @@ public class Group<T extends GameComponent> extends GameComponent{
 		return this.content.size();
 	}
 	
+	@Override
 	public void update(long elapsedTime){
 		for(int i=0;i<content.size();i++){
 			content.get(i).update(elapsedTime);
@@ -63,6 +65,7 @@ public class Group<T extends GameComponent> extends GameComponent{
 	 * @param bi: the target bufferedImage
 	 * @return : returns the altered BufferedImage
 	 */
+	@Override
 	public BufferedImage render(BufferedImage bi){
 		if (visible){
 			for(int i=0; i<content.size();i++){
@@ -77,6 +80,7 @@ public class Group<T extends GameComponent> extends GameComponent{
 	 * @param g : the target Graphics
 	 * @return : returns the altered Graphics
 	 */
+	@Override
 	public Graphics render(Graphics g){
 		if (visible){
 			for(int i=0; i<content.size();i++){
@@ -91,6 +95,7 @@ public class Group<T extends GameComponent> extends GameComponent{
 	 * 
 	 * shouldn't end up calling self, save if you nest groups in groups
 	 */
+	@Override
 	public boolean collide(GameComponent other){
 		for(int x=0; x<content.size();x++){
 			if (content.get(x).collide(other)){
@@ -100,10 +105,12 @@ public class Group<T extends GameComponent> extends GameComponent{
 		return false;
 	}
 	
+	@Override
 	public String toString(){
 		return content.toString();
 	}
 	
+	@Override
 	public void setParent(Game g){
 		super.setParent(g);
 		for(int x=0; x<content.size();x++){
@@ -115,6 +122,7 @@ public class Group<T extends GameComponent> extends GameComponent{
 		this.content.clear();
 	}
 	
+	@Override
 	public Group<T> clone(){
 		Group<T> g = new Group<T>();
 		g.addAll(this);
@@ -127,5 +135,10 @@ public class Group<T extends GameComponent> extends GameComponent{
 				this.content.remove(i);
 			}
 		}
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return this.content.iterator();
 	}
 }

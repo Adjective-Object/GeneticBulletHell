@@ -118,17 +118,23 @@ public class LocalEvolutionManager{
 	
 	public void archiveCurrentGeneration(){
 		System.out.println("archiving generation to generation_"+generationNumber+".gen");
-		try {
-			FileOutputStream fileOut = new FileOutputStream("generation_"+generationNumber+".gen");
-			ObjectOutputStream out;
-			out = new ObjectOutputStream(fileOut);
-			out.writeObject(currentGeneration);
-			out.close();
-		} catch (IOException e) {
-			System.err.println("cannot save generation");
+		archiveGeneration(currentGeneration, new File(currentGeneration.getFileName()));
+		 
+	}
+	
+	public static void archiveGeneration(Generation gen, File f){
+		try{
+			archiveGeneration(gen, new FileOutputStream(f));
+		}catch (IOException e){
 			e.printStackTrace();
 		}
-		 
+	}
+	
+	public static void archiveGeneration(Generation gen, FileOutputStream fileOut) throws IOException {
+		ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		out.writeObject(gen);
+		out.close();
+		System.err.println("cannot save generation");
 	}
 	
 	public static Generation getGeneration(File f){

@@ -7,6 +7,7 @@ import anetworkcode.ClientEvolutionManager;
 import anetworkcode.Server;
 import atouhougame.gamescreens.BossRushRouter;
 import atouhougame.gamescreens.ExitGame;
+import atouhougame.gamescreens.FavoritesScreen;
 import atouhougame.gamescreens.GalleryScreen;
 import atouhougame.gamescreens.TMenu;
 import atouhougame.gamescreens.TextForwardScreen;
@@ -81,18 +82,20 @@ public class Runner  {
 			TGlobal.evolutionManager = new LocalEvolutionManager();
 			//galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
 		}
-		galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
+		
 		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
 		
 		TGlobal.mainMenu = new TMenu(
 				new String[] {
 						"Boss Rush",
 						"Gallery",
+						"Favorites",
 						"About",
 						"Exit"},
 				new Game[] {
 						TGlobal.bossRushRouter,
-						galleryScreen,
+						new GalleryScreen(TGlobal.evolutionManager),
+						new FavoritesScreen(),
 						new TextForwardScreen(TGlobal.aboutScreenTitle,TGlobal.aboutScreenText),
 						new ExitGame()},
 				TGlobal.greyBack,

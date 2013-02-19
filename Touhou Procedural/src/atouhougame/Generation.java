@@ -38,6 +38,10 @@ public class Generation implements Serializable, Iterable<BossSeed>{
 		return bosses.size();
 	}
 	
+	public String getFileName() {
+		return Generation.getFileName(generationNumber);
+	}
+	
 	public static String getFileName(int number){
 		return "generation_"+number+".gen";
 	}

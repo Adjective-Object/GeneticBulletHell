@@ -33,13 +33,17 @@ public class Mouse {
 	public static void mouseReleased(MouseEvent e) {
 		switch (e.getButton()){
 			case MouseEvent.BUTTON1:
-				left=true;
+				left=false;
 			case MouseEvent.BUTTON2:
-				middle=true;
+				middle=false;
 			case MouseEvent.BUTTON3:
-				right=true;
+				right=false;
 		}
 		updated=true;
+	}
+
+	public static boolean anyButtonPressed() {
+		return left || right || middle;
 	}
 	
 }
