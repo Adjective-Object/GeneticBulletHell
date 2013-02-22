@@ -10,6 +10,7 @@ import framework.GameComponent;
 import framework.Global;
 import framework.Group;
 import framework.Keys;
+import framework.Mouse;
 import framework.SwitchGameEvent;
 import framework.Text;
 
@@ -75,6 +76,12 @@ public class GalleryScreen extends Game{
 	
 	@Override
 	public void update(){
+		//clicking objects
+		
+		if(Mouse.updated && Mouse.left){
+			
+		}
+		
 		super.update();
 		
 		if(Keys.isKeyPressed(KeyEvent.VK_ESCAPE)){
