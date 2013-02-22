@@ -15,7 +15,6 @@ public class Mouse {
 		position.y = e.getY();
 		x=(int)position.x;
 		y=(int)position.y;
-		updated=true;
 	}
 	
 	public static void mouseClicked(MouseEvent e) {

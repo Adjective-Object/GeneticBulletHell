@@ -22,6 +22,7 @@ public class Runner  {
     	if(args.length==0){
     		args = new String[] {"-sc"};
     	}
+    	
     	if( args[0].equals("-s") || args[0].equals("-server") ){
     		int port;
     		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
