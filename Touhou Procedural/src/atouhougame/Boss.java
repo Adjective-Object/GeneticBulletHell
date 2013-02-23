@@ -37,6 +37,7 @@ public class Boss extends BakedGameComponent{
 	double radius;
 	
 	public boolean phaseChanged= false, active = false;
+	public boolean lockedToPlayer = false;
 	
 	public double angle = 0, destAngle;
 	
@@ -86,12 +87,17 @@ public class Boss extends BakedGameComponent{
 			//mana regen
 			this.MP+=manaRegenRate*(1.0*elapsedTime/1000);
 			if(MP>maxMP){MP=maxMP;}
-			
+
+			TouhouGame g = (TouhouGame) this.parentGame;
 			//using Commands
 			comMillis+=elapsedTime;
 			if(comMillis>comRate){
-				this.patterns.get(currentPhase).apply(this);
+				this.patterns.get(currentPhase).apply(this,g.player);
 				comMillis=(long)(comMillis-comRate);
+			}
+			
+			if(this.lockedToPlayer){
+				this.destAngle=Global.findAngle(x, y, g.player.x, g.player.y);
 			}
 			
 			//movement
@@ -100,14 +106,18 @@ public class Boss extends BakedGameComponent{
 				
 				//move angle as well
 				if(angle!=destAngle){
-					double ms = moveSpeed*elapsedTime/1000000*Math.PI;
+					double diff = destAngle-angle;
+					if(diff>Math.PI){
+						destAngle=destAngle-2*Math.PI;
+					}
+					double ms = moveSpeed*elapsedTime/100000*Math.PI;
 					if(destAngle-angle>0){
 						angle+=ms;
 					} else{
 						angle-=ms;
 					}
 					angle=angle%(2*Math.PI);
-					if(Math.abs(destAngle-angle)<(moveSpeed/100)){
+					if(Math.abs(destAngle-angle)<ms){
 						angle=destAngle;
 					}
 				}

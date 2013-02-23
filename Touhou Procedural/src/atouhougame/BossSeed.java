@@ -136,7 +136,8 @@ public class BossSeed implements Serializable{
 			return new MoveCommand(
 					(int)(TouhouGame.playFieldLeft.x+r.nextDouble()*(TouhouGame.playFieldRight.x-TouhouGame.playFieldLeft.x)),
 					(int)(TouhouGame.playFieldLeft.y+r.nextDouble()*(TouhouGame.playFieldRight.y-TouhouGame.playFieldLeft.y)),
-					r.nextDouble());
+					r.nextDouble(),
+					r.nextBoolean());
 		}
 		else if(d<0.7){
 			ArrayList<BulletSeed> seeds = new ArrayList<BulletSeed>(0);
@@ -144,7 +145,8 @@ public class BossSeed implements Serializable{
 			return new FireLaserCommand(seeds);
 		}
 		else{
-			return new FireCommand(getRandBulletArr(r.nextInt(50)),
+			return new FireCommand(getRandBulletArr(1+r.nextInt(100)),
+					r.nextBoolean(),
 					r.nextBoolean(),
 					r.nextBoolean(),
 					r.nextBoolean(),

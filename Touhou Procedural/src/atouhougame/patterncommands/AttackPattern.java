@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import atouhougame.Boss;
+import atouhougame.Player;
 
 
 public class AttackPattern implements Serializable{
@@ -13,8 +14,8 @@ public class AttackPattern implements Serializable{
 		this.commands = commands;
 	}
 	
-	public void apply(Boss boss){
-		commands.get(currentCommand).apply(boss);
+	public void apply(Boss boss, Player player){
+		commands.get(currentCommand).apply(boss, player);
 		currentCommand++;
 		if(currentCommand>=commands.size()){
 			currentCommand = currentCommand%commands.size();

@@ -3,6 +3,7 @@ package atouhougame.patterncommands;
 import java.util.ArrayList;
 
 import atouhougame.Boss;
+import atouhougame.Player;
 import atouhougame.bullets.BulletSeed;
 import atouhougame.bullets.Laser;
 
@@ -15,7 +16,7 @@ public class FireLaserCommand extends Command{
 	}	
 	
 	@Override
-	public void apply(Boss boss) {
+	public void apply(Boss boss, Player player) {
 		for(int i=0;i<seedValues.size();i++){
 			if(boss.bullets.size()<boss.volleySize &&  boss.MP>seedValues.get(i).getManaCost()*2){
 				boss.bullets.add(

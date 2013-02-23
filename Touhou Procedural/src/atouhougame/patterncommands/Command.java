@@ -3,6 +3,7 @@ package atouhougame.patterncommands;
 import java.io.Serializable;
 
 import atouhougame.Boss;
+import atouhougame.Player;
 
 public abstract class Command implements Serializable{
 
@@ -11,5 +12,5 @@ public abstract class Command implements Serializable{
 	public Command(){
 	}
 	
-	public abstract void apply(Boss boss);
+	public abstract void apply(Boss boss, Player p);
 }

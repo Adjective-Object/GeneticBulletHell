@@ -36,12 +36,13 @@ public class Global {
 	//it's meant to find the angle in radians from the origin (x,y) to the destination(destx,desty)
 	public static double findAngle(double x, double y, double destx, double desty){
 		double anglepart= Math.atan( Math.abs(x-destx)/Math.abs(y-desty) );
+		
 		if(y<=desty){
-			if(x<=destx){}
-			else{anglepart=anglepart+1.5*Math.PI;}
+			if(x>=destx){}
+			else{anglepart=2*Math.PI-anglepart;}
 		}
 		else{
-			if(x<=destx){anglepart=anglepart+0.5*Math.PI;}
+			if(x>=destx){anglepart=Math.PI-anglepart;}
 			else{anglepart=anglepart+Math.PI;}
 		}
 		return anglepart;

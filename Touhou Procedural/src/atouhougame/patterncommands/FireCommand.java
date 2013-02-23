@@ -2,33 +2,35 @@ package atouhougame.patterncommands;
 import java.util.ArrayList;
 
 import atouhougame.Boss;
+import atouhougame.Player;
 import atouhougame.TGlobal;
 import atouhougame.bullets.BulletSeed;
 import atouhougame.bullets.WaitingBullet;
 
 public class FireCommand extends Command{
 	
-	boolean staggered, symmetrical, symmetrical2, fireRows, spinning;
+	boolean staggered, symmetrical, symmetrical2, fireRows, spinning, cloneVolley;
 	
 	protected ArrayList<BulletSeed> bullets = new ArrayList<BulletSeed>(0);
 	
-	public FireCommand(ArrayList<BulletSeed> bullets, boolean staggered, boolean spinning, boolean symmetrical, boolean symmetrical2, boolean fireRows){
+	public FireCommand(ArrayList<BulletSeed> bullets, boolean staggered, boolean spinning, boolean symmetrical, boolean symmetrical2, boolean fireRows, boolean cloneVolley){
 		this.bullets=bullets;
 		this.staggered=true;
 		this.symmetrical=symmetrical;
 		this.symmetrical2=symmetrical2;
 		this.fireRows = fireRows;
 		this.spinning=true;
+		this.cloneVolley=cloneVolley;
 	}
 	
 	@Override
-	public void apply(Boss boss){
+	public void apply(Boss boss, Player player){
 		boolean fired = false;
-
-		BulletSeed seedBullet = bullets.get(0);
 		
+		BulletSeed seedBullet = bullets.get(0);
 		int bulletCount = 0;
 		
+		//calculating the axies of symmetry, and the anglestep of each axis
 		int symmetries=1;
 		double angleStep=0;
 		if(symmetrical){
@@ -36,6 +38,7 @@ public class FireCommand extends Command{
 			angleStep=2*Math.PI/symmetries;
 		}
 		
+		//calculate the number of volleys to fire to keep at ~ the bullet limitation of the boss.
 		int goingToFire = boss.volleySize;
 		if(symmetrical){
 			goingToFire=goingToFire*2;
@@ -55,6 +58,7 @@ public class FireCommand extends Command{
 			}
 		}
 		
+		//firing bullets
 		for(int i=0;i<volleysToFire;i++){
 			if(bulletCount>boss.volleySize){
 				break;
@@ -71,16 +75,23 @@ public class FireCommand extends Command{
 			if( boss.MP>manaCost){
 				fired=true;
 				for(int s=0; s<symmetries; s++){
-					BulletSeed b = seedBullet.rotatedCopy(angleStep*s+boss.angle);
+					BulletSeed b;
+					if(cloneVolley){
+						b = seedBullet.rotatedCopy(angleStep*s+boss.angle);
+					} else{
+						b = bullets.get(i).rotatedCopy(boss.angle);
+					}
+					
 					if(staggered){
 						if(fireRows){
-							b.power=seedBullet.power;
+							b.angle=seedBullet.angle;
 							b.speed=seedBullet.speed;
-							b.size=seedBullet.size;
 							b.torque=seedBullet.torque;
 						}
 						if(spinning){
-							b.angle+=i*(boss.bulletSpeed/2/Math.PI);
+							b.angle=seedBullet.angle+i*(boss.bulletSpeed/2/Math.PI);
+							b.speed=seedBullet.speed;
+							b.torque=seedBullet.torque;
 						}
 					}
 					
@@ -99,7 +110,7 @@ public class FireCommand extends Command{
 						}
 					}
 				}
-				boss.MP-=bullets.get(i).getManaCost()*symmetries;
+				boss.MP-=manaCost;
 			}
 			else{
 				break;
