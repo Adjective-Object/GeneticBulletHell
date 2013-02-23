@@ -21,7 +21,7 @@ public class Runner  {
     public static void main(String[] args){
     	
     	if(args.length==0){
-    		args = new String[] {"-sc"};
+    		args = new String[] {"-st"};
     	}
     	
     	if( args[0].equals("-s") || args[0].equals("-server") ){
