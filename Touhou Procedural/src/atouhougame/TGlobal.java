@@ -3,14 +3,12 @@ package atouhougame;
 import java.awt.Color;
 import java.awt.Font;
 
-import atouhougame.gamescreens.BossRushRouter;
 import framework.Game;
 import framework.RecycleableClip;
 
 public class TGlobal {
-	public static Game mainMenu;
-	public static BossRushRouter bossRushRouter;
-	public static LocalEvolutionManager evolutionManager;
+	public static Game mainMenu, favoritesScreen;
+	public static EvolutionManager evolutionManager;
 	
 	public static boolean playNetworked=true;
 	
@@ -55,7 +53,11 @@ public class TGlobal {
 		"",
 		"Or at least that's the hope.",
 		"",
-		"Z to shoot, X to bomb, Shift to move slowly, Space to move quickly."
+		"Z to shoot, X to bomb, Shift to move slowly, Space to move quickly.",
+		"",
+		"",
+		"Concept and Programming by Maxwell Huang-Hobbs",
+		"Design help by Griffin Brodman"
 	};
 	
 

@@ -1,19 +1,16 @@
 package atouhougame.gamescreens;
 
-import java.awt.event.ActionEvent;
-
 import atouhougame.TGlobal;
 import framework.Game;
 import framework.Global;
 import framework.Keys;
 import framework.Mouse;
 import framework.ParagraphText;
-import framework.SwitchGameEvent;
 import framework.Text;
 
-public class TextForwardScreen extends Game{
-	
-	public TextForwardScreen(String title, String[] minitext){
+public class ErrorScreen extends Game{
+
+	public ErrorScreen(String title, String[] minitext) {
 		super();
 		
 		this.bkgColor = TGlobal.greyBack;
@@ -37,21 +34,20 @@ public class TextForwardScreen extends Game{
 						8
 				));
 		this.add(new Text(
-			"(Press any button go to the main menu)",
+			"(Press any button to the exit)",
 			TGlobal.textTrans,TGlobal.fsmall,
 			45,
 			Global.height-TGlobal.fsmall.getSize()-16
 		));
 	}
+
 	
 	@Override
 	public void update(){
-		if (Keys.anyKeyPressed()||Mouse.anyButton() ){
-			TGlobal.sound_menu_escape.play();
-			Keys.clearpressedButtons();
-			switchGame(new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,TGlobal.mainMenu,endGameDelay));
+		if(Keys.anyKeyPressed() || Mouse.anyButton()){
+			System.exit(0);
 		}
-
 		super.update();
 	}
+	
 }

@@ -19,7 +19,7 @@ public class FireLaserCommand extends Command{
 		for(int i=0;i<seedValues.size();i++){
 			if(boss.bullets.size()<boss.volleySize &&  boss.MP>seedValues.get(i).getManaCost()*2){
 				boss.bullets.add(
-						new Laser(boss.getCenter().x, boss.getCenter().y, seedValues.get(i).angle, seedValues.get(i).size, seedValues.get(i).power, boss.baseColor)
+						new Laser(boss.getCenter().x, boss.getCenter().y, seedValues.get(i).angle+boss.angle, seedValues.get(i).size, seedValues.get(i).power, boss.baseColor)
 						);
 				boss.MP-=seedValues.get(i).getManaCost()*2;
 			}

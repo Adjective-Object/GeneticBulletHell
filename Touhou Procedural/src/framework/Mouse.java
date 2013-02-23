@@ -12,6 +12,7 @@ public class Mouse {
 	
 	
 	public static void mouseMoved(MouseEvent e) {
+		updated=true;
 		position.x = e.getX();
 		position.y = e.getY();
 		x=(int)position.x;
@@ -19,6 +20,7 @@ public class Mouse {
 	}
 	
 	public static void mouseClicked(MouseEvent e) {
+		updated=true;
 		switch (e.getButton()){
 			case MouseEvent.BUTTON1:
 				left=true;
@@ -33,6 +35,7 @@ public class Mouse {
 	}
 	
 	public static void mouseReleased(MouseEvent e) {
+		updated=true;
 		switch (e.getButton()){
 			case MouseEvent.BUTTON1:
 				rightPressed=false;
@@ -43,14 +46,19 @@ public class Mouse {
 		}
 	}
 
-	public static boolean anyButtonPressed() {
+	public static boolean anyButtonDown() {
+		return leftPressed || rightPressed || middlePressed;
+	}
+	
+	public static boolean anyButton() {
 		return left || right || middle;
 	}
 	
-	public static void resetMouse(){
-		leftPressed=false;
-		rightPressed=false;
-		middlePressed=false;
+	public static void reset(){
+		updated=false;
+		left=false;
+		right=false;
+		middle=false;
 	}
 	
 }

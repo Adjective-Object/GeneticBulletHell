@@ -5,10 +5,11 @@ import java.io.IOException;
 import anetworkcode.Client;
 import anetworkcode.ClientEvolutionManager;
 import anetworkcode.Server;
-import atouhougame.gamescreens.BossRushRouter;
+import atouhougame.gamescreens.ErrorScreen;
 import atouhougame.gamescreens.ExitGame;
 import atouhougame.gamescreens.FavoritesScreen;
 import atouhougame.gamescreens.GalleryScreen;
+import atouhougame.gamescreens.RandomBossRouter;
 import atouhougame.gamescreens.TMenu;
 import atouhougame.gamescreens.TextForwardScreen;
 import framework.Game;
@@ -29,7 +30,7 @@ public class Runner  {
 
     		System.out.println("Running as Server "+port);
     		
-    		Server threadServer= new Server(port);//set server port
+    		Server threadServer= new Server(port,1000);//set server port
     		threadServer.start();
     	}
     	else if( args[0].equals("-c") || args[0].equals("-client") ){
@@ -45,13 +46,22 @@ public class Runner  {
     		Game g = makeTheGame();
         	TopFrame t = new TopFrame(g,Global.width,Global.height);
         	g.start();
-    	} else if( args[0].equals("-sc") || args[0].equals("-both") ){
+    	}
+    	else if( args[0].equals("-st") || args[0].equals("-stand") ){
+    		System.out.println("Running as Standalone");
+    		TGlobal.playNetworked=false;
+    	    		
+    		Game g = makeTheGame();
+        	TopFrame t = new TopFrame(g,Global.width,Global.height);
+        	g.start();
+    	}
+    	else if( args[0].equals("-sc") || args[0].equals("-both") ){
     		System.out.println("Running as Server-Client Hybrid");
     		int port;
     		if(args.length>=2){ port=Integer.parseInt(args[2]); } else{ port=1337;} //pull port from args, else use default.
     		
     		//server make thread go
-    		Server threadServer= new Server(port);//set server port
+    		Server threadServer= new Server(port,10000);//set server port
     		threadServer.start();
     		
     		//client make thread go
@@ -74,17 +84,32 @@ public class Runner  {
     }
     
 	private static Game makeTheGame(){
-		TGlobal.playNetworked = serverExists();
+		boolean panic = false;
+		if(TGlobal.playNetworked){
+			TGlobal.playNetworked = serverExists();
+			panic=TGlobal.playNetworked;
+		}
 		Game galleryScreen;
 		if(TGlobal.playNetworked){
 			TGlobal.evolutionManager = new ClientEvolutionManager();
 			//galleryScreen = new TextForwardScreen("Sorry.",new String[] {"The gallery function has not been implemented for networked games."});
 		} else{
-			TGlobal.evolutionManager = new LocalEvolutionManager();
-			//galleryScreen = new GalleryScreen(TGlobal.evolutionManager);
+			boolean loadedLocal = true;
+			try{
+				TGlobal.evolutionManager = new LocalEvolutionManager();
+			} catch (IOException e){
+				e.printStackTrace();
+				loadedLocal=false;
+			} catch (ClassNotFoundException c){
+				c.printStackTrace();
+				loadedLocal=false;
+			}
+			if(loadedLocal==false){
+				return new ErrorScreen("Cannot Load Generation", new String[]{"incompatable file type? Corrupt?"});
+			}
 		}
 		
-		TGlobal.bossRushRouter=new BossRushRouter(TGlobal.evolutionManager);
+		TGlobal.favoritesScreen = new FavoritesScreen();
 		
 		TGlobal.mainMenu = new TMenu(
 				new String[] {
@@ -94,16 +119,16 @@ public class Runner  {
 						"About",
 						"Exit"},
 				new Game[] {
-						TGlobal.bossRushRouter,
+						new RandomBossRouter(),
 						new GalleryScreen(TGlobal.evolutionManager),
-						new FavoritesScreen(),
+						TGlobal.favoritesScreen,
 						new TextForwardScreen(TGlobal.aboutScreenTitle,TGlobal.aboutScreenText),
 						new ExitGame()},
 				TGlobal.greyBack,
 				TGlobal.fbig
 			);
 		
-		if(TGlobal.playNetworked){
+		if(!panic){
 			return TGlobal.mainMenu;
 		}
 		else{

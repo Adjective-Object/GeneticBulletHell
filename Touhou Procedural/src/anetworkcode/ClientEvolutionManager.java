@@ -3,10 +3,10 @@ package anetworkcode;
 import java.util.HashMap;
 
 import atouhougame.BossSeed;
+import atouhougame.EvolutionManager;
 import atouhougame.Generation;
-import atouhougame.LocalEvolutionManager;
 
-public class ClientEvolutionManager extends LocalEvolutionManager{
+public class ClientEvolutionManager extends EvolutionManager{
 	
 	BossSeed current, previous;
 	
@@ -20,19 +20,23 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 	BossSeed currentSeed=new BossSeed(System.currentTimeMillis());
 	
 	@Override
-	public BossSeed currentSeed(){
+	public BossSeed getTestingSeed() {
 		return current;
 	}
 	
 	//advances to next boss seed
 	@Override
-	public void scoreLastSeed(double score){
-		Client.submitScore((int)(score), current.bossID);
+	public boolean scoreSeed(long bossID, double score) {
+		Client.submitScore((int)(score), bossID);
 		
-		current.score+=(score-current.score)
-		/(1+current.timesTested);
-
-		current.timesTested++;//purely asthetic
+		if(bossID==current.bossID){//purely asthetic
+			current.score+=(score-current.score)
+			/(1+current.timesTested);
+	
+			current.timesTested++;
+		}
+		
+		return true;
 	}
 	
 	@Override
@@ -58,5 +62,10 @@ public class ClientEvolutionManager extends LocalEvolutionManager{
 	public void refreshCache(){
 		existingGenerations.clear();
 	}
-	
+
+
+	@Override
+	public int getNumGenerations() {
+		return 0;//TODO what will this do again?
+	}
 }

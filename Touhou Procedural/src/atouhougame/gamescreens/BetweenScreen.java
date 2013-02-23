@@ -18,12 +18,15 @@ import framework.Text;
 
 public class BetweenScreen extends Game{
 	
+	BossSeed nextSeed;
 	
 	public BetweenScreen(BossSeed lastSeed, BossSeed nextSeed, double score){
 		super();
-
+		this.nextSeed = nextSeed;
 		buildGUI(lastSeed, nextSeed, score);
 	}
+	
+	//	new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, new TouhouGame(manager.getTestingSeed()) ,endGameDelay
 	
 	public void buildGUI(BossSeed lastSeed, BossSeed nextSeed, double score){
 		//#######################################################
@@ -45,19 +48,29 @@ public class BetweenScreen extends Game{
 			));
 
 		
-		BufferedImage nextBoss = Boss.makeImage(nextSeed);
-		this.add(new BakedGameComponent(700-nextBoss.getWidth()/2,200-nextBoss.getHeight()/2,nextBoss));
-		
-		this.add(
-			new ParagraphText(
-				new String[]{
-					nextSeed.getName(),
-					"Times Tested:  "+lastSeed.timesTested,
-					"Overall Score: "+(int)nextSeed.score,
-				},
-				TGlobal.textTrans,TGlobal.fsmall,
-				500,200,8
-		));
+		if(nextSeed!=null){
+			BufferedImage nextBoss = Boss.makeImage(nextSeed);
+			this.add(new BakedGameComponent(700-nextBoss.getWidth()/2,200-nextBoss.getHeight()/2,nextBoss));
+			
+			this.add(
+				new ParagraphText(
+					new String[]{
+						nextSeed.getName(),
+						"Times Tested:  "+lastSeed.timesTested,
+						"Overall Score: "+(int)nextSeed.score,
+					},
+					TGlobal.textTrans,TGlobal.fsmall,
+					500,200,8
+				));
+		} else{
+			this.add(
+					new Text(
+							"Press Enter to return to Favorites",
+							TGlobal.textTrans,TGlobal.fmed,
+							500,
+							TGlobal.fbig.getSize()-TGlobal.fmed.getSize()+360
+					));
+		}
 		
 		//#######################################################
 		//put text on top of everything else.
@@ -91,11 +104,12 @@ public class BetweenScreen extends Game{
 		super.update();
 		Game targetGame = null;
 		
-		
-		
-		
 		if(Keys.isKeyPressed(KeyEvent.VK_ENTER)){
-			targetGame=TGlobal.bossRushRouter;
+			if(this.nextSeed!=null){
+				targetGame = new TouhouGame(nextSeed,true);
+			} else{
+				targetGame = TGlobal.mainMenu;
+			}
 		}
 		else if(Keys.isKeyPressed(KeyEvent.VK_ESCAPE)){
 			targetGame=TGlobal.mainMenu;

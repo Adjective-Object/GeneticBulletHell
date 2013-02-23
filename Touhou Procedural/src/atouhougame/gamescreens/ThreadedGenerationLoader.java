@@ -2,6 +2,7 @@ package atouhougame.gamescreens;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import atouhougame.Boss;
 import atouhougame.BossSeed;
@@ -45,10 +46,18 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 			g.fillOval(beg+thick, beg+thick, parent.boxsize-beg*2-thick*2, parent.boxsize-beg*2-thick*2);
 		}
 		
-		Generation g = parent.manager.getGeneration(genNumber);
+		Generation g;
+		try {
+			g = parent.manager.getGeneration(genNumber);
+			makeRowFromGeneration(g);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		this.visible=false;
 		this.kill();
-		makeRowFromGeneration(g);
 	}
 	
 	private void makeRowFromGeneration(Generation gen){
@@ -73,11 +82,18 @@ public class ThreadedGenerationLoader extends GameComponent implements Runnable{
 				);
 			}
 			BufferedImage d = Boss.makeImage(s);
-			parent.images.add(new BakedGameComponent(
-					y*parent.boxsize+parent.boxsize/2-d.getWidth()/2+x,
-					parent.boxsize/2-d.getHeight()/2+this.y,
-					d)
-			);
+			BakedGameComponent b = new BakedGameComponent(
+					y*parent.boxsize+x,
+					this.y,
+					d);
+			b.imageOffset.x = -parent.boxsize/2+d.getWidth()/2;
+			b.imageOffset.y = -parent.boxsize/2+d.getHeight()/2;
+			b.size.x = parent.boxsize;
+			b.size.y = parent.boxsize;
+			
+			b.data=s;
+			parent.images.add(b);
+			parent.bossTiles.add(b);
 		}
 		for(int y=0; y< gen.size(); y++){
 			BossSeed s = gen.get(y);

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import atouhougame.Boss;
@@ -39,7 +40,13 @@ public class FavoritesScreen extends Game{
 		bgc.clear();
 		File genFile = new File("favorites.gen");
 		if(genFile.exists()){
-			this.fav = LocalEvolutionManager.getGeneration(new File("favorites.gen"));
+			try {
+				this.fav = LocalEvolutionManager.getGeneration(new File("favorites.gen"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		} else{
 			fav = new Generation(0);
 			LocalEvolutionManager.archiveGeneration(fav, genFile);
@@ -63,7 +70,7 @@ public class FavoritesScreen extends Game{
 				new String[]{
 						"What's the matter, don't you like anything?",
 						"Go Fight some bosses, and then favorite them here to play again later.",
-						"You know you want to!.",
+						"You know you want to!",
 				},
 				TGlobal.textTrans,
 				TGlobal.fsmall,

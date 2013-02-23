@@ -3,8 +3,10 @@ package atouhougame.gamescreens;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import atouhougame.LocalEvolutionManager;
+import atouhougame.BossSeed;
+import atouhougame.EvolutionManager;
 import atouhougame.TGlobal;
+import framework.BakedGameComponent;
 import framework.Game;
 import framework.GameComponent;
 import framework.Global;
@@ -31,15 +33,16 @@ public class GalleryScreen extends Game{
 	
 	boolean hasBosses=true;
 	
-	LocalEvolutionManager manager;
+	EvolutionManager manager;
 	
 	Group<Text> lockX = new Group<Text>();
 	Group<GameComponent> images = new Group<GameComponent>(true);
+	Group<BakedGameComponent> bossTiles = new Group<BakedGameComponent>(true);
 	Group<GameComponent> text = new Group<GameComponent>(true);
 	
-	public GalleryScreen(LocalEvolutionManager evomanager){
+	public GalleryScreen(EvolutionManager evolutionManager){
 		super();
-		this.manager = evomanager;
+		this.manager = evolutionManager;
 		this.bkgColor=TGlobal.greyBack;
 
 		this.add(images);
@@ -78,8 +81,23 @@ public class GalleryScreen extends Game{
 	public void update(){
 		//clicking objects
 		
-		if(Mouse.updated && Mouse.left){
-			
+		if(Mouse.updated){
+			for(int i=0; i<this.bossTiles.size(); i++){
+				GameComponent c = this.bossTiles.content.get(i);
+				if(c.containsPoint(Mouse.position)){
+					if(!c.hilight){
+						c.hilight=true;
+						TGlobal.sound_menu_move.play();
+					}
+					if(Mouse.left){
+						SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, new TouhouGame((BossSeed)c.data,false) ,endGameDelay);
+						switchGame(e);
+						TGlobal.sound_menu_select.play();
+					}
+				} else{
+					c.hilight=false;
+				}
+			}
 		}
 		
 		super.update();

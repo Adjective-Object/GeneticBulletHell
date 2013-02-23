@@ -20,7 +20,7 @@ import atouhougame.LocalEvolutionManager;
 public class Server extends Thread{
 	
 	ServerSocket serverSocket;
-	int serverPort;
+	int serverPort, timeout;
 	boolean running = false;
 	
 	static final int ERROR = 0;
@@ -37,23 +37,29 @@ public class Server extends Thread{
 	
 	LocalEvolutionManager evoManager;
 	
-	public Server(int port){
+	public Server(int port, int timeoutTolerance){
 		super();
 		this.serverPort = port;
+		this.timeout=timeoutTolerance;
 	}
 	
 	@Override
 	public void run(){
 		 try{
 			 serverSocket = new ServerSocket(serverPort);
-		     serverSocket.setSoTimeout(10);
 	     }catch (IOException e) {
 	    	 System.err.println("Could not listen on port: "+serverPort+".");
 	    	 e.printStackTrace();
 	         System.exit(1);
 	     }
 	     
-	     evoManager = new LocalEvolutionManager();
+	     try {
+			evoManager = new LocalEvolutionManager();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 	     running=true;
 	     
 	     while(running){
@@ -71,7 +77,7 @@ public class Server extends Thread{
 	}
 
 	private void clientCommunications(Socket clientSocket) throws IOException {
-		clientSocket.setSoTimeout(1000);
+		clientSocket.setSoTimeout(timeout);
 		
 		try{
 			OutputStream out = clientSocket.getOutputStream();
@@ -176,7 +182,11 @@ public class Server extends Thread{
 		ObjectOutputStream objout = new ObjectOutputStream(out);
 		if(genFile.exists()){
 			objout.writeBoolean(true);
-			objout.writeObject(evoManager.getGeneration(requestedGeneration));
+			try {
+				objout.writeObject(evoManager.getGeneration(requestedGeneration));
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		else{
 			System.out.println("SERVER: no appropriate generation file exists");

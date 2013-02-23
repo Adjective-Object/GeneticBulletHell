@@ -67,11 +67,7 @@ public class Group<T extends GameComponent> extends GameComponent implements Ite
 	 */
 	@Override
 	public BufferedImage render(BufferedImage bi){
-		if (visible){
-			for(int i=0; i<content.size();i++){
-				bi=content.get(i).render(bi);
-			}
-		}
+		this.render(bi.getGraphics());
 		return bi;
 	}
 	
@@ -84,7 +80,12 @@ public class Group<T extends GameComponent> extends GameComponent implements Ite
 	public Graphics render(Graphics g){
 		if (visible){
 			for(int i=0; i<content.size();i++){
-				g=content.get(i).render(g);
+				if(content.get(i).visible){
+					content.get(i).render(g);
+					if(content.get(i).hilight){
+						content.get(i).renderHilight(g);
+					}
+				}
 			}
 		}
 		return g;

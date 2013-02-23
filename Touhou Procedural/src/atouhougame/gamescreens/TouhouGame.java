@@ -34,7 +34,7 @@ public class TouhouGame extends Game{
 	public FlashingText readyStart;
 	public Color baseColor;
 	
-	boolean gameRunning = false;
+	boolean gameRunning = false, rushMode;
 	
 	public double bossScore;
 	public LocalEvolutionManager localEvolutionManager;
@@ -47,10 +47,10 @@ public class TouhouGame extends Game{
 	public static Point playFieldLeft = new Point(10,10),
 						playFieldRight = new Point(475,Global.height-10);
 	
-	public TouhouGame(LocalEvolutionManager localEvolutionManager){
+	public TouhouGame(BossSeed seed, boolean rushMode){
 		super();
-		this.localEvolutionManager=localEvolutionManager;
-		this.seed=localEvolutionManager.currentSeed();
+		this.rushMode = rushMode;
+		this.seed=seed;
 		this.baseColor = this.seed.color;
 		
 		this.bossBullets = new Group<Bullet>(true);
@@ -68,13 +68,14 @@ public class TouhouGame extends Game{
 		
 		this.makeUI(this.baseColor);
 
-		this.add(this.player);
 		this.add(this.playerBullets);
 
 		this.add(this.particles);
 
-		this.add(this.boss);
 		this.add(this.bossBullets);
+
+		this.add(this.boss);
+		this.add(this.player);
 
 		this.add(this.bossHpBarB);
 		this.add(this.bossHpBar);
@@ -136,7 +137,7 @@ public class TouhouGame extends Game{
 		if(this.boss.alive){
 			for(int i=0; i<this.playerBullets.content.size();i++){
 				if(this.playerBullets.content.get(i).collide(this.boss)){
-					ParticleBullet bullet = (ParticleBullet)(this.playerBullets.content.get(i));
+					ParticleBullet bullet = (ParticleBullet)(this.playerBullets.content.get(i));//TODO explosions collide with boss-> kill
 					this.boss.HP-= bullet.power;
 					this.playerBullets.content.remove(i);
 					this.particles.addAll(Global.createSimpleExplosion(bullet));
@@ -177,9 +178,14 @@ public class TouhouGame extends Game{
 		if(!this.readyStart.alive && !gameRunning && endGameDelay>0){
 			endGameDelay-=this.elapsedTime;
 		}
-		if(!gameRunning && (endGameDelay<=0 || Keys.isKeyPressed(KeyEvent.VK_ENTER))){
-			TGlobal.bossRushRouter.scoreNext(this.bossScore);
-			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, TGlobal.bossRushRouter ,endGameDelay);
+		if(!gameRunning && (endGameDelay<=0 || Keys.isKeyPressed(KeyEvent.VK_ENTER))){// advance game
+			BossSeed nextSeed = null;
+			TGlobal.evolutionManager.scoreSeed(this.seed.bossID,this.bossScore);
+			if(rushMode){
+				TGlobal.evolutionManager.advanceSeed();
+				nextSeed=TGlobal.evolutionManager.getTestingSeed();
+			}
+			SwitchGameEvent e = new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED, new BetweenScreen(this.seed,nextSeed,this.bossScore) ,endGameDelay);
 			switchGame(e);
 		}
 	}

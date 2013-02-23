@@ -73,14 +73,14 @@ public class Menu extends Game{
 			this.changed = false;
 		}
 		
-		super.update();
-		
 		if(Keys.isKeyPressed(KeyEvent.VK_ENTER) || Keys.isKeyPressed(KeyEvent.VK_Z) || Mouse.left){
 			onSelect();
 			switchGame(
 					new SwitchGameEvent(this,ActionEvent.ACTION_PERFORMED,this.results[this.currentSelection],endGameDelay)
 							);
 		}
+
+		super.update();
 	}
 	
 	protected void onMove(){}

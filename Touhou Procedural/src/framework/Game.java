@@ -116,7 +116,7 @@ public abstract class Game extends JPanel implements ActionListener{
 		this.elapsedTime = System.currentTimeMillis() - lastUpdate;
 		lastUpdate = System.currentTimeMillis();
 		content.update(elapsedTime);
-		Mouse.updated=false;
+		Mouse.reset();
 	}
 	
 	/**

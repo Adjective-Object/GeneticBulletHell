@@ -22,6 +22,8 @@ public class GameComponent {
 	public Point maxVelocity = new Point(-1,-1);
 	public Point size;
 	
+	public Object data = null;
+	
 	public Game parentGame;
 	
 	/**
@@ -39,6 +41,7 @@ public class GameComponent {
 	public Point scale = new Point(1,1);
 	public boolean visible = true, alive=true;
 	public Color color;
+	public boolean hilight = false;
 	
 	public int boundaryState=0;
 	public static final int BOUNDARY_NONE = 0, BOUNDARY_BLOCK = 1, BOUNDARY_KILL_ON_TOUCH = 2, BOUNDARY_KILL_ON_CROSS = 3, BOUNDARY_BOUNCE=4;
@@ -154,10 +157,14 @@ public class GameComponent {
 	 * @return : returns the altered Graphics
 	 */
 	public Graphics render(Graphics g){
-		if (visible){
-			g.setColor(this.color);
-			g.fillRect((int)x,(int)y,(int)(size.x*scale.x),(int)(size.y*scale.y));
-		}
+		g.setColor(this.color);
+		g.fillRect((int)x,(int)y,(int)(size.x*scale.x),(int)(size.y*scale.y));
+		return g;
+	}
+	
+	public Graphics renderHilight(Graphics g){
+		g.setColor(Global.hilightColor);
+		g.fillRect((int)x,(int)y,(int)(size.x*scale.x),(int)(size.y*scale.y));
 		return g;
 	}
 	

@@ -29,12 +29,17 @@ public class Text extends GameComponent{
 	
 	@Override
 	public Graphics render(Graphics g){
-		if(this.visible){
-			char[] c = this.text.toCharArray();
-			g.setColor(color);
-			g.setFont(this.font);
-			g.drawChars(c, 0, this.text.length(),(int)x,(int)y);
-		}
+		char[] c = this.text.toCharArray();
+		g.setColor(color);
+		g.setFont(this.font);
+		g.drawChars(c, 0, this.text.length(),(int)x,(int)y);
+		return g;
+	}
+	
+	@Override
+	public Graphics renderHilight(Graphics g){
+		g.setColor(Global.hilightColor);
+		g.fillRect((int)x,(int)y-this.font.getSize(),(int)(size.x*scale.x),(int)(size.y*scale.y));
 		return g;
 	}
 	

@@ -138,13 +138,18 @@ public class BossSeed implements Serializable{
 					(int)(TouhouGame.playFieldLeft.y+r.nextDouble()*(TouhouGame.playFieldRight.y-TouhouGame.playFieldLeft.y)),
 					r.nextDouble());
 		}
-		else if (d<0.6){
+		else if(d<0.7){
 			ArrayList<BulletSeed> seeds = new ArrayList<BulletSeed>(0);
 			seeds.add(new BulletSeed());
 			return new FireLaserCommand(seeds);
 		}
 		else{
-			return new FireCommand(getRandBulletArr(volleySize),r.nextBoolean(), r.nextBoolean());
+			return new FireCommand(getRandBulletArr(r.nextInt(50)),
+					r.nextBoolean(),
+					r.nextBoolean(),
+					r.nextBoolean(),
+					r.nextBoolean(),
+					r.nextBoolean());
 		}
 	}
 	
@@ -155,18 +160,10 @@ public class BossSeed implements Serializable{
 		}
 		return seed;
 	}
-	public static ArrayList<BulletSeed> getRadialBulletArr(int numBullets){
-		ArrayList<BulletSeed> seed = new ArrayList<BulletSeed>(0);
-		BulletSeed b = new BulletSeed();
-		for(int d=0; d<numBullets;d++){
-			seed.add( b.rotatedCopy(2*Math.PI*d/numBullets) );
-		}
-		return seed;
-	}
 	
 	@Override
 	public String toString(){
-		return "<Boss id="+this.bossID+" >";
+		return "<Boss name = "+this.getName()+" id="+this.bossID+" >";
 	}
 	
 	public static final double mutationRate = 0.5;

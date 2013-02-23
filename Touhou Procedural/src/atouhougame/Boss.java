@@ -38,6 +38,8 @@ public class Boss extends BakedGameComponent{
 	
 	public boolean phaseChanged= false, active = false;
 	
+	public double angle = 0, destAngle;
+	
 	public Color baseColor;
 	
 	public Boss(int x, int y, BossSeed seed){
@@ -45,25 +47,25 @@ public class Boss extends BakedGameComponent{
 		
 		this.baseColor 		=seed.color;
 		this.power 			=seed.STR*0.5;
-		this.bulletSpeed	=seed.DEX;
+		this.bulletSpeed	=10+seed.DEX;
 		this.patterns		=seed.patterns;
 		this.weight			=(seed.STR/5.0+seed.CON)/2;
 		this.maxHP			=(50+(int) seed.CON)*4;
 		this.HP				=maxHP;
 		this.maxMP			=(int) seed.WIS/2;
 		this.MP				=maxMP/4.0;
-		this.manaRegenRate	=seed.INT/6000;
+		this.manaRegenRate	=seed.INT/500;
 		this.moveSpeed		=5+10*seed.LUK/seed.CON;
-		this.volleySize		=(int)(seed.INT*0.8+seed.STR*0.6+seed.DEX*0.4);//most # of bulltets onscreen at the time
+		this.volleySize		=(int)(seed.INT*0.8+seed.STR*0.6+seed.DEX*0.4)/10;//most # of bullets boss can fire per volley
 		
 		this.comRate		=500+seed.CON/2+seed.STR/4-seed.INT-seed.DEX*2-seed.WIS;
-		this.symmetry 		=(int) (seed.INT/30);
+		this.symmetry 		=3+(int) (seed.INT/15);
 		
 		destX=x;
 		destY=y;
 
 		
-		this.radius			=(seed.CON*0.25);
+		this.radius			= seed.CON*0.25+10;
 		this.size			= new Point(radius*2,radius*2);
 		this.imageOffset 	= new Point(
 				this.image.getWidth()/2-this.radius,
@@ -96,6 +98,20 @@ public class Boss extends BakedGameComponent{
 			if(destX!=x || destY!=y){
 				Point pawnt = Global.scaleAlong(moveSpeed*(elapsedTime/1000.0),Global.getsincos(x,y,destX,destY));
 				
+				//move angle as well
+				if(angle!=destAngle){
+					double ms = moveSpeed*elapsedTime/1000000*Math.PI;
+					if(destAngle-angle>0){
+						angle+=ms;
+					} else{
+						angle-=ms;
+					}
+					angle=angle%(2*Math.PI);
+					if(Math.abs(destAngle-angle)<(moveSpeed/100)){
+						angle=destAngle;
+					}
+				}
+				
 				//if catches to avoid jittering
 				if(Math.abs(x-destX)<pawnt.x){
 					this.x=destX;
@@ -113,6 +129,7 @@ public class Boss extends BakedGameComponent{
 		
 			if(HP<=0 || Keys.isKeyPressed(KeyEvent.VK_T))
 			{
+				TGlobal.sound_explode_boss.play();
 				if(currentPhase >= patterns.size()-1){
 					this.kill();
 				}
@@ -131,7 +148,6 @@ public class Boss extends BakedGameComponent{
 	@Override
 	public void kill(){
 		if(this.visible && this.active){
-			TGlobal.sound_explode_boss.play();
 			this.visible=false;
 			this.active=false;
 			TouhouGame g = (TouhouGame) this.parentGame;
@@ -159,13 +175,22 @@ public class Boss extends BakedGameComponent{
 		super.setParent(g);
 	}
 	
+	@Override
+	public Graphics render(Graphics g){
+		super.render(g);
+		g.setColor(Color.white);
+		Point p = Global.rotate(new Point(0,this.radius),angle);
+		g.drawLine((int)this.getCenter().x, (int)this.getCenter().y, (int)(this.getCenter().x+p.x), (int)(this.getCenter().y+p.y));
+		return g;
+	}
+	
 	public static BufferedImage makeImage(BossSeed seed){
 		
 		
-		double radius = seed.CON*0.25+8;
+		double radius = seed.CON*0.25+10;
 		double numstep = 3+seed.LUK;
 		double anglestep = 2*Math.PI/numstep;
-		double spikeyness = radius * (0.5*seed.DEX/seed.STR);
+		double spikeyness = Math.abs(radius * (seed.DEX/(BossSeed.nutrients/5)-seed.STR/(BossSeed.nutrients/5)));
 		if(spikeyness<1){
 			spikeyness=1;
 		}
@@ -189,7 +214,6 @@ public class Boss extends BakedGameComponent{
 			poly.addPoint(center+(int)p.x, center+(int)p.y);
 			
 		}
-		
 		
 		g.setColor(new Color(seed.color.getRed()+20, seed.color.getGreen()+20, seed.color.getBlue()+20));
 		g.fillOval((int)spikeyness, (int)spikeyness, (int)(radius*2), (int)(radius*2));

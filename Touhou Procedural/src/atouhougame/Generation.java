@@ -67,7 +67,7 @@ public class Generation implements Serializable, Iterable<BossSeed>{
 				secondBest=best;
 				best=seed;
 			}
-			else if( (secondBest==null || seed.score>secondBest.score) && seed.score<best.score){
+			else if( (secondBest==null || seed.score>secondBest.score)){
 				secondBest=seed;
 			}
 		}

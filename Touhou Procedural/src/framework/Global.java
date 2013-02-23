@@ -8,6 +8,8 @@ public class Global {
 	public static int width=800;
 	public static int height=600;
 	
+	public static Color hilightColor = new Color(255,255,255,50);
+	
 	public static Point scaleAlong (double displacement, Point sincos){
 		return new Point(displacement*sincos.x,displacement*sincos.y);
 	}
@@ -77,6 +79,11 @@ public class Global {
 			numParts=5;
 		}
 		return createSimpleExplosion(particleSize,numParts,b.color,p.getCenter(),b.velocity,0,1000,(p.getWidth()+p.getHeight())/4,false);
+	}
+
+	public static Color randomColor() {
+		Random r = new Random();
+		return new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255));
 	}
 
 }

@@ -1,30 +1,25 @@
 package atouhougame;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class LocalEvolutionManager{
+public class LocalEvolutionManager extends EvolutionManager{
 
 	Generation currentGeneration;
 	
 	static final int trials = 3;
 	
-	int currentBoss,generationNumber;
+	int currentBoss, generationNumber;
 	
 	//makes a new EvolutionManager, w/ seed generation an all, from scratch
-	public LocalEvolutionManager(){
+	public LocalEvolutionManager() throws IOException, ClassNotFoundException{
 		generationNumber=getNumGenerations();
 		if(generationNumber==-1){
 			this.currentGeneration= new Generation(new ArrayList<BossSeed>(0),0);
 			currentBoss=0;
 			for(int i=0; i<Generation.generationsize; i++){
-				currentGeneration.add(new BossSeed(System.currentTimeMillis()));
+				currentGeneration.add(new BossSeed(System.currentTimeMillis()+i));
 			}
 			generationNumber=0;
 		}
@@ -35,7 +30,8 @@ public class LocalEvolutionManager{
 		}
 	}
 		
-	private int getNumGenerations() {
+	@Override
+	public int getNumGenerations() {
 		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
 		int genNumber = -1;
 		
@@ -48,19 +44,7 @@ public class LocalEvolutionManager{
 
 	BossSeed currentSeed=new BossSeed(System.currentTimeMillis());
 	
-	public BossSeed currentSeed(){
-		return currentGeneration.get(currentBoss);
-	}
-	
-	//advances to next boss seed
-	public void scoreLastSeed(double score){
-		currentGeneration.get(currentBoss).score+=(score-currentGeneration.get(currentBoss).score)
-			/(1+currentGeneration.get(currentBoss).timesTested);
-		//weighted average of scores
-		currentGeneration.get(currentBoss).timesTested++;
-		archiveCurrentGeneration();
-	}
-	
+	@Override
 	public boolean scoreSeed(long bossID, double score){
 		for(BossSeed b:currentGeneration){
 			if(b.bossID==bossID){
@@ -71,29 +55,37 @@ public class LocalEvolutionManager{
 				return true;
 			}
 		}
+		if(currentSeed.bossID==bossID){
+			advanceSeed();
+		}
 		return false;
 	}
 	
+	@Override
 	public BossSeed getTestingSeed(){
-		advanceSeed();
 		BossSeed b =  currentGeneration.get(currentBoss);
 		return b;
 	}
 	
+	@Override
 	public void advanceSeed(){
-		int maxTrials = 0,fails=-1;
-		while(this.currentGeneration.get(currentBoss).timesTested>=maxTrials && fails<Generation.generationsize*2){
-			maxTrials=this.currentGeneration.get(currentBoss).timesTested;
-			currentBoss=(currentBoss+1)%currentGeneration.size();
-			fails++;
+		BossSeed leastTested = this.getTestingSeed();
+		for (int i=this.currentGeneration.size()-1; i>=0;i--){
+			if(this.currentGeneration.get(i).timesTested<=leastTested.timesTested){
+				leastTested=this.currentGeneration.get(i);
+				this.currentBoss=i;
+			}
 		}
+		System.out.println(leastTested);
 		
 		//advance
-		if(currentGeneration.get(currentBoss).timesTested>=trials){
+		if(leastTested.timesTested>=trials){
 			System.out.println("making new genration");
 			makeNextGeneration();
 			archiveCurrentGeneration();
+			this.currentBoss=0;
 		}
+		
 		System.out.println(this.currentGeneration);
 		System.out.println(this.currentGeneration.get(currentBoss).bossID);
 	}
@@ -121,68 +113,15 @@ public class LocalEvolutionManager{
 		archiveGeneration(currentGeneration, new File(currentGeneration.getFileName()));
 		 
 	}
-	
-	public static void archiveGeneration(Generation gen, File f){
-		try{
-			archiveGeneration(gen, new FileOutputStream(f));
-		}catch (IOException e){
-			e.printStackTrace();
-		}
-	}
-	
-	public static void archiveGeneration(Generation gen, FileOutputStream fileOut) throws IOException {
-		ObjectOutputStream out = new ObjectOutputStream(fileOut);
-		out.writeObject(gen);
-		out.close();
-		System.err.println("cannot save generation");
-	}
-	
-	public static Generation getGeneration(File f){
-		Generation seeds=null;
-		try {
-	        FileInputStream fileIn = new FileInputStream(f);
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-			seeds = (Generation) in.readObject();
-			in.close();
-			fileIn.close();
-		} catch (IOException io) {
-			System.err.println("File of unreadable format.");
-			io.printStackTrace();
-		}catch(ClassNotFoundException c){
-			System.err.println("class not found.");
-	        c.printStackTrace();
-		}
-		return seeds;
-	}
-	
-	private class GenFilter implements FilenameFilter{
-		@Override
-		public boolean accept(File file, String name) {
-			return name.matches(".*generation_[0,1,2,3,4,5,6,7,8,9]*.gen");
-		}
-	}
-	
-	public ArrayList<Generation> loadGenerations() {
-		File[] genFiles = new File(System.getProperty("user.dir")).listFiles(new GenFilter());
-	
-		ArrayList<Generation> seeds = new ArrayList<Generation>(0);
-		
-		for (File f:genFiles){
-			seeds.add(getGeneration(f));
-		}
-		
-		return seeds;
-	}
 
-	public Generation getGeneration(int n) {
+	@Override
+	public Generation getGeneration(int n) throws IOException, ClassNotFoundException {
 		return getGeneration(new File("generation_"+n+".gen"));
 	}
 
+	@Override
 	public boolean hasGeneration(int n) {
 		return new File("generation_"+n+".gen").exists();
 	}
-	
-	public void refreshCache(){}//DOES NOTHING :< only exists for the purposes of the Networked subclass. oh I feel so dirty...
-
 	
 }
